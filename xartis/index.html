@@ -1,0 +1,1462 @@
+<title>Στατιστικός Άτλας Ελλάδας</title>
+<style>
+/* Διάταξη: στο κινητό μία στήλη (τίτλος, επιλογές, χάρτης, χρονιά, λεπτομέρειες, κατάταξη).
+   Σε μεγάλη οθόνη ο χάρτης αριστερά και οι επιλογές με τις λεπτομέρειες δεξιά. */
+:root {
+  --bg: #f2f5f5;        /* σελίδα και θάλασσα */
+  --surface: #fbfcfc;   /* κάρτες */
+  --land: #e5e9e7;      /* γειτονικές χώρες */
+  --region: #d6dcda;    /* περιοχές όταν δείχνουμε κύκλους */
+  --coast: #9aa6a4;
+  --ink: #13201f;
+  --ink-2: #475553;
+  --muted: #6f7c7a;
+  --rule: #d3dad8;
+  --hairline: rgba(19, 32, 31, 0.12);
+  --bubble: #2a78d6;
+  --bubble-edge: #1c5cab;
+  --mid: #e9e8e3;
+  --neg-1: #f5d5cd; --neg-2: #eeab9b; --neg-3: #e27c66; --neg-4: #c54b3a; --neg-5: #8e2a20;
+  --pos-1: #d6e5f8; --pos-2: #a9c9f2; --pos-3: #6da7ec; --pos-4: #2a78d6; --pos-5: #104281;
+  --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #6da7ec; --seq-4: #3987e5; --seq-5: #256abf; --seq-6: #104281;
+  --font-display: "GFS Didot", "Didot", "Bodoni 72", Georgia, serif;
+  --font-body: "Commissioner", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --step--1: 0.8125rem; --step-0: 0.9375rem; --step-1: 1.0625rem; --step-2: 1.375rem;
+  --step-3: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1514; --surface: #151c1b; --land: #1a2120; --region: #2b3533; --coast: #4f5c5a;
+    --ink: #edf2f1; --ink-2: #b5c0be; --muted: #8a9795; --rule: #29312f;
+    --hairline: rgba(237, 242, 241, 0.12); --bubble: #3987e5; --bubble-edge: #86b6ef; --mid: #383835;
+    --neg-1: #4b2b26; --neg-2: #7d3329; --neg-3: #b23f2f; --neg-4: #e0614b; --neg-5: #f59b86;
+    --pos-1: #1f3049; --pos-2: #1c4f8f; --pos-3: #2f77cf; --pos-4: #5d9de8; --pos-5: #a3c8f3;
+    --seq-1: #1b2c44; --seq-2: #184f95; --seq-3: #256abf; --seq-4: #3987e5; --seq-5: #6da7ec; --seq-6: #b7d3f6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1514; --surface: #151c1b; --land: #1a2120; --region: #2b3533; --coast: #4f5c5a;
+  --ink: #edf2f1; --ink-2: #b5c0be; --muted: #8a9795; --rule: #29312f;
+  --hairline: rgba(237, 242, 241, 0.12); --bubble: #3987e5; --bubble-edge: #86b6ef; --mid: #383835;
+  --neg-1: #4b2b26; --neg-2: #7d3329; --neg-3: #b23f2f; --neg-4: #e0614b; --neg-5: #f59b86;
+  --pos-1: #1f3049; --pos-2: #1c4f8f; --pos-3: #2f77cf; --pos-4: #5d9de8; --pos-5: #a3c8f3;
+  --seq-1: #1b2c44; --seq-2: #184f95; --seq-3: #256abf; --seq-4: #3987e5; --seq-5: #6da7ec; --seq-6: #b7d3f6;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--step-0); line-height: 1.5;
+  padding-inline: 16px; padding-block: 20px 40px;
+}
+.page { max-width: 1180px; margin: 0 auto; display: grid; gap: 20px; }
+h1, h2 { font-weight: 400; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* Χάρτες-ιστορίες */
+/* Κινητό: οι καρτέλες είναι πλέγμα 2×2 με ίσες στήλες· κάθε κελί έχει ύψος τουλάχιστον 48px και τη δική του
+   γραμμή, ώστε η ενεργή να φαίνεται σε όλη τη στήλη της και καμία να μην κρύβεται πίσω από οριζόντια κύλιση. */
+.stories { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+.stories button {
+  display: flex; align-items: center; gap: 8px; border: 0; background: none; cursor: pointer; text-align: start;
+  min-height: 48px; padding: 6px 0; border-bottom: 1px solid var(--rule); line-height: 1.25;
+  color: var(--ink-2); font-weight: 600; font-size: var(--step--1);
+}
+.stories button span { flex: none; font-family: var(--font-display); font-size: var(--step-1); font-weight: 400; color: var(--muted); }
+.stories button[aria-current="true"] { color: var(--ink); border-bottom: 2px solid var(--ink); padding-bottom: 5px; }
+@media (min-width: 640px) {
+  .stories { display: flex; flex-wrap: wrap; gap: 0 22px; border-bottom: 1px solid var(--rule); }
+  .stories button { flex: none; min-height: 44px; padding: 8px 0 10px; margin-bottom: -1px; border-bottom: 2px solid transparent; line-height: inherit; }
+  .stories button[aria-current="true"] { padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+}
+
+/* Τίτλος */
+.masthead { display: grid; gap: 10px; max-width: 46rem; }
+.eyebrow {
+  font-size: var(--step--1); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+/* Κινητό: η καρτέλα από πάνω ήδη λέει ποιος χάρτης είναι ανοιχτός· η επιγραφή μένει σε μία γραμμή (μόνο η ταυτότητα του άτλαντα)
+   και ο χάρτης ανεβαίνει 16–43px, αντί να σπάει σε δύο γραμμές με κεφαλαία και απόσταση γραμμάτων.
+   Το θέμα κρύβεται μόνο όταν φαίνονται οι καρτέλες (με έναν χάρτη η πλοήγηση κρύβεται και το θέμα μένει). */
+@media (max-width: 639px) {
+  .stories:not([hidden]) ~ .masthead .eyebrow-topic { display: none; }
+  .masthead { gap: 8px; }
+}
+.masthead h1 { font-family: var(--font-display); font-size: var(--step-3); line-height: 1.12; }
+.dek { color: var(--ink-2); font-size: var(--step-1); max-width: 40rem; }
+
+.layout { display: grid; gap: 20px; grid-template-areas: "controls" "map" "detail" "ranking"; }
+.layout > * { min-width: 0; }
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    grid-template-areas: "map controls" "map detail" "map ranking";
+    grid-template-rows: auto auto 1fr;
+    column-gap: 36px;
+  }
+}
+
+/* Επιλογές */
+.controls { grid-area: controls; display: grid; gap: 12px; container: controls / inline-size; }
+.control-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.control-label { font-size: var(--step--1); color: var(--muted); min-width: 4.5rem; }
+.segmented { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; background: var(--surface); }
+.segmented button {
+  border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  font-size: var(--step--1); font-weight: 500; color: var(--ink-2);
+}
+.control-row[hidden], .segmented button[hidden] { display: none; }
+/* Κινητό: κάθε επιλογή έχει την ετικέτα της από πάνω και το ίδιο πλάτος· τα κουμπιά μοιράζονται τη γραμμή,
+   ώστε όλες οι επιλογές (Δείκτης, Δείχνει, Ανά) να ξεκινούν και να τελειώνουν στο ίδιο σημείο. */
+@media (max-width: 639px) {
+  .controls { gap: 10px; }
+  .control-row { flex-direction: column; align-items: stretch; gap: 3px; }
+  .control-label { min-width: 0; line-height: 1.2; }
+  .segmented { display: flex; width: 100%; }
+  .segmented button { flex: 1 1 0; min-width: min-content; min-height: 44px; line-height: 1.25; padding-inline: 10px; }
+  /* 4+ δείκτες: πλέγμα 2 στηλών (ίσα κελιά), ώστε κανένα όνομα, ούτε το «προσωρινά», να μη σπάει σε 3 γραμμές. */
+  .segmented.wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; border-radius: 26px; }
+  .segmented.wrap button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  #baseWrap { flex-direction: row; align-items: center; }
+  #baseWrap select { min-height: 44px; padding-inline: 12px; }
+}
+/* Στενή στήλη επιλογών (κινητό, αλλά και πλάγια της σελίδας σε οθόνη 900–1150px): ο κανόνας του πλέγματος 2 στηλών για 4+ δείκτες
+   ισχύει όπου η στήλη είναι στενή, όχι μόνο κάτω από 640px. Αλλιώς τα 5 κουμπιά του «Δουλειά και εισόδημα» σε μία γραμμή
+   είχαν συνολικό ελάχιστο πλάτος μεγαλύτερο από τη στήλη και η σελίδα ξεχείλιζε οριζόντια (962–1051px για οθόνη 900–1050px).
+   Σε πολύ στενή στήλη (320px) το ίδιο ισχύει και για τους 3 δείκτες του «Απασχόληση και τουρισμός».
+   Όριο 559px: με 6 δείκτες η μία γραμμή ξεχείλιζε και σε στήλη 460–530px (οθόνη 1200–1290px). */
+@container controls (max-width: 559px) {
+  .segmented.wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; border-radius: 26px; width: 100%; }
+  .segmented.wrap button { min-height: 44px; }
+  .segmented.wrap button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@container controls (max-width: 330px) {
+  #indicatorPick { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; border-radius: 26px; width: 100%; }
+  #indicatorPick button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+.segmented button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+select {
+  border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); padding: 5px 8px;
+  font-size: var(--step--1); font-variant-numeric: tabular-nums;
+}
+
+/* Χάρτης */
+.map-col { grid-area: map; display: grid; gap: 14px; align-content: start; }
+.map-wrap { position: relative; }
+#map { display: block; width: 100%; height: auto; overflow: hidden; touch-action: manipulation; }
+#map .land { fill: var(--land); }
+#map .block { cursor: pointer; transition: fill 260ms ease; }
+#map .borders { fill: none; stroke: var(--bg); stroke-width: 0.9; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+#map .coast { fill: none; stroke: var(--coast); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+#map .bubble { fill: var(--bubble); fill-opacity: 0.45; stroke: var(--bubble-edge); stroke-width: 1; vector-effect: non-scaling-stroke; pointer-events: none; transition: r 260ms ease; }
+#map .bubble.neg { fill: var(--neg-4); stroke: var(--neg-5); }
+#map .bubble.pos { fill: var(--pos-4); stroke: var(--pos-5); }
+.swatch { display: inline-flex; align-items: center; gap: 6px; }
+.swatch::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--c); opacity: 0.75; }
+#map .selected { fill: none; stroke: var(--ink); stroke-width: 2.4; vector-effect: non-scaling-stroke; pointer-events: none; }
+.map-status { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: var(--step--1); text-align: center; padding: 16px; }
+.tooltip {
+  position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 8px; padding: 6px 10px; font-size: var(--step--1); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  white-space: nowrap; transform: translate(-50%, calc(-100% - 12px));
+}
+.tooltip strong { display: block; font-weight: 600; }
+.tooltip span { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+
+.legend { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 14px; font-size: var(--step--1); color: var(--ink-2); }
+.legend-title { width: 100%; color: var(--muted); }
+.legend-scale { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); width: min(100%, 440px); }
+.legend-scale span { height: 12px; }
+.legend-scale span:first-child { border-radius: 3px 0 0 3px; }
+.legend-scale span:last-child { border-radius: 0 3px 3px 0; }
+.legend-ticks { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); width: min(100%, 440px); font-variant-numeric: tabular-nums; font-size: 0.75rem; color: var(--muted); }
+.legend-ticks span { text-align: center; }
+.legend svg { overflow: visible; }
+.legend svg circle { fill: none; stroke: var(--ink-2); stroke-width: 1; }
+.legend svg text { fill: var(--ink-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+.legend svg line { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 2; }
+
+/* Χρονιά */
+.timeline { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; }
+.play {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--ink); background: var(--ink); color: var(--surface);
+  display: grid; place-items: center; cursor: pointer;
+}
+.play svg { width: 18px; height: 18px; fill: currentColor; }
+.year-label { font-family: var(--font-display); font-size: 2.25rem; line-height: 1; font-variant-numeric: tabular-nums; min-width: 4.6ch; }
+.slider { display: grid; gap: 2px; }
+.slider input { width: 100%; accent-color: var(--ink); margin: 0; }
+.slider-ends { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Λεπτομέρειες περιοχής */
+.detail {
+  grid-area: detail; background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px;
+  padding: 16px 18px; display: grid; gap: 6px; align-content: start;
+}
+.detail-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.detail h2 { font-family: var(--font-display); font-size: var(--step-2); line-height: 1.2; }
+.detail .clear { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: var(--step--1); padding: 4px 0; white-space: nowrap; }
+.detail-value { font-size: 2rem; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.detail-value small { font-size: var(--step-0); font-weight: 400; color: var(--ink-2); }
+.detail-sub { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.change-neg { color: var(--neg-5); }
+.change-pos { color: var(--pos-5); }
+#spark { width: 100%; height: auto; display: block; margin-top: 6px; overflow: visible; }
+#spark .line { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
+#spark .area { fill: var(--ink); fill-opacity: 0.06; }
+#spark .grid { stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#spark .base { stroke: var(--muted); stroke-dasharray: 3 3; stroke-width: 1; vector-effect: non-scaling-stroke; }
+#spark .dot { fill: var(--ink); stroke: var(--surface); stroke-width: 2; vector-effect: non-scaling-stroke; }
+#spark text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.hint { color: var(--muted); font-size: var(--step--1); }
+
+/* Κατάταξη */
+.ranking { grid-area: ranking; display: grid; gap: 10px; align-content: start; }
+.ranking h2 { font-size: var(--step-1); font-weight: 600; font-family: var(--font-body); }
+.rank-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.rank-list button {
+  width: 100%; display: grid; grid-template-columns: 2ch minmax(0, 1fr) minmax(64px, 34%) 6.5ch; align-items: center; gap: 10px;
+  padding: 7px 4px; border: 0; border-bottom: 1px solid var(--rule); background: none; cursor: pointer; text-align: left;
+  font-size: var(--step--1);
+}
+.rank-list button[aria-current="true"] { background: var(--surface); font-weight: 600; }
+.rank-list .n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.rank-list .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-list .bar { height: 8px; border-radius: 0 4px 4px 0; background: var(--bubble); min-width: 2px; }
+.rank-list .v { text-align: right; font-variant-numeric: tabular-nums; }
+/* Στενή στήλη (κινητό, ή πλάγια της σελίδας σε οθόνη 900–1150px): κάθε γραμμή γίνεται δύο σειρών. Στην πρώτη ο αριθμός θέσης,
+   το όνομα ολόκληρο και η τιμή· στη δεύτερη η μπάρα κάτω από το όνομα. Έτσι το όνομα παίρνει όλο το πλάτος και δεν κόβεται με
+   αποσιωπητικά («Βόρειος Τομέας Αθηνών», «Ανατολική Μακεδονία & Θράκη») και η γραμμή έχει ύψος πάνω από 44px για το δάχτυλο.
+   Αν το όνομα δεν χωρά ούτε έτσι (μεγάλα γράμματα συστήματος), σπάει σε δεύτερη γραμμή αντί να κόβεται.
+   Η μπάρα μένει ανάλογη της τιμής (το μήκος της μετριέται πάντα από το πλάτος της στήλης της). */
+.ranking { container: rank / inline-size; }
+@container rank (max-width: 459px) {
+  .rank-list button {
+    grid-template-columns: 2ch minmax(0, 1fr) 6.5ch; grid-template-areas: "n name v" ". bar .";
+    align-items: start; row-gap: 4px; min-height: 44px; padding: 6px 4px 8px;
+  }
+  .rank-list .n { grid-area: n; }
+  .rank-list .name { grid-area: name; white-space: normal; overflow-wrap: anywhere; }
+  .rank-list .v { grid-area: v; }
+  .rank-list .barcell { grid-area: bar; }
+  .more { min-height: 44px; padding-inline: 18px; }
+}
+.more { justify-self: start; border: 1px solid var(--rule); background: var(--surface); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: var(--step--1); }
+@media (max-width: 639px) {
+  .more { min-height: 44px; padding-inline: 18px; }
+}
+
+/* Πηγές */
+.notes { border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 10px; color: var(--ink-2); font-size: var(--step--1); max-width: 46rem; }
+.notes h2 { font-family: var(--font-body); font-size: var(--step-0); font-weight: 600; color: var(--ink); }
+.notes ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 4px; }
+.notes a { color: inherit; }
+.notes .checked { display: inline-flex; align-items: center; gap: 6px; }
+.notes .checked::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0ca30c; }
+
+@media (prefers-reduced-motion: reduce) {
+  #map .block, #map .bubble { transition: none; }
+}
+</style>
+
+<div class="page">
+  <nav class="stories" id="storyNav" aria-label="Χάρτες" hidden></nav>
+  <header class="masthead">
+    <p class="eyebrow">Στατιστικός Άτλας Ελλάδας<span class="eyebrow-topic"> · <span id="eyebrowTopic">Δημογραφία</span></span></p>
+    <h1 id="headline">Οι γεννήσεις στην Ελλάδα, περιοχή προς περιοχή</h1>
+    <p class="dek" id="dek">Στοιχεία της ΕΛΣΤΑΤ από το 1980 μέχρι σήμερα.</p>
+  </header>
+
+  <div class="layout">
+    <section class="controls" aria-label="Επιλογές χάρτη">
+      <div class="control-row" id="indicatorRow" hidden>
+        <span class="control-label">Δείκτης</span>
+        <div class="segmented" id="indicatorPick" role="group" aria-label="Δείκτης"></div>
+      </div>
+      <div class="control-row" id="metricRow">
+        <span class="control-label">Δείχνει</span>
+        <div class="segmented" role="group" aria-label="Τι δείχνει ο χάρτης">
+          <button type="button" id="metricChange" data-metric="change" aria-pressed="true">Μεταβολή %</button>
+          <button type="button" id="metricValue" data-metric="value" aria-pressed="false">Αριθμό</button>
+          <button type="button" id="metricRate" data-metric="rate" aria-pressed="false">Ανά 1.000 κατ.</button>
+          <button type="button" id="metricLevel" data-metric="level" aria-pressed="false">Τιμή</button>
+          <button type="button" id="metricDiff" data-metric="diff" aria-pressed="false">Διαφορά</button>
+        </div>
+        <label class="control-row" id="baseWrap" style="gap:6px">
+          <span class="control-label" style="min-width:0">από το</span>
+          <select id="baseYear" aria-label="Έτος σύγκρισης"></select>
+        </label>
+      </div>
+      <div class="control-row" id="levelRow">
+        <span class="control-label">Ανά</span>
+        <div class="segmented" role="group" aria-label="Γεωγραφικό επίπεδο">
+          <button type="button" id="levelNuts3" data-level="nuts3" aria-pressed="true">Περιφερειακή ενότητα</button>
+          <button type="button" id="levelNuts2" data-level="nuts2" aria-pressed="false">Περιφέρεια</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="map-col">
+      <figure class="map-wrap" style="margin:0">
+        <svg id="map" viewBox="0 0 1000 900" role="img" aria-labelledby="headline"></svg>
+        <div class="map-status" id="mapStatus">Φορτώνει ο χάρτης…</div>
+        <div class="tooltip" id="tooltip" hidden></div>
+      </figure>
+      <div class="timeline">
+        <button type="button" class="play" id="play" aria-label="Αναπαραγωγή χρονιών">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path id="playIcon" d="M7 4.5v15l13-7.5z"/></svg>
+        </button>
+        <output class="year-label" id="yearLabel" for="year">2024</output>
+        <div class="slider">
+          <input type="range" id="year" min="1980" max="2024" step="1" value="2024" aria-label="Έτος">
+          <div class="slider-ends"><span id="yearMin">1980</span><span id="yearMax">2024</span></div>
+        </div>
+      </div>
+      <div class="legend" id="legend" aria-live="polite"></div>
+    </div>
+
+    <aside class="detail" aria-live="polite">
+      <div class="detail-head">
+        <h2 id="detailName">Ελλάδα</h2>
+        <button type="button" class="clear" id="clearSel" hidden>Όλη η χώρα</button>
+      </div>
+      <p class="detail-value" id="detailValue">–</p>
+      <p class="detail-sub" id="detailSub"></p>
+      <svg id="spark" viewBox="0 0 360 96" aria-hidden="true"></svg>
+      <p class="hint" id="detailHint">Πάτησε μια περιοχή στον χάρτη ή στη λίστα.</p>
+    </aside>
+
+    <section class="ranking" aria-labelledby="rankTitle">
+      <h2 id="rankTitle">Κατάταξη</h2>
+      <ol class="rank-list" id="rankList"></ol>
+      <button type="button" class="more" id="rankMore" hidden></button>
+    </section>
+  </div>
+
+  <footer class="notes">
+    <h2>Πηγές και σημειώσεις</h2>
+    <p id="definition"></p>
+    <ul id="noteList"></ul>
+    <p id="sourceLine"></p>
+    <p class="checked" id="checkedLine"></p>
+    <p>Χάρτης: όρια NUTS 2021 της Eurostat (GISCO, μέσω Nuts2json). Προβολή: εγκάρσια Μερκατορική με κεντρικό μεσημβρινό 24° Α, όπως το ΕΓΣΑ87.</p>
+  </footer>
+</div>
+
+<script src="vendor/d3.min.js"></script>
+<script src="vendor/topojson-client.min.js"></script>
+<script>
+// ---------------------------------------------------------------------------
+// Στατιστικός Άτλας Ελλάδας
+// Τα δεδομένα έρχονται από αρχεία JSON δίπλα στη σελίδα (data/), που τα φτιάχνει
+// το pipeline/update.py από τους πίνακες της ΕΛΣΤΑΤ και της Eurostat:
+//   data/manifest.json        λίστα δεικτών, κοινές κλίμακες, πότε έγινε ο τελευταίος έλεγχος
+//   data/geo/greece.topo.json τα σύνορα των 52 περιφερειακών ενοτήτων (NUTS3)
+//   data/geo/regions.json     ελληνικά ονόματα περιοχών
+//   data/indicators/*.json    ένας δείκτης ανά αρχείο: {levels: {nuts3|nuts2: {έτος: {μονάδα: τιμή}}}}
+// Μια «μονάδα» είναι κωδικός NUTS (EL522, EL52, EL30) ή ομάδα από το regions.groups.
+//
+// Τρεις τρόποι προβολής (state.metric):
+//   change  χρώμα: ποσοστιαία μεταβολή από το έτος σύγκρισης
+//   value   κύκλοι: ο αριθμός (το εμβαδό του κύκλου είναι ανάλογο της τιμής)
+//   rate    χρώμα: τιμή ανά 1.000 κατοίκους (με τη βοήθεια του δείκτη «πληθυσμός»)
+// ---------------------------------------------------------------------------
+
+const W = 1000, H = 900;
+const MINUS = "−";
+const nf = new Intl.NumberFormat("el-GR");
+const $ = (id) => document.getElementById(id);
+const DIVERGING = ["--neg-5", "--neg-4", "--neg-3", "--neg-2", "--neg-1", "--mid", "--pos-1", "--pos-2", "--pos-3", "--pos-4", "--pos-5"];
+const SEQUENTIAL = ["--seq-1", "--seq-2", "--seq-3", "--seq-4", "--seq-5", "--seq-6"];
+
+const state = { story: null, indicator: null, metric: "change", preferredMetric: "change", level: "nuts3", base: null, baseChosen: false, year: null, selected: null, showAll: false };
+let manifest, topo, R, ind, pop, NUTS3, path, geoms;
+let playTimer = null;
+const memberCache = new Map();
+const shapeCache = new Map();
+const scaleCache = new Map();
+
+async function getJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${url}: ${response.status}`);
+  return response.json();
+}
+
+// --- Μονάδες και «μπλοκ» -----------------------------------------------------
+
+function members(unit) {
+  if (!memberCache.has(unit)) {
+    const list = R.groups[unit]?.members ?? NUTS3.filter((code) => code.startsWith(unit));
+    memberCache.set(unit, list);
+  }
+  return memberCache.get(unit);
+}
+
+function unitName(unit) {
+  return R.groups[unit]?.name ?? R.nuts3[unit] ?? R.nuts2[unit] ?? unit;
+}
+
+function valuesAt(level, year, source = ind) {
+  return source?.levels[level]?.[String(year)] ?? null;
+}
+
+// «balance»: δείκτης με πρόσημο (π.χ. γεννήσεις − θάνατοι), χωρίς ποσοστιαία μεταβολή.
+const isBalance = () => ind.kind === "balance";
+// «ratio»: ποσοστό (π.χ. % κατοίκων 65+). Το αρχείο έχει αριθμητή (levels) και παρονομαστή
+// (denominator.levels), ώστε όταν ενώνονται περιοχές να ενώνονται οι αριθμοί, όχι τα ποσοστά.
+// «level»: τιμή που δίνεται έτοιμη ανά περιοχή (π.χ. % ανεργίας) και δεν αθροίζεται.
+// Και τα δύο δείχνονται ως ποσοστό, με μεταβολή σε ποσοστιαίες μονάδες· αν η τιμή δεν είναι
+// ποσοστό (π.χ. προσδόκιμο ζωής), το ratio.unitName λέει τη μονάδα της (π.χ. «έτη»). Το ratio.unitNameIn
+// είναι η ίδια μονάδα σε αιτιατική, για το «Διαφορά σε …» (π.χ. «γιατρούς» αντί για «γιατροί»).
+const isRatio = () => ind.kind === "ratio" || ind.kind === "level";
+
+// Οι περιοχές που μπορούν να συγκριθούν σε όλους τους συνδυασμούς [δείκτης, έτος] που ζητάμε.
+// Π.χ. το 2024 η Αθήνα έχει 4 τομείς, το 2008 μία νομαρχία: για σύγκριση 2008–2024
+// ενώνουμε τους 4 τομείς σε ένα μπλοκ. (Union-find πάνω στους κωδικούς NUTS3.)
+function blocksFor(level, pairs) {
+  const parent = new Map(NUTS3.map((c) => [c, c]));
+  const find = (c) => { while (parent.get(c) !== c) { parent.set(c, parent.get(parent.get(c))); c = parent.get(c); } return c; };
+  const units = new Set();
+  for (const [source, year] of pairs) {
+    for (const unit of Object.keys(valuesAt(level, year, source) ?? {})) {
+      units.add(unit);
+      const [first, ...rest] = members(unit);
+      for (const code of rest) parent.set(find(code), find(first));
+    }
+  }
+  const groups = new Map();
+  for (const code of NUTS3) {
+    const root = find(code);
+    if (!groups.has(root)) groups.set(root, []);
+    groups.get(root).push(code);
+  }
+  return [...groups.values()].map((codes) => {
+    const key = codes.slice().sort().join(",");
+    const named = [...units, ...Object.keys(R.nuts2), ...Object.keys(R.groups)]
+      .find((u) => members(u).length === codes.length && members(u).every((c) => codes.includes(c)));
+    return { key, members: codes, set: new Set(codes), name: named ? unitName(named) : codes.map((c) => R.nuts3[c]).join(", ") };
+  });
+}
+
+// Η τιμή ενός μπλοκ σε ένα έτος: άθροισμα των μονάδων που χωράνε μέσα του.
+function blockValue(block, level, year, source = ind) {
+  const values = valuesAt(level, year, source);
+  if (!values) return null;
+  let sum = 0, covered = 0, units = 0;
+  for (const [unit, value] of Object.entries(values)) {
+    const list = members(unit);
+    const inside = list.filter((c) => block.set.has(c)).length;
+    if (inside === 0) continue;
+    if (inside !== list.length) return null; // η μονάδα είναι μεγαλύτερη από το μπλοκ
+    sum += value; covered += inside; units++;
+  }
+  if (source.kind === "level" && units > 1) return null; // ποσοστά δεν αθροίζονται
+  return covered === block.members.length ? sum : null;
+}
+
+// Παρονομαστής δεικτών-ποσοστών (π.χ. όλοι οι κάτοικοι για το % 65+).
+function blockDen(block, level, year) {
+  return blockValue(block, level, year, { levels: ind.denominator.levels });
+}
+
+function ratioOf(num, den) {
+  return num != null && den ? (num / den) * ind.ratio.scale : null;
+}
+
+// Το ποσοστό ενός μπλοκ (ή όλης της χώρας, αν block = null).
+function blockRatio(block, level, year) {
+  if (ind.kind === "level") return block ? blockValue(block, level, year) : ind.national.all[String(year)] ?? null;
+  return block
+    ? ratioOf(blockValue(block, level, year), blockDen(block, level, year))
+    : ratioOf(ind.national.all[String(year)], ind.denominator.national.all[String(year)]);
+}
+
+// --- Ανά 1.000 κατοίκους ------------------------------------------------------
+
+const hasRate = () => !!(ind.rate && pop);
+
+// Χρονιές με πληθυσμό την 1η Ιανουαρίου του έτους και του επόμενου.
+function rateYears() {
+  return ind.years.filter((y) => valuesAt("nuts3", y, pop) && valuesAt("nuts3", y + 1, pop));
+}
+
+function ratePairs(year) {
+  return [[ind, year], [pop, year], [pop, year + 1]];
+}
+
+// Μέσος πληθυσμός του έτους ≈ μέσος όρος της 1ης Ιανουαρίου του έτους και του επόμενου.
+function meanPopulation(block, level, year) {
+  const a = block ? blockValue(block, level, year, pop) : pop.national.all[String(year)];
+  const b = block ? blockValue(block, level, year + 1, pop) : pop.national.all[String(year + 1)];
+  return a != null && b != null ? (a + b) / 2 : null;
+}
+
+function rateOf(value, population) {
+  return value != null && population ? (value / population) * ind.rate.per : null;
+}
+
+// Έτη με αλλαγή μεθόδου (σπάσιμο σειράς) ανάμεσα σε δύο χρονιές, π.χ. για την ανεργία.
+function breaksBetween(a, b) {
+  return (ind.breaks ?? []).filter((y) => y > Math.min(a, b) && y <= Math.max(a, b));
+}
+
+// Το κλειδί μιας περιοχής στις σημάνσεις: «EL» για όλη τη χώρα, κωδικός περιφέρειας (EL52)
+// ή περιφερειακής ενότητας (EL522)· null για ένωση περιοχών.
+function areaKey(block) {
+  return !block ? "EL"
+    : state.level === "nuts2" ? block.members[0].slice(0, 4)
+    : block.members.length === 1 ? block.members[0] : null;
+}
+
+// Αφορά η σημείωση (με λίστα περιοχών «areas») αυτή την περιοχή; Χωρίς areas: όλες.
+// Για ένωση περιοχών (key = null) απαντάμε «ναι», για να μη χαθεί προειδοποίηση.
+function inAreas(areas, key) {
+  if (!areas || key == null) return true;
+  return key === "EL" ? areas.includes("EL") : areas.some((a) => a !== "EL" && key.startsWith(a));
+}
+
+// Τα σπασίματα ανάμεσα σε δύο χρονιές, ανά είδος. Χωρίς breakNotes είναι σημάνση της πηγής
+// (π.χ. το 'b' της Eurostat στην ανεργία) και αφορά όλες τις περιοχές· με breakNotes έχει δική
+// του περιγραφή (π.χ. «αλλαγή στην κάλυψη των θανάτων») και ίσως μόνο κάποιες περιοχές.
+// key: μόνο όσα αφορούν αυτή την περιοχή· undefined: όλα.
+function breakGroups(a, b, key) {
+  const groups = new Map();
+  for (const y of breaksBetween(a, b)) {
+    const note = ind.breakNotes?.[String(y)] ?? {};
+    if (key !== undefined && !inAreas(note.areas, key)) continue;
+    const id = `${note.label ?? ""}|${(note.areas ?? []).join(",")}`;
+    if (!groups.has(id)) groups.set(id, { label: note.label ?? null, areas: note.areas ?? null, years: [] });
+    groups.get(id).years.push(y);
+  }
+  return [...groups.values()];
+}
+
+const areaLabel = (code) => (code === "EL" ? "σύνολο χώρας" : unitName(code));
+
+// Σημάνσεις της πηγής για μια περιοχή και χρονιά (π.χ. «χαμηλή αξιοπιστία»).
+function flagNotes(block, year) {
+  const key = areaKey(block);
+  const flag = (key && ind.flags?.[String(year)]?.[key]) ?? "";
+  return [...flag].filter((c) => c !== "b").map((c) => ind.flagLabels?.[c]).filter(Boolean);
+}
+
+// Χρονιές με προσωρινά στοιχεία της πηγής (ind.provisional, π.χ. γεννήσεις 2025 πριν από τους
+// οριστικούς πίνακες): μία γραμμή για όσες από τις χρονιές που δείχνει ο χάρτης είναι προσωρινές.
+function provisionalNote(years) {
+  const list = [...new Set(years)].filter((y) => ind.provisional?.includes(y)).sort((a, b) => a - b);
+  return list.length ? `Προσωρινά στοιχεία της πηγής για το ${list.join(", ")}· μπορεί να αναθεωρηθούν.` : null;
+}
+
+// Δικές μας σημειώσεις (όχι της πηγής) για τις τιμές μιας περιοχής, π.χ. για το προσδόκιμο ζωής
+// της Αττικής έως το 2021. Επιστρέφει [{ text, years }] για όσες από τις χρονιές έχουν σημείωση.
+function caveatNotes(key, years) {
+  const found = new Map();
+  for (const year of years) {
+    for (const c of (key && ind.caveats?.[String(year)]?.[key]) ?? "") {
+      const text = ind.caveatLabels?.[c];
+      if (!text) continue;
+      if (!found.has(text)) found.set(text, []);
+      if (!found.get(text).includes(year)) found.get(text).push(year);
+    }
+  }
+  return [...found].map(([text, list]) => ({ text, years: list.sort((a, b) => a - b) }));
+}
+
+// Οι χρονιές που δείχνει ο χάρτης: η χρονιά και, στις συγκρίσεις, το έτος σύγκρισης.
+function shownYears() {
+  return state.metric === "diff" || state.metric === "change" ? [state.year, state.base] : [state.year];
+}
+
+// Σήμα «*» δίπλα στο όνομα περιοχής με σημείωση στις χρονιές που δείχνει ο χάρτης.
+function caveatMark(block) {
+  return caveatNotes(areaKey(block), shownYears()).length ? " *" : "";
+}
+
+// Το πιο λεπτομερές επίπεδο του δείκτη (η ανεργία υπάρχει μόνο ανά περιφέρεια).
+function topLevel() {
+  return ind.levels.nuts3 ? "nuts3" : "nuts2";
+}
+
+function availableMetrics() {
+  return (ind.metrics ?? ["change", "value"]).filter((m) => m !== "rate" || hasRate());
+}
+
+function metricYears() {
+  return state.metric === "rate" ? rateYears() : ind.years;
+}
+
+function computeView() {
+  const { level, metric, year, base } = state;
+  const compare = metric === "change" || metric === "diff";
+  const pairs = compare ? [[ind, year], [ind, base]] : metric === "rate" ? ratePairs(year) : [[ind, year]];
+  const blocks = blocksFor(level, pairs);
+  for (const block of blocks) {
+    block.value = blockValue(block, level, year);
+    if (metric === "change") {
+      block.baseValue = blockValue(block, level, base);
+      block.metric = block.value != null && block.baseValue ? block.value / block.baseValue - 1 : null;
+    } else if (metric === "rate") {
+      block.population = meanPopulation(block, level, year);
+      block.metric = rateOf(block.value, block.population);
+    } else if (metric === "level" || metric === "diff") {
+      block.den = ind.kind === "ratio" ? blockDen(block, level, year) : null;
+      const now = blockRatio(block, level, year);
+      block.baseValue = metric === "diff" ? blockRatio(block, level, base) : null;
+      block.metric = metric === "level" ? now : now != null && block.baseValue != null ? now - block.baseValue : null;
+    } else {
+      block.metric = block.value;
+    }
+  }
+  return blocks;
+}
+
+// --- Κλίμακες ----------------------------------------------------------------
+
+// Δύο χρώματα γύρω από το μηδέν, 5 κλάσεις σε κάθε πλευρά και μία ουδέτερη στη μέση.
+function diverging(maxAbs, steps) {
+  const step = steps.find((s) => s * 6 >= maxAbs) ?? steps[steps.length - 1];
+  const t = [0.5, 1.5, 2.5, 3.5, 4.5].map((k) => k * step);
+  return { type: "diverging", step, thresholds: [...t.slice().reverse().map((x) => -x), ...t], colors: DIVERGING };
+}
+
+// Ένα χρώμα από ανοιχτό σε σκούρο, 6 κλάσεις με «στρογγυλά» όρια.
+function sequential(lo, hi) {
+  const steps = [0.5, 1, 2, 2.5, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000];
+  const step = steps.find((s) => (hi - lo) / s <= 6) ?? steps[steps.length - 1];
+  const start = Math.floor(lo / step) * step;
+  return { type: "sequential", step, thresholds: [1, 2, 3, 4, 5].map((k) => start + k * step), colors: SEQUENTIAL };
+}
+
+// Σταθερές κλάσεις για όλα τα έτη, ώστε τα χρώματα να συγκρίνονται από χρονιά σε χρονιά.
+function colorScale() {
+  const key = `${ind.id}|${state.metric}|${state.level}|${state.base}`;
+  if (scaleCache.has(key)) return scaleCache.get(key);
+  let scale;
+  if (state.metric === "change") {
+    // Ρυθμίζεται στις χρονιές μετά το έτος σύγκρισης (ή πριν, αν είναι το τελευταίο)·
+    // ό,τι την ξεπερνά πέφτει στις ακραίες κλάσεις.
+    let maxAbs = 0;
+    const after = ind.years.filter((y) => y > state.base);
+    for (const year of after.length ? after : ind.years.filter((y) => y < state.base)) {
+      for (const block of blocksFor(state.level, [[ind, year], [ind, state.base]])) {
+        const now = blockValue(block, state.level, year), then = blockValue(block, state.level, state.base);
+        if (now != null && then) maxAbs = Math.max(maxAbs, Math.abs(now / then - 1));
+      }
+    }
+    scale = diverging(maxAbs, [0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1]);
+  } else if (state.metric === "level" || state.metric === "diff") {
+    // Ποσοστά: κλίμακα για όλες τις χρονιές· διαφορές: όπως η μεταβολή, μετά το έτος σύγκρισης.
+    const values = [];
+    const after = ind.years.filter((y) => y > state.base);
+    const years = state.metric === "level" ? ind.years : after.length ? after : ind.years.filter((y) => y < state.base);
+    for (const year of years) {
+      const pairs = state.metric === "level" ? [[ind, year]] : [[ind, year], [ind, state.base]];
+      for (const block of blocksFor(state.level, pairs)) {
+        const now = blockRatio(block, state.level, year);
+        const then = state.metric === "diff" ? blockRatio(block, state.level, state.base) : 0;
+        if (now != null && then != null) values.push(now - then);
+      }
+    }
+    scale = state.metric === "level"
+      ? sequential(d3.min(values), d3.max(values))
+      : diverging(d3.max(values, Math.abs) ?? 1, [0.5, 1, 2, 2.5, 5, 10, 20, 50, 100, 200, 250, 500]);
+  } else {
+    const rates = [];
+    for (const year of rateYears()) {
+      for (const block of blocksFor(state.level, ratePairs(year))) {
+        const rate = rateOf(blockValue(block, state.level, year), meanPopulation(block, state.level, year));
+        if (rate != null) rates.push(rate);
+      }
+    }
+    scale = isBalance()
+      ? diverging(d3.max(rates, Math.abs) ?? 1, [0.5, 1, 2, 2.5, 5, 10])
+      : sequential(d3.min(rates), d3.max(rates));
+  }
+  scaleCache.set(key, scale);
+  return scale;
+}
+
+function colorFor(value) {
+  if (value == null) return "var(--land)";
+  const { thresholds, colors } = colorScale();
+  return `var(${colors[d3.bisectRight(thresholds, value)]})`;
+}
+
+// Κύκλοι για αριθμούς: το εμβαδό είναι ανάλογο της τιμής, με την ίδια κλίμακα για όλα τα έτη.
+// Δείκτες της ίδιας ομάδας (γεννήσεις, θάνατοι, φυσική μεταβολή) μοιράζονται την κλίμακα,
+// ώστε οι κύκλοι να συγκρίνονται όταν αλλάζεις δείκτη.
+function radiusScale() {
+  const group = ind.scaleGroup ?? ind.id;
+  const key = `radius|${group}`;
+  if (!scaleCache.has(key)) {
+    let max = manifest.scales?.[group] ?? 0;
+    if (!max) {
+      for (const level of Object.values(ind.levels)) {
+        for (const values of Object.values(level)) max = Math.max(max, ...Object.values(values).map(Math.abs));
+      }
+    }
+    scaleCache.set(key, d3.scaleSqrt().domain([0, max]).range([0, 78]));
+  }
+  return scaleCache.get(key);
+}
+
+// --- Μορφοποίηση -------------------------------------------------------------
+
+// Ποσοστό με πρόσημο· με ένα δεκαδικό όταν είναι κάτω από 10%.
+function pct(value, digits) {
+  if (value == null || !isFinite(value)) return "–";
+  digits ??= Math.abs(value) < 0.0995 ? 1 : 0; // ό,τι στρογγυλεύεται σε 10% γράφεται «10%»
+  const rounded = Math.abs(value * 100).toFixed(digits);
+  if (Number(rounded) === 0) return "0%";
+  return (value < 0 ? MINUS : "+") + rounded.replace(".", ",") + "%";
+}
+
+function fmt(value) {
+  return value == null ? "–" : nf.format(Math.round(value));
+}
+
+function fmtSigned(value) {
+  if (value == null) return "–";
+  const rounded = Math.round(value);
+  return (rounded > 0 ? "+" : rounded < 0 ? MINUS : "") + nf.format(Math.abs(rounded));
+}
+
+// Η τιμή όπως τη γράφουμε: με πρόσημο για δείκτες «balance».
+function fmtValue(value) {
+  return isBalance() ? fmtSigned(value) : fmt(value);
+}
+
+// Τιμή ανά 1.000 κατοίκους: ένα δεκαδικό και το σύμβολο ‰ (τοις χιλίοις).
+function fmtRate(value, signed = isBalance()) {
+  if (value == null || !isFinite(value)) return "–";
+  const text = Math.abs(value).toFixed(1);
+  const sign = signed && Number(text) !== 0 ? (value < 0 ? MINUS : "+") : "";
+  return `${sign}${text.replace(".", ",")}‰`;
+}
+
+// Ποσοστό με τα δεκαδικά και το σύμβολο του δείκτη, π.χ. «22,8%».
+function fmtRatio(value) {
+  if (value == null || !isFinite(value)) return "–";
+  return value.toFixed(ind.ratio?.decimals ?? 1).replace(".", ",") + (ind.ratio?.suffix ?? "");
+}
+
+// Διαφορά σε ποσοστιαίες μονάδες, π.χ. «+3,3 μον.» (ή στη μονάδα του δείκτη, π.χ. «+0,5 έτη»).
+function fmtDiff(value, withUnit = true, digits = ind.ratio?.decimals ?? 1) {
+  if (value == null || !isFinite(value)) return "–";
+  const text = Math.abs(value).toFixed(digits);
+  const sign = Number(text) === 0 ? "" : value < 0 ? MINUS : "+";
+  return `${sign}${text.replace(".", ",")}${withUnit ? ` ${ind.ratio?.unitName ?? "μον."}` : ""}`;
+}
+
+function fmtMetric(value) {
+  switch (state.metric) {
+    case "change": return pct(value);
+    case "rate": return fmtRate(value);
+    case "level": return fmtRatio(value);
+    case "diff": return fmtDiff(value);
+    default: return fmtValue(value);
+  }
+}
+
+function formatDate(iso) {
+  return iso ? new Date(iso).toLocaleDateString("el-GR", { day: "numeric", month: "long", year: "numeric" }) : "–";
+}
+
+// --- Σχεδίαση χάρτη ----------------------------------------------------------
+
+function blockShape(block) {
+  if (!shapeCache.has(block.key)) {
+    shapeCache.set(block.key, topojson.merge(topo, geoms.filter((g) => block.set.has(g.id))));
+  }
+  return shapeCache.get(block.key);
+}
+
+function setupMap() {
+  const svg = d3.select("#map");
+  const greece = topojson.feature(topo, topo.objects.nuts3);
+  const projection = d3.geoTransverseMercator().rotate([-24, 0]).fitExtent([[14, 14], [W - 14, H - 14]], greece);
+  path = d3.geoPath(projection);
+  geoms = topo.objects.nuts3.geometries;
+
+  svg.append("g").attr("class", "land-layer")
+    .selectAll("path").data(topojson.feature(topo, topo.objects.land).features)
+    .join("path").attr("class", "land").attr("d", path);
+  svg.append("g").attr("class", "blocks");
+  svg.append("path").attr("class", "borders");
+  svg.append("path").attr("class", "coast").attr("d", path(topojson.mesh(topo, topo.objects.nuts3, (a, b) => a === b)));
+  svg.append("g").attr("class", "bubbles");
+  svg.append("path").attr("class", "selected");
+}
+
+function render() {
+  const blocks = computeView();
+  const blockOf = new Map();
+  for (const block of blocks) for (const code of block.members) blockOf.set(code, block);
+  const current = state.selected ? blockOf.get(state.selected) : null;
+  const svg = d3.select("#map");
+
+  svg.select(".blocks").selectAll("path")
+    .data(blocks, (b) => b.key)
+    .join("path")
+    .attr("class", "block")
+    .attr("d", (b) => path(blockShape(b)))
+    .attr("fill", (b) => state.metric === "value" ? "var(--region)" : colorFor(b.metric))
+    .on("click", (event, b) => select(b.members[0]))
+    .on("pointermove", (event, b) => showTooltip(event, b))
+    .on("pointerleave", hideTooltip);
+
+  svg.select(".borders").attr("d", path(topojson.mesh(topo, topo.objects.nuts3,
+    (a, b) => a !== b && blockOf.get(a.id) !== blockOf.get(b.id))));
+
+  const radius = radiusScale();
+  const bubbles = state.metric === "value" ? blocks.filter((b) => b.value != null) : [];
+  svg.select(".bubbles").selectAll("circle")
+    .data(bubbles.sort((a, b) => Math.abs(b.value) - Math.abs(a.value)), (b) => b.key)
+    .join("circle")
+    .attr("class", (b) => isBalance() ? `bubble ${b.value < 0 ? "neg" : "pos"}` : "bubble")
+    .attr("cx", (b) => path.centroid(blockShape(b))[0])
+    .attr("cy", (b) => path.centroid(blockShape(b))[1])
+    .attr("r", (b) => Math.max(1.5, radius(Math.abs(b.value))));
+
+  svg.select(".selected").attr("d", current ? path(blockShape(current)) : null);
+
+  renderLegend();
+  renderDetail(current, blocks);
+  renderRanking(blocks, current);
+  $("yearLabel").textContent = state.year;
+  $("year").value = metricYears().indexOf(state.year);
+}
+
+function showTooltip(event, block) {
+  if (event.pointerType !== "mouse") return;
+  const tip = $("tooltip");
+  const [x, y] = d3.pointer(event, $("map").parentNode);
+  const text = state.metric === "change"
+    ? `${pct(block.metric)} από το ${state.base} · ${fmt(block.value)} ${ind.unit}`
+    : state.metric === "rate"
+      ? `${fmtRate(block.metric)} · ${fmtValue(block.value)} ${ind.unit}`
+      : state.metric === "level"
+        ? ind.kind === "ratio" ? `${fmtRatio(block.metric)} · ${fmt(block.value)} ${ind.unit}` : fmtRatio(block.metric)
+        : state.metric === "diff"
+          ? `${fmtDiff(block.metric)} από το ${state.base}`
+          : `${fmtValue(block.value)} ${ind.unit}`;
+  tip.innerHTML = `<strong></strong><span></span>`;
+  tip.querySelector("strong").textContent = block.name + caveatMark(block);
+  tip.querySelector("span").textContent = text;
+  tip.style.left = `${x}px`;
+  tip.style.top = `${y}px`;
+  tip.hidden = false;
+}
+
+function hideTooltip() { $("tooltip").hidden = true; }
+
+// Τίτλος υπομνήματος για το επίπεδο: η μονάδα σε παρένθεση, εκτός αν ο τίτλος
+// του δείκτη τη λέει ήδη (π.χ. «Νοσοκομειακές κλίνες ανά 100.000 κατοίκους»).
+function levelLegendTitle() {
+  const unit = (ind.ratio.unitName ?? ind.ratio.suffix).trim();
+  return ind.title.toLowerCase().includes(unit.toLowerCase())
+    ? `${ind.title}, το ${state.year}`
+    : `${ind.title} (${unit}), το ${state.year}`;
+}
+
+function renderLegend() {
+  const legend = $("legend");
+  legend.innerHTML = "";
+  const provisional = () => {
+    const note = provisionalNote(shownYears());
+    if (!note) return;
+    legend.insertAdjacentHTML("beforeend", `<span class="legend-title"></span>`);
+    legend.lastElementChild.textContent = note;
+  };
+  if (state.metric === "value") {
+    renderCircleLegend(legend);
+    return provisional();
+  }
+
+  const scale = colorScale();
+  const title = state.metric === "change"
+    ? `Μεταβολή ${ind.genitive ?? ind.short.toLowerCase()} από το ${state.base}`
+    : state.metric === "level"
+      ? levelLegendTitle()
+      : state.metric === "diff"
+        ? `Διαφορά σε ${ind.ratio.unitNameIn ?? ind.ratio.unitName ?? "ποσοστιαίες μονάδες"} από το ${state.base}`
+        : `${ind.short} ${ind.rate.label}, το ${state.year}`;
+  legend.insertAdjacentHTML("beforeend", `<span class="legend-title"></span>`);
+  legend.querySelector(".legend-title").textContent = title;
+
+  const bar = document.createElement("div");
+  bar.className = "legend-scale";
+  const ticks = document.createElement("div");
+  ticks.className = "legend-ticks";
+  const suffix = state.metric === "level" && !ind.ratio.unitName ? ind.ratio.suffix : "";
+  const number = (v) => (scale.step < 1 ? v.toFixed(1) : String(Math.round(v))).replace(".", ",") + suffix;
+  scale.colors.forEach((color, i) => {
+    const swatch = document.createElement("span");
+    swatch.style.background = `var(${color})`;
+    bar.append(swatch);
+    const label = document.createElement("span");
+    if (scale.type === "diverging") {
+      // ετικέτα στο κέντρο κάθε δεύτερης κλάσης, π.χ. −40%, −20%, 0%, +20%, +40%
+      const center = (i - 5) * scale.step;
+      label.textContent = i % 2 === 0 ? ""
+        : state.metric === "change" ? pct(center, 0)
+        : state.metric === "diff" ? fmtDiff(center, false, scale.step >= 1 ? 0 : 1)
+        : fmtRate(center, true);
+    } else {
+      const t = scale.thresholds;
+      if (t.some((v) => Math.abs(v) >= 1000)) {
+        // μεγάλοι αριθμοί (π.χ. 1000–1500) δεν χωράνε ως διαστήματα στο κινητό: ένα όριο κάτω από κάθε αλλαγή χρώματος
+        label.textContent = i === 0 ? "" : number(t[i - 1]);
+        label.style.transform = "translateX(-50%)";
+        label.style.textAlign = "left";
+      } else {
+        label.textContent = i === 0 ? `<${number(t[0])}` : i === t.length ? `${number(t[i - 1])}+` : `${number(t[i - 1])}–${number(t[i])}`;
+      }
+    }
+    ticks.append(label);
+  });
+  legend.append(bar, ticks);
+  const line = (text) => {
+    legend.insertAdjacentHTML("beforeend", `<span class="legend-title"></span>`);
+    legend.lastElementChild.textContent = text;
+  };
+  const groups = state.metric === "diff" || state.metric === "change" ? breakGroups(state.year, state.base) : [];
+  for (const g of groups) {
+    const what = g.label ? g.label[0].toUpperCase() + g.label.slice(1) : "Η πηγή σημειώνει αλλαγή στη μέθοδο";
+    const where = g.areas ? ` (μόνο ${g.areas.map(areaLabel).join(" και ")})` : "";
+    line(`${what} το ${g.years.join(", ")}${where}: η σύγκριση με το ${state.base} είναι ενδεικτική.`);
+  }
+  // Περιοχές του χάρτη με δική μας σημείωση (σήμα «*» στην κατάταξη).
+  const marked = new Map();
+  for (const year of shownYears()) {
+    for (const key of Object.keys(ind.caveats?.[String(year)] ?? {})) {
+      if (key === "EL" || valuesAt(state.level, year)?.[key] == null) continue;
+      for (const note of caveatNotes(key, shownYears())) {
+        const id = `${note.text}|${note.years}`;
+        if (!marked.has(id)) marked.set(id, { ...note, names: [] });
+        if (!marked.get(id).names.includes(unitName(key))) marked.get(id).names.push(unitName(key));
+      }
+    }
+  }
+  for (const note of marked.values()) line(`* ${note.names.join(", ")} (${note.years.join(", ")}): ${note.text}.`);
+  provisional();
+}
+
+function renderCircleLegend(legend) {
+  const radius = radiusScale();
+  const max = radius.domain()[1];
+  // Τρεις κύκλοι αναφοράς: η μεγαλύτερη «στρογγυλή» τιμή (1, 2 ή 5 × 10ⁿ), το 1/5 και το 1/50 της.
+  const top = d3.max([1, 2, 5].map((m) => m * 10 ** Math.floor(Math.log10(max))).filter((v) => v <= max));
+  const refs = [top / 50, top / 5, top];
+  const rMax = radius(top);
+  const width = rMax * 2 + 140;
+  legend.insertAdjacentHTML("beforeend", `<span class="legend-title"></span>`);
+  legend.querySelector(".legend-title").textContent = `${ind.title} το ${state.year} (εμβαδό κύκλου)`;
+  if (isBalance()) {
+    legend.insertAdjacentHTML("beforeend",
+      `<span class="legend-title" style="display:flex;flex-wrap:wrap;gap:4px 16px">` +
+      `<span class="swatch" style="--c: var(--neg-4)">Περισσότεροι θάνατοι</span>` +
+      `<span class="swatch" style="--c: var(--pos-4)">Περισσότερες γεννήσεις</span></span>`);
+  }
+  // Η κλίμακα του χάρτη (viewBox 1000) μετατρέπεται σε pixels της οθόνης.
+  const k = $("map").getBoundingClientRect().width / W || 0.5;
+  const svg = d3.create("svg").attr("width", width * k).attr("height", (rMax * 2 + 4) * k)
+    .attr("viewBox", `0 0 ${width} ${rMax * 2 + 4}`);
+  for (const v of refs.slice().reverse()) {
+    const r = radius(v), cy = rMax * 2 + 2 - r;
+    svg.append("circle").attr("cx", rMax).attr("cy", cy).attr("r", r);
+    svg.append("line").attr("x1", rMax).attr("x2", rMax * 2 + 8).attr("y1", cy - r).attr("y2", cy - r);
+    svg.append("text").attr("x", rMax * 2 + 12).attr("y", cy - r + 4).style("font-size", `${11 / k}px`).text(fmt(v));
+  }
+  legend.append(svg.node());
+}
+
+// --- Λεπτομέρειες και κατάταξη ------------------------------------------------
+
+function renderDetail(block, blocks) {
+  const { year, base, level, metric } = state;
+  const national = (y) => ind.national.all[String(y)] ?? null;
+  const valueAt = (y) => (block ? blockValue(block, level, y) : national(y));
+  const value = block ? block.value : national(year);
+  $("detailName").textContent = block ? block.name : "Ελλάδα";
+  $("clearSel").hidden = !block;
+  $("detailHint").hidden = !!block;
+  const sub = $("detailSub");
+  sub.textContent = "";
+
+  if (isRatio()) {
+    const now = blockRatio(block, level, year), then = blockRatio(block, level, base);
+    const den = ind.kind !== "ratio" ? null : block ? blockDen(block, level, year) : ind.denominator.national.all[String(year)];
+    $("detailValue").innerHTML = `<span></span> <small></small>`;
+    $("detailValue").querySelector("span").textContent = fmtRatio(now);
+    $("detailValue").querySelector("small").textContent = `${ind.ratio.of ?? ""} το ${year}`.trim();
+    if (now != null && then != null) {
+      const span = document.createElement("span");
+      span.className = now < then ? "change-neg" : "change-pos";
+      span.textContent = fmtDiff(now - then);
+      sub.append(span, ` από το ${base} (${fmtRatio(then)})`, document.createElement("br"));
+    }
+    // Ο παρονομαστής δεν είναι πάντα κάτοικοι (π.χ. κατοικίες, απασχολούμενοι): ratio.denominatorUnit.
+    if (den != null) sub.append(`${fmt(value)} ${ind.unit} σε ${fmt(den)} ${ind.ratio.denominatorUnit ?? "κατοίκους"}`);
+    for (const g of breakGroups(year, base, areaKey(block))) {
+      sub.append(document.createElement("br"), `Προσοχή: ${g.label ?? "αλλαγή στη μέθοδο"} το ${g.years.join(", ")}· η σύγκριση είναι ενδεικτική.`);
+    }
+    // Η κάρτα δείχνει και τη μεταβολή από το έτος σύγκρισης, άρα μετράει και εκείνη η τιμή.
+    for (const note of caveatNotes(areaKey(block), [year, base])) {
+      sub.append(document.createElement("br"), `Προσοχή (${note.years.join(", ")}): ${note.text}.`);
+    }
+    for (const note of flagNotes(block, year)) sub.append(document.createElement("br"), `Σημείωση της πηγής: ${note}.`);
+    if (provisionalNote([year, base])) sub.append(document.createElement("br"), provisionalNote([year, base]));
+    renderSpark((y) => blockRatio(block, level, y), fmtRatio);
+    return;
+  }
+
+  if (metric === "rate") {
+    const population = block ? block.population : meanPopulation(null, level, year);
+    $("detailValue").innerHTML = `<span></span> <small></small>`;
+    $("detailValue").querySelector("span").textContent = fmtRate(rateOf(value, population));
+    $("detailValue").querySelector("small").textContent = `${ind.short.toLowerCase()} ${ind.rate.label} το ${year}`;
+    sub.append(`${fmtValue(value)} ${ind.unit}, μέσος πληθυσμός ${fmt(population)}`);
+    renderSpark((y) => rateOf(valueAt(y), meanPopulation(block, level, y)), fmtRate);
+    return;
+  }
+
+  $("detailValue").innerHTML = `${fmtValue(value)} <small>${ind.unit} το ${year}</small>`;
+  const baseValue = valueAt(base);
+  if (isBalance()) {
+    if (value != null) {
+      const span = document.createElement("span");
+      span.className = value < 0 ? "change-neg" : "change-pos";
+      span.textContent = value < 0 ? "Πέθαναν περισσότεροι απ' όσους γεννήθηκαν" : "Γεννήθηκαν περισσότεροι απ' όσους πέθαναν";
+      sub.append(span);
+    }
+    if (baseValue != null) sub.append(document.createElement("br"), `Το ${base}: ${fmtSigned(baseValue)}`);
+  } else if (value != null && baseValue) {
+    const change = value / baseValue - 1;
+    const span = document.createElement("span");
+    span.className = change < 0 ? "change-neg" : "change-pos";
+    span.textContent = pct(change);
+    sub.append(span, ` σε σχέση με το ${base} (${fmt(baseValue)})`);
+    for (const g of breakGroups(year, base, areaKey(block))) {
+      sub.append(document.createElement("br"), `Προσοχή: ${g.label ?? "αλλαγή στη μέθοδο"} το ${g.years.join(", ")}· η σύγκριση είναι ενδεικτική.`);
+    }
+  }
+  if (block && metric === "change") {
+    const ranked = blocks.filter((b) => b.metric != null).sort((a, b) => a.metric - b.metric);
+    const position = ranked.indexOf(block) + 1;
+    if (position && block.metric < 0) {
+      sub.append(document.createElement("br"), `${position}η μεγαλύτερη πτώση ανάμεσα σε ${ranked.length} περιοχές`);
+    } else if (position) {
+      sub.append(document.createElement("br"), `Μία από τις ${ranked.filter((b) => b.metric >= 0).length} περιοχές χωρίς πτώση`);
+    }
+  }
+  if (provisionalNote([year, base])) sub.append(document.createElement("br"), provisionalNote([year, base]));
+  renderSpark(valueAt, fmtValue);
+}
+
+// Μικρό γράφημα με την πορεία της περιοχής σε όλα τα χρόνια.
+function renderSpark(valueAt, format) {
+  const svg = d3.select("#spark");
+  svg.selectAll("*").remove();
+  const data = ind.years.map((year) => ({ year, value: valueAt(year) }));
+  const valid = data.filter((d) => d.value != null);
+  if (valid.length < 2) {
+    svg.append("text").attr("x", 0).attr("y", 50).text("Δεν υπάρχει χρονοσειρά για αυτή την περιοχή.");
+    return;
+  }
+  const m = { l: 4, r: 4, t: 14, b: 18 };
+  const x = d3.scaleLinear().domain(d3.extent(ind.years)).range([m.l, 360 - m.r]);
+  // Συνήθως ο άξονας ξεκινά από το 0. Δείκτες με ratio.zero = false (π.χ. προσδόκιμο ζωής, 79–84 έτη)
+  // δείχνουν μόνο το εύρος των τιμών τους, αλλιώς η γραμμή θα φαινόταν επίπεδη.
+  const fromZero = !(isRatio() && ind.ratio?.zero === false);
+  let [lo, hi] = d3.extent(valid, (d) => d.value);
+  if (fromZero) { lo = Math.min(0, lo); hi = Math.max(0, hi); }
+  else if (lo === hi) { lo -= 0.5; hi += 0.5; }
+  const y = d3.scaleLinear().domain([lo, hi]).nice(3).range([96 - m.b, m.t]);
+  for (const tick of y.ticks(3)) {
+    svg.append("line").attr("class", tick === 0 && lo < 0 ? "base" : "grid")
+      .attr("x1", m.l).attr("x2", 360 - m.r).attr("y1", y(tick)).attr("y2", y(tick));
+  }
+  svg.append("text").attr("x", 360 - m.r).attr("y", y(y.domain()[1]) - 4).attr("text-anchor", "end").text(format(y.domain()[1]));
+  if (lo < 0 || !fromZero) svg.append("text").attr("x", m.l + 2).attr("y", y(y.domain()[0]) - 4).text(format(y.domain()[0]));
+  const defined = (d) => d.value != null;
+  if (fromZero) svg.append("path").attr("class", "area").attr("d", d3.area().defined(defined).x((d) => x(d.year)).y0(y(0)).y1((d) => y(d.value))(data));
+  svg.append("path").attr("class", "line").attr("d", d3.line().defined(defined).x((d) => x(d.year)).y((d) => y(d.value))(data));
+  const baseValue = data.find((d) => d.year === state.base)?.value;
+  if ((state.metric === "change" || state.metric === "diff") && baseValue != null) {
+    svg.append("line").attr("class", "base").attr("x1", m.l).attr("x2", 360 - m.r).attr("y1", y(baseValue)).attr("y2", y(baseValue));
+  }
+  const now = data.find((d) => d.year === state.year);
+  if (now?.value != null) svg.append("circle").attr("class", "dot").attr("cx", x(now.year)).attr("cy", y(now.value)).attr("r", 4.5);
+  svg.append("text").attr("x", m.l).attr("y", 96).text(ind.years[0]);
+  svg.append("text").attr("x", 360 - m.r).attr("y", 96).attr("text-anchor", "end").text(ind.years[ind.years.length - 1]);
+}
+
+function renderRanking(blocks, current) {
+  const { metric } = state;
+  const ascending = metric === "change" || isBalance();
+  const ranked = blocks.filter((b) => b.metric != null)
+    .sort((a, b) => ascending ? a.metric - b.metric : b.metric - a.metric);
+  $("rankTitle").textContent = metric === "change"
+    ? `Μεταβολή ${state.base}–${state.year}, από τη μεγαλύτερη πτώση`
+    : metric === "level"
+      ? `${ind.title} το ${state.year}, από το υψηλότερο`
+    : metric === "diff"
+      ? `Διαφορά ${state.base}–${state.year} σε ${ind.ratio.unitNameIn ?? ind.ratio.unitName ?? "μονάδες"}, από τη μεγαλύτερη αύξηση`
+    : metric === "rate"
+      ? `${ind.short} ${ind.rate.label} το ${state.year}, από ${ascending ? "τη χαμηλότερη" : "την υψηλότερη"} τιμή`
+      : `${ind.short} το ${state.year}, ${isBalance() ? "από τη χαμηλότερη τιμή" : "από τις περισσότερες"}`;
+  const limit = state.showAll ? ranked.length : 10;
+  const max = d3.max(ranked, (b) => Math.abs(b.metric)) || 1;
+  const list = $("rankList");
+  list.innerHTML = "";
+  ranked.slice(0, limit).forEach((block, i) => {
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("aria-current", String(block === current));
+    button.innerHTML = `<span class="n"></span><span class="name"></span><span class="barcell"><span class="bar"></span></span><span class="v"></span>`;
+    button.querySelector(".n").textContent = i + 1;
+    button.querySelector(".name").textContent = block.name + caveatMark(block);
+    const bar = button.querySelector(".bar");
+    bar.style.width = `${(Math.abs(block.metric) / max) * 100}%`;
+    bar.style.display = "block";
+    if (metric !== "value") bar.style.background = colorFor(block.metric);
+    else if (isBalance()) bar.style.background = `var(${block.metric < 0 ? "--neg-4" : "--pos-4"})`;
+    // ratio.compact: ο τίτλος της κατάταξης λέει ήδη τη μονάδα (π.χ. «ανά 100.000 κατοίκους»), οπότε
+    // οι γραμμές δείχνουν μόνο τον αριθμό, για να χωράει στο κινητό.
+    const compact = ind.ratio?.compact && (metric === "level" || metric === "diff");
+    button.querySelector(".v").textContent = !compact ? fmtMetric(block.metric)
+      : metric === "diff" ? fmtDiff(block.metric, false)
+      : block.metric.toFixed(ind.ratio.decimals ?? 1).replace(".", ",");
+    button.addEventListener("click", () => select(block.members[0]));
+    li.append(button);
+    list.append(li);
+  });
+  const more = $("rankMore");
+  more.hidden = ranked.length <= 10;
+  more.textContent = state.showAll ? "Λιγότερες" : `Όλες οι περιοχές (${ranked.length})`;
+}
+
+// --- Τίτλος, πηγές -------------------------------------------------------------
+
+function defaultBase() {
+  // Το έτος σύγκρισης του δείκτη (defaultBase), αλλιώς η χρονιά με τη μεγαλύτερη τιμή
+  // στα τελευταία 30 χρόνια (για τον πληθυσμό: 2011).
+  const last = ind.years[ind.years.length - 1];
+  if (ind.years.includes(ind.defaultBase) && ind.defaultBase !== last) return ind.defaultBase;
+  const candidates = ind.years.filter((y) => y >= last - 30 && y < last);
+  return candidates.reduce((best, y) => (ind.national.all[y] > ind.national.all[best] ? y : best), candidates[0]);
+}
+
+// «Ο χάρτης δείχνει …»: οι χρονιές που καλύπτει ο δείκτης.
+function coverageText() {
+  const last = ind.years[ind.years.length - 1];
+  return ind.frequency === "census"
+    ? `Ο χάρτης δείχνει τις απογραφές του ${ind.years.slice(0, -1).join(", ")} και του ${last}.`
+    : `Ο χάρτης δείχνει κάθε χρονιά από το ${ind.years[0]} έως το ${last}.`;
+}
+
+function renderHeadline() {
+  const last = ind.years[ind.years.length - 1];
+  const base = defaultBase();
+  if (isRatio()) {
+    $("headline").textContent = ind.headline.template
+      .replace("{year}", last).replace("{value}", fmtRatio(blockRatio(null, topLevel(), last)))
+      .replace("{base_value}", fmtRatio(blockRatio(null, topLevel(), base))).replace("{base}", base);
+    const ranked = blocksFor(topLevel(), [[ind, last]])
+      .map((b) => ({ name: b.name, value: blockRatio(b, topLevel(), last) }))
+      .filter((b) => b.value != null).sort((a, b) => b.value - a.value);
+    const high = ranked[0], low = ranked[ranked.length - 1];
+    $("dek").textContent = `Υψηλότερο: ${high.name} (${fmtRatio(high.value)}). Χαμηλότερο: ${low.name} (${fmtRatio(low.value)}). ${coverageText()}`;
+    return;
+  }
+  const now = ind.national.all[String(last)], then = ind.national.all[String(base)];
+  const change = now / then - 1;
+  const h = ind.headline;
+  if (isBalance()) {
+    $("headline").textContent = (now < 0 ? h.negative : h.positive)
+      .replace("{year}", last).replace("{abs_value}", fmt(Math.abs(now)));
+    const values = blocksFor("nuts3", [[ind, last]]).map((b) => blockValue(b, "nuts3", last)).filter((v) => v != null);
+    const negative = values.filter((v) => v < 0).length;
+    // Από πότε η χώρα έχει συνεχώς το ίδιο πρόσημο.
+    let since = last;
+    while (ind.national.all[String(since - 1)] != null && Math.sign(ind.national.all[String(since - 1)]) === Math.sign(now)) since--;
+    $("dek").textContent =
+      `Σε ${negative} από τις ${values.length} περιοχές πέθαναν περισσότεροι απ' όσους γεννήθηκαν. ` +
+      (since < last
+        ? `Για όλη τη χώρα, ${now < 0 ? "οι θάνατοι ξεπερνούν τις γεννήσεις" : "οι γεννήσεις ξεπερνούν τους θανάτους"} κάθε χρονιά από το ${since}. `
+        : "") +
+      `Στοιχεία της ΕΛΣΤΑΤ, ${ind.years[0]}–${last}.`;
+    return;
+  }
+  $("headline").textContent = h
+    ? h.template
+      .replace("{year}", last).replace("{value}", fmt(now)).replace("{base}", base)
+      .replace("{abs_change}", pct(Math.abs(change)).replace("+", "")).replace("{direction}", change < 0 ? h.less : h.more)
+    : ind.title;
+  // Στο πιο λεπτομερές επίπεδο του δείκτη (π.χ. οι διανυκτερεύσεις υπάρχουν μόνο ανά περιφέρεια).
+  const top = topLevel();
+  const blocks = blocksFor(top, [[ind, last], [ind, base]])
+    .map((b) => ({ ...b, change: blockValue(b, top, last) / blockValue(b, top, base) - 1 }))
+    .filter((b) => isFinite(b.change)).sort((a, b) => a.change - b.change);
+  // Ενότητες με λίγες μονάδες στο έτος σύγκρισης (ind.smallNumbers, π.χ. κάτω από 200 γεννήσεις) αλλάζουν
+  // πολύ το ποσοστό με λίγες δεκάδες· δεν μπαίνουν στα άκρα του υπότιτλου, και ο υπότιτλος λέει ποιες λείπουν.
+  const small = ind.smallNumbers ? blocks.filter((b) => blockValue(b, top, base) < ind.smallNumbers.base) : [];
+  const ranked = blocks.filter((b) => !small.includes(b));
+  const smallText = small.length
+    ? ` Χωρίς ${small.length > 3 ? `${small.length} ενότητες` : small.map((b) => b.name).join(", ")}: λιγότερες από ${ind.smallNumbers.base} ${ind.smallNumbers.unit} το ${base}, όπου λίγες δεκάδες αλλάζουν πολύ το ποσοστό.`
+    : "";
+  if (ranked.length) {
+    const low = ranked[0], high = ranked[ranked.length - 1];
+    const extremes = high.change < 0
+      ? `Μεγαλύτερη πτώση: ${low.name} (${pct(low.change)}). Μικρότερη: ${high.name} (${pct(high.change)}).`
+      : low.change > 0
+        ? `Μεγαλύτερη αύξηση: ${high.name} (${pct(high.change)}). Μικρότερη: ${low.name} (${pct(low.change)}).`
+        : `Μεγαλύτερη πτώση: ${low.name} (${pct(low.change)}). Μεγαλύτερη αύξηση: ${high.name} (${pct(high.change)}).`;
+    $("dek").textContent = `${extremes}${smallText} ${coverageText()}`;
+  }
+}
+
+function renderNotes() {
+  $("definition").textContent = ind.definition ?? "";
+  const notes = $("noteList");
+  notes.innerHTML = "";
+  const all = [...(ind.notes ?? [])];
+  if (ind.rate && pop) {
+    all.push(`Ανά 1.000 κατοίκους: ${ind.short.toLowerCase()} του έτους προς τον μέσο πληθυσμό του ` +
+      `(μέσος όρος 1ης Ιανουαρίου του έτους και του επόμενου), από το ${rateYears()[0]}.`);
+    if (pop.denominatorNote) all.push(pop.denominatorNote);
+  }
+  for (const note of all) {
+    const li = document.createElement("li");
+    li.textContent = note;
+    notes.append(li);
+  }
+  const source = ind.source ?? {};
+  const line = $("sourceLine");
+  line.textContent = `Πηγή: ${source.org ?? ""}, ${source.table ?? ""}. Λήψη: ${formatDate(source.retrieved)}. `;
+  if (source.page) {
+    const a = document.createElement("a");
+    a.href = source.page;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = `Σελίδα της πηγής`;
+    line.append(a);
+  }
+  $("checkedLine").textContent = `Τελευταίος έλεγχος για νέα στοιχεία: ${formatDate(manifest.checkedAt)}`;
+}
+
+// --- Αλληλεπίδραση ------------------------------------------------------------
+
+function select(code) {
+  state.selected = state.selected === code ? null : code;
+  render();
+}
+
+function setPressed(attr, value) {
+  document.querySelectorAll(`[data-${attr}]`).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset[attr] === value)));
+}
+
+// Η μπάρα χρονιών έχει μία θέση για κάθε χρονιά με στοιχεία (για τις απογραφές: 2001, 2011, 2021).
+function syncYears() {
+  const years = metricYears();
+  const input = $("year");
+  input.min = 0;
+  input.max = years.length - 1;
+  input.dataset.years = JSON.stringify(years);
+  $("yearMin").textContent = years[0];
+  $("yearMax").textContent = years[years.length - 1];
+  if (!years.includes(state.year)) state.year = years[years.length - 1];
+}
+
+// Δείχνει μόνο τις επιλογές που έχει ο δείκτης (π.χ. η φυσική μεταβολή δεν έχει «Μεταβολή %»).
+const METRIC_LABELS = { change: "Μεταβολή %", value: "Αριθμό", rate: "Ανά 1.000 κατ.", level: "Τιμή", diff: "Διαφορά" };
+
+function showMetric() {
+  const metrics = availableMetrics();
+  document.querySelectorAll("[data-metric]").forEach((b) => {
+    b.hidden = !metrics.includes(b.dataset.metric);
+    b.textContent = ind.metricLabels?.[b.dataset.metric] ?? METRIC_LABELS[b.dataset.metric];
+  });
+  $("metricRow").hidden = metrics.length < 2;
+  setPressed("metric", state.metric);
+  $("baseWrap").hidden = state.metric !== "change" && state.metric !== "diff";
+  syncYears();
+}
+
+function stop() {
+  clearInterval(playTimer);
+  playTimer = null;
+  $("playIcon").setAttribute("d", "M7 4.5v15l13-7.5z");
+  $("play").setAttribute("aria-label", "Αναπαραγωγή χρονιών");
+}
+
+function play() {
+  if (playTimer) return stop();
+  const years = metricYears();
+  if (state.year === years[years.length - 1]) state.year = years[0];
+  $("playIcon").setAttribute("d", "M6 4.5h4v15H6zM14 4.5h4v15h-4z");
+  $("play").setAttribute("aria-label", "Παύση");
+  render();
+  playTimer = setInterval(() => {
+    const i = years.indexOf(state.year);
+    if (i >= years.length - 1) return stop();
+    state.year = years[i + 1];
+    render();
+  }, 650);
+}
+
+function bindControls() {
+  document.querySelectorAll("[data-metric]").forEach((b) => b.addEventListener("click", () => {
+    stop();
+    state.metric = state.preferredMetric = b.dataset.metric;
+    showMetric();
+    render();
+  }));
+  document.querySelectorAll("[data-level]").forEach((b) => b.addEventListener("click", () => {
+    state.level = state.preferredLevel = b.dataset.level;
+    setPressed("level", state.level);
+    render();
+  }));
+  $("baseYear").addEventListener("change", (e) => { state.base = +e.target.value; state.baseChosen = true; render(); });
+  $("year").addEventListener("input", (e) => { stop(); state.year = metricYears()[+e.target.value]; render(); });
+  $("play").addEventListener("click", play);
+  $("clearSel").addEventListener("click", () => { state.selected = null; render(); });
+  $("rankMore").addEventListener("click", () => { state.showAll = !state.showAll; render(); });
+  window.addEventListener("resize", () => renderLegend());
+}
+
+async function loadIndicator(id, saved = {}) {
+  const entry = manifest.indicators.find((i) => i.id === id) ?? manifest.indicators[0];
+  ind = await getJSON(entry.file);
+  state.indicator = ind.id;
+  if (ind.rate && !pop) {
+    const denominator = manifest.indicators.find((i) => i.id === ind.rate.denominator);
+    if (denominator) pop = await getJSON(denominator.file);
+  }
+  const metrics = availableMetrics();
+  state.metric = metrics.includes(state.preferredMetric) ? state.preferredMetric : metrics[0];
+  state.base = ind.years.includes(saved.base) ? saved.base : defaultBase();
+  const levels = Object.keys(ind.levels);
+  state.level = levels.includes(state.preferredLevel) ? state.preferredLevel : levels.includes("nuts3") ? "nuts3" : levels[0];
+  $("levelRow").hidden = levels.length < 2;
+  setPressed("level", state.level);
+  // Η χρονιά μένει ίδια όταν αλλάζεις δείκτη, εκτός αν θα συγκρινόταν με τον εαυτό της
+  // (π.χ. από τις γεννήσεις του 2024 στις γεννήσεις με το 2025 προσωρινά, όπου η σύγκριση είναι με το 2024).
+  const selfCompare = saved.base === undefined && saved.year === state.base && ["change", "diff"].includes(state.metric);
+  state.year = selfCompare ? null : saved.year ?? null;
+  $("baseYear").innerHTML = ind.years.map((y) => `<option value="${y}">${y}</option>`).join("");
+  $("baseYear").value = state.base;
+  setPressed("indicator", ind.id);
+  showMetric();
+
+  renderHeadline();
+  renderNotes();
+  render();
+}
+
+// --- Χάρτες-ιστορίες -------------------------------------------------------------
+// Κάθε χάρτης («ιστορία») έχει τους δικούς του δείκτες (manifest.stories).
+// Το id του φαίνεται στο link, π.χ. …#residents, ώστε να ανοίγει κατευθείαν.
+
+function stories() {
+  const visible = manifest.indicators.filter((i) => !i.hidden).map((i) => i.id);
+  return (manifest.stories ?? [{ id: "atlas", title: "Δημογραφία", indicators: visible }])
+    .map((story) => ({ ...story, indicators: story.indicators.filter((id) => visible.includes(id)) }))
+    .filter((story) => story.indicators.length);
+}
+
+function renderStoryNav() {
+  const nav = $("storyNav");
+  const list = stories();
+  nav.hidden = list.length < 2;
+  nav.innerHTML = "";
+  list.forEach((story, i) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.story = story.id;
+    button.innerHTML = `<span></span>`;
+    button.querySelector("span").textContent = i + 1;
+    button.append(story.title);
+    button.addEventListener("click", () => openStory(story.id));
+    nav.append(button);
+  });
+}
+
+function renderIndicatorPicker(story) {
+  const picks = manifest.indicators.filter((i) => story.indicators.includes(i.id));
+  $("indicatorRow").hidden = picks.length < 2;
+  $("indicatorPick").innerHTML = "";
+  $("indicatorPick").classList.toggle("wrap", picks.length > 3);
+  for (const entry of picks) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.indicator = entry.id;
+    button.setAttribute("aria-pressed", "false");
+    button.textContent = entry.short;
+    button.addEventListener("click", () => {
+      stop();
+      // Κρατάμε τη χρονιά (και το έτος σύγκρισης, αν το άλλαξες), για να συγκρίνεις δείκτες.
+      loadIndicator(entry.id, { year: state.year, base: state.baseChosen ? state.base : undefined });
+    });
+    $("indicatorPick").append(button);
+  }
+}
+
+async function openStory(id, saved = {}) {
+  const list = stories();
+  const story = list.find((s) => s.id === id) ?? list[0];
+  stop();
+  state.story = story.id;
+  state.selected = saved.selected ?? null;
+  state.baseChosen = false;
+  document.querySelectorAll("[data-story]").forEach((b) => b.setAttribute("aria-current", String(b.dataset.story === story.id)));
+  $("eyebrowTopic").textContent = story.title;
+  if (list.length > 1 && location.hash.slice(1) !== story.id) {
+    try { history.replaceState(null, "", `#${story.id}`); } catch { /* σε κάποιες προβολές δεν επιτρέπεται */ }
+  }
+  renderIndicatorPicker(story);
+  const first = story.indicators.includes(saved.indicator) ? saved.indicator : story.indicators[0];
+  await loadIndicator(first, saved);
+}
+
+async function start(saved = {}) {
+  try {
+    manifest = await getJSON("data/manifest.json");
+    [topo, R] = await Promise.all([getJSON(manifest.geo), getJSON(manifest.regions)]);
+    NUTS3 = Object.keys(R.nuts3);
+    setupMap();
+    bindControls();
+
+    // Δείκτες με hidden (π.χ. οι ετήσιες εκτιμήσεις πληθυσμού) δεν είναι επιλογές του χάρτη.
+    renderStoryNav();
+    Object.assign(state, {
+      preferredMetric: saved.preferredMetric ?? saved.metric ?? "change",
+      level: saved.level ?? state.level,
+      preferredLevel: saved.preferredLevel ?? saved.level ?? state.level,
+    });
+    setPressed("level", state.level);
+    const list = stories();
+    const fromLink = list.find((s) => s.id === location.hash.slice(1))?.id;
+    const fromSaved = list.find((s) => s.id === saved.story || s.indicators.includes(saved.indicator))?.id;
+    await openStory(fromLink ?? fromSaved ?? list[0].id, saved);
+    window.addEventListener("hashchange", () => {
+      const id = location.hash.slice(1);
+      if (id !== state.story && stories().some((s) => s.id === id)) openStory(id);
+    });
+    $("mapStatus").hidden = true;
+  } catch (error) {
+    console.error(error);
+    $("mapStatus").textContent = "Ο χάρτης δεν φόρτωσε. Ανανέωσε τη σελίδα· αν συνεχίσει, τα αρχεία δεδομένων λείπουν.";
+  }
+}
+
+window.claude?.hot?.snapshot?.(() => ({ ...state }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
