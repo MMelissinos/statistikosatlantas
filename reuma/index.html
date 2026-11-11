@@ -1,0 +1,31 @@
+<!doctype html><html lang="el"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Υπολογιστής κόστους ρεύματος ανά πάροχο · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Γράψτε πόσες κιλοβατώρες καταναλώνετε και δείτε τη χρέωση ενέργειας με τα πράσινα τιμολόγια ΔΕΗ, Ήρων, Protergia, NRG και Volton του μήνα.">
+<link rel="stylesheet" href="../style.css"></head><body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main><div class="kicker">Εργαλείο · Ρεύμα</div><h1>Πόσο θα πληρώσω για ρεύμα ανά πάροχο;</h1>
+<p class="muted">Χρέωση ενέργειας με τα «πράσινα» (κυμαινόμενα) οικιακά τιμολόγια <b id="month"></b>.</p>
+<label for="kwh">Κατανάλωση τον μήνα (κιλοβατώρες)</label>
+<div class="row"><input id="kwh" type="number" min="0" step="10" value="300" inputmode="numeric">
+<button data-v="150">Μικρό σπίτι</button><button data-v="300">Μέσο</button><button data-v="500">Μεγάλο</button></div>
+<p class="muted" style="font-size:.9rem">Την κατανάλωση τη βρίσκετε στον λογαριασμό, ως κιλοβατώρες (kWh) της περιόδου· διαιρέστε με τους μήνες της.</p>
+<table><thead><tr><th>Πάροχος</th><th class="n">Τον μήνα</th><th class="n">Τον χρόνο*</th><th style="width:28%"></th></tr></thead><tbody id="out"></tbody></table>
+<div class="note"><p><b>Τι μετράει:</b> μόνο τη χρέωση ενέργειας του παρόχου, που είναι αυτό που διαφέρει από πάροχο σε πάροχο. Δεν περιλαμβάνει το πάγιο, τις ρυθμιζόμενες χρεώσεις (δίκτυα, ΥΚΩ, ΕΤΜΕΑΡ), που είναι ίδιες για όλους, ούτε ΦΠΑ και δημοτικά τέλη. Ο λογαριασμός σας θα είναι μεγαλύτερος.</p>
+<p>* «Τον χρόνο»: αν οι τιμές του μήνα έμεναν ίδιες όλο τον χρόνο. Τα πράσινα τιμολόγια αλλάζουν κάθε μήνα· ενημερώνουμε το εργαλείο με τις νέες τιμές.</p>
+<p><b>Πηγές:</b> οι τιμές που ανακοίνωσαν οι πάροχοι για τον μήνα (<span id="src"></span>). Δείτε και το εύρημα στο <a href="https://statistikosatlantas.com/">statistikosatlantas.com</a>.</p>
+<p>Δεν κρατάμε τίποτα από όσα γράφετε: ο υπολογισμός γίνεται μόνο στη συσκευή σας.</p></div>
+</main><footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+<script>
+// Τιμές σε λεπτά/kWh, ίδιες με το ελεγμένο εύρημα της 11/11/2026. ΔΕΗ: κλιμακωτή (οι πρώτες 200 kWh του μήνα φθηνότερα).
+const DATA={month:"Νοεμβρίου 2026",source:"ανακοινώσεις 2/11/2026",tariffs:[
+ {name:"ΔΕΗ",tiers:[[200,16.9],[Infinity,28.4]]},{name:"Ήρων",tiers:[[Infinity,25.95]]},{name:"Protergia",tiers:[[Infinity,26.4]]},
+ {name:"NRG",tiers:[[Infinity,33.4]]},{name:"Volton",tiers:[[Infinity,36.22]]}]};
+const eur=v=>v.toLocaleString("el-GR",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+function cost(t,k){let left=k,prev=0,c=0;for(const[upto,p]of t.tiers){const q=Math.max(0,Math.min(left,upto-prev));c+=q*p;left-=q;prev=upto;if(left<=0)break}return c/100}
+function draw(){const k=Math.max(0,+document.getElementById("kwh").value||0);
+ const rows=DATA.tariffs.map(t=>({n:t.name,m:cost(t,k)})).sort((a,b)=>a.m-b.m);const max=Math.max(...rows.map(r=>r.m),1);
+ document.getElementById("out").innerHTML=rows.map((r,i)=>`<tr class="${i?"":"best"}"><td>${r.n}</td><td class="n">${eur(r.m)}</td><td class="n">${eur(r.m*12)}</td><td><div class="bar" style="width:${100*r.m/max}%"></div></td></tr>`).join("")}
+document.getElementById("month").textContent=DATA.month;document.getElementById("src").textContent=DATA.source;
+document.getElementById("kwh").addEventListener("input",draw);
+document.querySelectorAll("button[data-v]").forEach(b=>b.onclick=()=>{document.getElementById("kwh").value=b.dataset.v;draw()});draw();
+</script></body></html>
