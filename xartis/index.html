@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Στατιστικός Άτλας Ελλάδας</title>
 <style>
 /* Διάταξη: στο κινητό μία στήλη (τίτλος, επιλογές, χάρτης, χρονιά, λεπτομέρειες, κατάταξη).
@@ -191,6 +194,7 @@ select {
 .year-label { font-family: var(--font-display); font-size: 2.25rem; line-height: 1; font-variant-numeric: tabular-nums; min-width: 4.6ch; }
 .slider { display: grid; gap: 2px; }
 .slider input { width: 100%; accent-color: var(--ink); margin: 0; }
+.year-period { margin: 6px 0 0; font-size: 0.875rem; color: var(--ink-2); }
 .slider-ends { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* Λεπτομέρειες περιοχής */
@@ -317,6 +321,7 @@ select {
           <div class="slider-ends"><span id="yearMin">1980</span><span id="yearMax">2024</span></div>
         </div>
       </div>
+      <p class="year-period" id="yearPeriod" hidden></p>
       <div class="legend" id="legend" aria-live="polite"></div>
     </div>
 
@@ -414,6 +419,30 @@ const isBalance = () => ind.kind === "balance";
 // ποσοστό (π.χ. προσδόκιμο ζωής), το ratio.unitName λέει τη μονάδα της (π.χ. «έτη»). Το ratio.unitNameIn
 // είναι η ίδια μονάδα σε αιτιατική, για το «Διαφορά σε …» (π.χ. «γιατρούς» αντί για «γιατροί»).
 const isRatio = () => ind.kind === "ratio" || ind.kind === "level";
+
+// Δείκτες σε κυλιόμενες περιόδους (ind.window, π.χ. τριετίες): κάθε «χρονιά» του αρχείου είναι το τελευταίο
+// έτος της περιόδου (2024 = 2022–2024). Όπου η σελίδα γράφει «το 2024», αυτές γράφουν την περίοδο·
+// χωρίς ind.window δίνουν ακριβώς το ίδιο κείμενο με πριν.
+const period = (y) => (ind.window ? `${y - ind.window.years + 1}–${y}` : String(y));
+const when = (y) => (ind.window ? `την ${ind.window.name} ${period(y)}` : `το ${y}`);
+// Χωρίς παύλα, για την κύρια τιμή της κάρτας και το tooltip.
+const whenShort = (y) => (ind.window ? `την ${ind.window.name} έως το ${y}` : `το ${y}`);
+const whenList = (list) => (ind.window ? `τις ${ind.window.plural} έως το ${list.join(", ")}` : `το ${list.join(", ")}`);
+const spanText = (a, b) => (ind.window ? `${period(a)} έως ${period(b)}` : `${a}–${b}`);
+
+// Περιοχές με λίγα περιστατικά (ind.lowCount, π.χ. κάτω από 20 θανάτους βρεφών στην τριετία) σε κάποια
+// από τις χρονιές: η τιμή τους αλλάζει πολύ με λίγα περιστατικά. Μόνο για δείκτες με αριθμητή (ratio).
+function lowCountBlocks(level, years) {
+  if (!ind.lowCount || ind.kind !== "ratio") return [];
+  return blocksFor(level, years.map((y) => [ind, y])).filter((b) =>
+    years.some((y) => { const v = blockValue(b, level, y); return v != null && v < ind.lowCount.below; }));
+}
+
+function lowCountLine(names, years) {
+  const list = [...new Set(years)];
+  const at = list.length === 1 ? when(list[0]) : `${when(list[0])} ή ${when(list[1])}`;
+  return `${ind.lowCount.label} (κάτω από ${ind.lowCount.below} ${ind.lowCount.unitIn} ${at}, σήμα °): ${names.join(", ")}. ${ind.lowCount.why}`;
+}
 
 // Οι περιοχές που μπορούν να συγκριθούν σε όλους τους συνδυασμούς [δείκτης, έτος] που ζητάμε.
 // Π.χ. το 2024 η Αθήνα έχει 4 τομείς, το 2008 μία νομαρχία: για σύγκριση 2008–2024
@@ -573,6 +602,12 @@ function shownYears() {
 }
 
 // Σήμα «*» δίπλα στο όνομα περιοχής με σημείωση στις χρονιές που δείχνει ο χάρτης.
+// Σήμα «°» δίπλα σε περιοχή με λίγα περιστατικά (ind.lowCount) στις χρονιές που δείχνει ο χάρτης.
+function lowMark(block) {
+  if (!ind.lowCount || ind.kind !== "ratio" || state.metric === "value") return "";
+  return shownYears().some((y) => { const v = blockValue(block, state.level, y); return v != null && v < ind.lowCount.below; }) ? " °" : "";
+}
+
 function caveatMark(block) {
   return caveatNotes(areaKey(block), shownYears()).length ? " *" : "";
 }
@@ -829,6 +864,8 @@ function render() {
   renderDetail(current, blocks);
   renderRanking(blocks, current);
   $("yearLabel").textContent = state.year;
+  $("yearPeriod").hidden = !ind.window;
+  $("yearPeriod").textContent = ind.window ? `${ind.window.name[0].toUpperCase()}${ind.window.name.slice(1)} ${period(state.year)}` : "";
   $("year").value = metricYears().indexOf(state.year);
 }
 
@@ -837,16 +874,16 @@ function showTooltip(event, block) {
   const tip = $("tooltip");
   const [x, y] = d3.pointer(event, $("map").parentNode);
   const text = state.metric === "change"
-    ? `${pct(block.metric)} από το ${state.base} · ${fmt(block.value)} ${ind.unit}`
+    ? `${pct(block.metric)} από ${whenShort(state.base)} · ${fmt(block.value)} ${ind.unit}`
     : state.metric === "rate"
       ? `${fmtRate(block.metric)} · ${fmtValue(block.value)} ${ind.unit}`
       : state.metric === "level"
         ? ind.kind === "ratio" ? `${fmtRatio(block.metric)} · ${fmt(block.value)} ${ind.unit}` : fmtRatio(block.metric)
         : state.metric === "diff"
-          ? `${fmtDiff(block.metric)} από το ${state.base}`
+          ? `${fmtDiff(block.metric)} από ${whenShort(state.base)}`
           : `${fmtValue(block.value)} ${ind.unit}`;
   tip.innerHTML = `<strong></strong><span></span>`;
-  tip.querySelector("strong").textContent = block.name + caveatMark(block);
+  tip.querySelector("strong").textContent = block.name + caveatMark(block) + lowMark(block);
   tip.querySelector("span").textContent = text;
   tip.style.left = `${x}px`;
   tip.style.top = `${y}px`;
@@ -860,8 +897,8 @@ function hideTooltip() { $("tooltip").hidden = true; }
 function levelLegendTitle() {
   const unit = (ind.ratio.unitName ?? ind.ratio.suffix).trim();
   return ind.title.toLowerCase().includes(unit.toLowerCase())
-    ? `${ind.title}, το ${state.year}`
-    : `${ind.title} (${unit}), το ${state.year}`;
+    ? `${ind.title}, ${when(state.year)}`
+    : `${ind.title} (${unit}), ${when(state.year)}`;
 }
 
 function renderLegend() {
@@ -880,12 +917,12 @@ function renderLegend() {
 
   const scale = colorScale();
   const title = state.metric === "change"
-    ? `Μεταβολή ${ind.genitive ?? ind.short.toLowerCase()} από το ${state.base}`
+    ? `Μεταβολή ${ind.genitive ?? ind.short.toLowerCase()} από ${when(state.base)}`
     : state.metric === "level"
       ? levelLegendTitle()
       : state.metric === "diff"
-        ? `Διαφορά σε ${ind.ratio.unitNameIn ?? ind.ratio.unitName ?? "ποσοστιαίες μονάδες"} από το ${state.base}`
-        : `${ind.short} ${ind.rate.label}, το ${state.year}`;
+        ? `Διαφορά σε ${ind.ratio.unitNameIn ?? ind.ratio.unitName ?? "ποσοστιαίες μονάδες"} από ${when(state.base)}`
+        : `${ind.short} ${ind.rate.label}, ${when(state.year)}`;
   legend.insertAdjacentHTML("beforeend", `<span class="legend-title"></span>`);
   legend.querySelector(".legend-title").textContent = title;
 
@@ -929,7 +966,11 @@ function renderLegend() {
   for (const g of groups) {
     const what = g.label ? g.label[0].toUpperCase() + g.label.slice(1) : "Η πηγή σημειώνει αλλαγή στη μέθοδο";
     const where = g.areas ? ` (μόνο ${g.areas.map(areaLabel).join(" και ")})` : "";
-    line(`${what} το ${g.years.join(", ")}${where}: η σύγκριση με το ${state.base} είναι ενδεικτική.`);
+    line(`${what} ${whenList(g.years)}${where}: η σύγκριση με ${when(state.base)} είναι ενδεικτική.`);
+  }
+  if (state.metric === "level" || state.metric === "diff") {
+    const few = lowCountBlocks(state.level, shownYears());
+    if (few.length) line(lowCountLine(few.map((b) => b.name), shownYears()));
   }
   // Περιοχές του χάρτη με δική μας σημείωση (σήμα «*» στην κατάταξη).
   const marked = new Map();
@@ -994,17 +1035,24 @@ function renderDetail(block, blocks) {
     const den = ind.kind !== "ratio" ? null : block ? blockDen(block, level, year) : ind.denominator.national.all[String(year)];
     $("detailValue").innerHTML = `<span></span> <small></small>`;
     $("detailValue").querySelector("span").textContent = fmtRatio(now);
-    $("detailValue").querySelector("small").textContent = `${ind.ratio.of ?? ""} το ${year}`.trim();
+    $("detailValue").querySelector("small").textContent = `${ind.ratio.of ?? ""} ${whenShort(year)}`.trim();
     if (now != null && then != null) {
       const span = document.createElement("span");
-      span.className = now < then ? "change-neg" : "change-pos";
+      // ratio.neutral: η άνοδος δεν είναι «καλή» ούτε «κακή» με το χρώμα της αύξησης (π.χ. θνησιμότητα)· χωρίς χρώμα.
+      if (!ind.ratio.neutral) span.className = now < then ? "change-neg" : "change-pos";
       span.textContent = fmtDiff(now - then);
-      sub.append(span, ` από το ${base} (${fmtRatio(then)})`, document.createElement("br"));
+      sub.append(span, ` από ${when(base)} (${fmtRatio(then)})`, document.createElement("br"));
     }
     // Ο παρονομαστής δεν είναι πάντα κάτοικοι (π.χ. κατοικίες, απασχολούμενοι): ratio.denominatorUnit.
     if (den != null) sub.append(`${fmt(value)} ${ind.unit} σε ${fmt(den)} ${ind.ratio.denominatorUnit ?? "κατοίκους"}`);
     for (const g of breakGroups(year, base, areaKey(block))) {
-      sub.append(document.createElement("br"), `Προσοχή: ${g.label ?? "αλλαγή στη μέθοδο"} το ${g.years.join(", ")}· η σύγκριση είναι ενδεικτική.`);
+      sub.append(document.createElement("br"), `Προσοχή: ${g.label ?? "αλλαγή στη μέθοδο"} ${whenList(g.years)}· η σύγκριση είναι ενδεικτική.`);
+    }
+    if (ind.lowCount && ind.kind === "ratio") {
+      for (const y of [...new Set([year, base])]) {
+        const n = block ? blockValue(block, level, y) : ind.national.all[String(y)];
+        if (n != null && n < ind.lowCount.below) sub.append(document.createElement("br"), `${ind.lowCount.label}: ${fmt(n)} ${ind.unit} ${when(y)}. ${ind.lowCount.why}`);
+      }
     }
     // Η κάρτα δείχνει και τη μεταβολή από το έτος σύγκρισης, άρα μετράει και εκείνη η τιμή.
     for (const note of caveatNotes(areaKey(block), [year, base])) {
@@ -1093,8 +1141,8 @@ function renderSpark(valueAt, format) {
   }
   const now = data.find((d) => d.year === state.year);
   if (now?.value != null) svg.append("circle").attr("class", "dot").attr("cx", x(now.year)).attr("cy", y(now.value)).attr("r", 4.5);
-  svg.append("text").attr("x", m.l).attr("y", 96).text(ind.years[0]);
-  svg.append("text").attr("x", 360 - m.r).attr("y", 96).attr("text-anchor", "end").text(ind.years[ind.years.length - 1]);
+  svg.append("text").attr("x", m.l).attr("y", 96).text(period(ind.years[0]));
+  svg.append("text").attr("x", 360 - m.r).attr("y", 96).attr("text-anchor", "end").text(period(ind.years[ind.years.length - 1]));
 }
 
 function renderRanking(blocks, current) {
@@ -1103,11 +1151,11 @@ function renderRanking(blocks, current) {
   const ranked = blocks.filter((b) => b.metric != null)
     .sort((a, b) => ascending ? a.metric - b.metric : b.metric - a.metric);
   $("rankTitle").textContent = metric === "change"
-    ? `Μεταβολή ${state.base}–${state.year}, από τη μεγαλύτερη πτώση`
+    ? `Μεταβολή ${spanText(state.base, state.year)}, από τη μεγαλύτερη πτώση`
     : metric === "level"
-      ? `${ind.title} το ${state.year}, από το υψηλότερο`
+      ? `${ind.title} ${when(state.year)}, από το υψηλότερο`
     : metric === "diff"
-      ? `Διαφορά ${state.base}–${state.year} σε ${ind.ratio.unitNameIn ?? ind.ratio.unitName ?? "μονάδες"}, από τη μεγαλύτερη αύξηση`
+      ? `Διαφορά ${spanText(state.base, state.year)} σε ${ind.ratio.unitNameIn ?? ind.ratio.unitName ?? "μονάδες"}, από τη μεγαλύτερη αύξηση`
     : metric === "rate"
       ? `${ind.short} ${ind.rate.label} το ${state.year}, από ${ascending ? "τη χαμηλότερη" : "την υψηλότερη"} τιμή`
       : `${ind.short} το ${state.year}, ${isBalance() ? "από τη χαμηλότερη τιμή" : "από τις περισσότερες"}`;
@@ -1122,7 +1170,7 @@ function renderRanking(blocks, current) {
     button.setAttribute("aria-current", String(block === current));
     button.innerHTML = `<span class="n"></span><span class="name"></span><span class="barcell"><span class="bar"></span></span><span class="v"></span>`;
     button.querySelector(".n").textContent = i + 1;
-    button.querySelector(".name").textContent = block.name + caveatMark(block);
+    button.querySelector(".name").textContent = block.name + caveatMark(block) + lowMark(block);
     const bar = button.querySelector(".bar");
     bar.style.width = `${(Math.abs(block.metric) / max) * 100}%`;
     bar.style.display = "block";
@@ -1157,6 +1205,7 @@ function defaultBase() {
 // «Ο χάρτης δείχνει …»: οι χρονιές που καλύπτει ο δείκτης.
 function coverageText() {
   const last = ind.years[ind.years.length - 1];
+  if (ind.window) return `Ο χάρτης δείχνει κυλιόμενες ${ind.window.plural}, από ${period(ind.years[0])} έως ${period(last)}.`;
   return ind.frequency === "census"
     ? `Ο χάρτης δείχνει τις απογραφές του ${ind.years.slice(0, -1).join(", ")} και του ${last}.`
     : `Ο χάρτης δείχνει κάθε χρονιά από το ${ind.years[0]} έως το ${last}.`;
@@ -1168,12 +1217,18 @@ function renderHeadline() {
   if (isRatio()) {
     $("headline").textContent = ind.headline.template
       .replace("{year}", last).replace("{value}", fmtRatio(blockRatio(null, topLevel(), last)))
-      .replace("{base_value}", fmtRatio(blockRatio(null, topLevel(), base))).replace("{base}", base);
-    const ranked = blocksFor(topLevel(), [[ind, last]])
-      .map((b) => ({ name: b.name, value: blockRatio(b, topLevel(), last) }))
+      .replace("{base_value}", fmtRatio(blockRatio(null, topLevel(), base))).replace("{base}", base)
+      .replace("{period}", period(last)).replace("{base_period}", period(base));
+    // Περιοχές με λίγα περιστατικά (ind.lowCount) δεν μπαίνουν στα άκρα· ο υπότιτλος λέει ποιες λείπουν.
+    const few = new Set(lowCountBlocks(topLevel(), [last]).map((b) => b.key));
+    const all = blocksFor(topLevel(), [[ind, last]])
+      .map((b) => ({ key: b.key, name: b.name, value: blockRatio(b, topLevel(), last) }))
       .filter((b) => b.value != null).sort((a, b) => b.value - a.value);
+    const ranked = all.filter((b) => !few.has(b.key));
     const high = ranked[0], low = ranked[ranked.length - 1];
-    $("dek").textContent = `Υψηλότερο: ${high.name} (${fmtRatio(high.value)}). Χαμηλότερο: ${low.name} (${fmtRatio(low.value)}). ${coverageText()}`;
+    const fewText = few.size ? ` Χωρίς ${all.filter((b) => few.has(b.key)).map((b) => b.name).join(", ")}: κάτω από ${ind.lowCount.below} ${ind.lowCount.unitIn} ${when(last)}.` : "";
+    // ind.dekNote: σύντομη επιφύλαξη του δείκτη για τον υπότιτλο (π.χ. αλλαγή κάλυψης).
+    $("dek").textContent = `Υψηλότερο: ${high.name} (${fmtRatio(high.value)}). Χαμηλότερο: ${low.name} (${fmtRatio(low.value)}).${fewText} ${coverageText()}${ind.dekNote ? ` ${ind.dekNote}` : ""}`;
     return;
   }
   const now = ind.national.all[String(last)], then = ind.national.all[String(base)];
@@ -1270,8 +1325,8 @@ function syncYears() {
   input.min = 0;
   input.max = years.length - 1;
   input.dataset.years = JSON.stringify(years);
-  $("yearMin").textContent = years[0];
-  $("yearMax").textContent = years[years.length - 1];
+  $("yearMin").textContent = period(years[0]);
+  $("yearMax").textContent = period(years[years.length - 1]);
   if (!years.includes(state.year)) state.year = years[years.length - 1];
 }
 
@@ -1351,7 +1406,7 @@ async function loadIndicator(id, saved = {}) {
   // (π.χ. από τις γεννήσεις του 2024 στις γεννήσεις με το 2025 προσωρινά, όπου η σύγκριση είναι με το 2024).
   const selfCompare = saved.base === undefined && saved.year === state.base && ["change", "diff"].includes(state.metric);
   state.year = selfCompare ? null : saved.year ?? null;
-  $("baseYear").innerHTML = ind.years.map((y) => `<option value="${y}">${y}</option>`).join("");
+  $("baseYear").innerHTML = ind.years.map((y) => `<option value="${y}">${period(y)}</option>`).join("");
   $("baseYear").value = state.base;
   setPressed("indicator", ind.id);
   showMetric();
