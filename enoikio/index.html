@@ -1,0 +1,43 @@
+<!doctype html><html lang="el"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Πόσο βαραίνει το ενοίκιο; · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Γράψτε το μηνιαίο καθαρό εισόδημα του νοικοκυριού και το κόστος στέγασης και δείτε πόσο % του εισοδήματος πάει στη στέγαση, σε σχέση με το όριο 40% της Eurostat.">
+<link rel="stylesheet" href="../style.css"></head><body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main><div class="kicker">Εργαλείο · Στέγαση</div><h1>Πόσο βαραίνει το ενοίκιο;</h1>
+<p class="muted">Δείτε πόσο μέρος του εισοδήματος του νοικοκυριού σας πάει στη στέγαση και αν περνά το 40%, το όριο που χρησιμοποιεί η Eurostat για την «επιβάρυνση από το κόστος στέγασης».</p>
+<label for="inc">Μηνιαίο καθαρό εισόδημα νοικοκυριού (€)</label>
+<input id="inc" type="number" min="0" step="50" value="1200" inputmode="decimal">
+<label for="cost">Μηνιαίο κόστος στέγασης (€)</label>
+<input id="cost" type="number" min="0" step="10" value="450" inputmode="decimal">
+<p class="muted" style="font-size:.9rem">Ενοίκιο ή δόση δανείου, και αν θέλετε κοινόχρηστα και λογαριασμούς (ρεύμα, νερό, θέρμανση).</p>
+<div id="res" class="card" aria-live="polite"></div>
+<div class="barwrap" aria-hidden="true"><div id="bar" class="bar" style="width:0"></div><div class="mark"></div></div>
+<p class="muted" style="font-size:.85rem;margin-top:4px">Η κάθετη γραμμή δείχνει το 40%.</p>
+<h2 style="font-size:1.2rem;margin-top:28px">Η εικόνα στην Ελλάδα και στην ΕΕ</h2>
+<p class="muted">Ποσοστό του πληθυσμού που ξοδεύει πάνω από το 40% του διαθέσιμου εισοδήματός του στη στέγαση (Eurostat, <b id="yr"></b>).</p>
+<table><thead><tr><th>Ομάδα</th><th class="n">Ελλάδα</th><th class="n">ΕΕ-27</th></tr></thead><tbody id="ctx"></tbody></table>
+<div class="note"><p><b>Προσοχή, ενδεικτικό εργαλείο:</b> ο ορισμός της Eurostat χρησιμοποιεί το <i>διαθέσιμο εισόδημα</i> του νοικοκυριού αφού αφαιρεθούν τα επιδόματα στέγασης, και μετρά <i>όλα</i> τα έξοδα στέγασης (ενοίκιο ή τόκους στεγαστικού, κοινόχρηστα, λογαριασμούς, συντήρηση). Εδώ βάζετε όσα επιλέξετε εσείς, οπότε το αποτέλεσμα δεν είναι ίδιο με το επίσημο στατιστικό, δείχνει μόνο μια τάξη μεγέθους.</p>
+<p>Δεν κρατάμε τίποτα από όσα γράφετε: ο υπολογισμός γίνεται μόνο στη συσκευή σας.</p>
+<p><b>Πηγές:</b> <a href="https://ec.europa.eu/eurostat">Eurostat</a>, σύνολα δεδομένων ilc_lvho07a (ποσοστό υπερβολικής επιβάρυνσης, σύνολο) και ilc_lvho07c (ανά καθεστώς κατοχής), ερώτηση στο API της Eurostat.</p></div>
+</main><footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+<style>.barwrap{position:relative;height:10px;background:var(--line);border-radius:5px;margin-top:10px;overflow:hidden}.barwrap .bar{height:10px;opacity:1}.barwrap .bar.over{background:#b3261e}.mark{position:absolute;left:40%;top:0;bottom:0;width:2px;background:#222}#res b{font-size:1.5rem}input[type=number]{max-width:100%}</style>
+<script>
+// Αριθμοί μόνο από το API της Eurostat (ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/...), ερώτηση 13/11/2026, μονάδα PC, έτος 2025:
+// ilc_lvho07a (σύνολο, T, TOTAL): Ελλάδα 26.4, ΕΕ-27 7.6.
+// ilc_lvho07c (ανά καθεστώς κατοχής): Ελλάδα / ΕΕ-27:
+//   Ενοικιαστές σε τιμή αγοράς (RENT_MKT): 26.0 / 18.5
+//   Ιδιοκτήτες με στεγαστικό (OWN_L): 22.2 / 4.6
+//   Ιδιοκτήτες χωρίς στεγαστικό (OWN_NL): 26.2 / 3.7
+const D={year:2025,rows:[["Όλο ο πληθυσμός",26.4,7.6],["Ενοικιαστές σε τιμή αγοράς",26.0,18.5],["Ιδιοκτήτες με στεγαστικό",22.2,4.6],["Ιδιοκτήτες χωρίς στεγαστικό",26.2,3.7]]};
+const f=v=>v.toLocaleString("el-GR",{minimumFractionDigits:1,maximumFractionDigits:1});
+const e=v=>v.toLocaleString("el-GR",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+const $=i=>document.getElementById(i);
+$("yr").textContent=D.year;
+$("ctx").innerHTML=D.rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${f(r[1])}%</td><td class="n">${f(r[2])}%</td></tr>`).join("");
+function draw(){const i=+$("inc").value,c=+$("cost").value,r=$("res"),b=$("bar");
+ if(!(i>0)||!(c>=0)){r.innerHTML="Γράψτε εισόδημα μεγαλύτερο από μηδέν.";b.style.width="0";return}
+ const p=100*c/i,over=p>40;
+ r.innerHTML=`<b>${f(p)}% του εισοδήματος</b>Η στέγαση κοστίζει ${e(c)} από ${e(i)} τον μήνα. ${over?"Ξεπερνά το όριο του 40%: με τον ορισμό της Eurostat θα θεωρούνταν «επιβαρυμένο» νοικοκυριό.":"Είναι κάτω από το όριο του 40% της Eurostat."} Μένουν ${e(Math.max(0,i-c))} τον μήνα για τα υπόλοιπα έξοδα.`;
+ b.style.width=Math.min(100,p)+"%";b.classList.toggle("over",over)}
+$("inc").addEventListener("input",draw);$("cost").addEventListener("input",draw);draw();
+</script></body></html>
