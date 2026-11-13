@@ -1049,7 +1049,10 @@ function renderDetail(block, blocks) {
       sub.append(span, ` από ${when(base)} (${fmtRatio(then)})`, document.createElement("br"));
     }
     // Ο παρονομαστής δεν είναι πάντα κάτοικοι (π.χ. κατοικίες, απασχολούμενοι): ratio.denominatorUnit.
-    if (den != null) sub.append(`${fmt(value)} ${ind.unit} σε ${fmt(den)} ${ind.ratio.denominatorUnit ?? "κατοίκους"}`);
+    // ratio.countLine: δική του διατύπωση, όταν το «Χ σε Υ» δεν βγάζει την τιμή (π.χ. νεκροί τριετίας, μέσος πληθυσμός).
+    if (den != null) sub.append(ind.ratio.countLine
+      ? ind.ratio.countLine.replace("{num}", fmt(value)).replace("{unit}", ind.unit).replace("{period}", period(year)).replace("{den}", fmt(den))
+      : `${fmt(value)} ${ind.unit} σε ${fmt(den)} ${ind.ratio.denominatorUnit ?? "κατοίκους"}`);
     for (const g of breakGroups(year, base, areaKey(block))) {
       sub.append(document.createElement("br"), `Προσοχή: ${g.label ?? "αλλαγή στη μέθοδο"} ${whenList(g.years)}· η σύγκριση είναι ενδεικτική.`);
     }
