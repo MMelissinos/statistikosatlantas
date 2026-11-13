@@ -697,7 +697,11 @@ function colorScale() {
         if (now != null && then != null) values.push(now - then);
       }
     }
-    scale = state.metric === "level"
+    // Ένας δείκτης μπορεί να ορίσει δικά του όρια για το ποσοστό (ratio.legendThresholds, 5 αύξοντες αριθμοί).
+    const fixed = state.metric === "level" ? ind.ratio?.legendThresholds : null;
+    scale = fixed && fixed.length === 5
+      ? { type: "sequential", step: Math.min(...fixed.slice(1).map((v, i) => v - fixed[i])), thresholds: fixed, colors: SEQUENTIAL }
+      : state.metric === "level"
       ? sequential(d3.min(values), d3.max(values))
       : diverging(d3.max(values, Math.abs) ?? 1, [0.5, 1, 2, 2.5, 5, 10, 20, 50, 100, 200, 250, 500]);
   } else {
