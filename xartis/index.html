@@ -1230,9 +1230,12 @@ function renderHeadline() {
       .filter((b) => b.value != null).sort((a, b) => b.value - a.value);
     const ranked = all.filter((b) => !few.has(b.key));
     const high = ranked[0], low = ranked[ranked.length - 1];
+    // Ισοβαθμία στο χαμηλότερο (π.χ. 34 Π.Ε. με 0% φυσικό αέριο): λέμε πόσες, όχι ένα τυχαίο όνομα.
+    const ties = ranked.filter((b) => fmtRatio(b.value) === fmtRatio(low.value)).length;
+    const lowText = ties > 1 ? `${ties} περιοχές με ${fmtRatio(low.value)}` : `${low.name} (${fmtRatio(low.value)})`;
     const fewText = few.size ? ` Χωρίς ${all.filter((b) => few.has(b.key)).map((b) => b.name).join(", ")}: κάτω από ${ind.lowCount.below} ${ind.lowCount.unitIn} ${when(last)}.` : "";
     // ind.dekNote: σύντομη επιφύλαξη του δείκτη για τον υπότιτλο (π.χ. αλλαγή κάλυψης).
-    $("dek").textContent = `Υψηλότερο: ${high.name} (${fmtRatio(high.value)}). Χαμηλότερο: ${low.name} (${fmtRatio(low.value)}).${fewText} ${coverageText()}${ind.dekNote ? ` ${ind.dekNote}` : ""}`;
+    $("dek").textContent = `Υψηλότερο: ${high.name} (${fmtRatio(high.value)}). Χαμηλότερο: ${lowText}.${fewText} ${coverageText()}${ind.dekNote ? ` ${ind.dekNote}` : ""}`;
     return;
   }
   const now = ind.national.all[String(last)], then = ind.national.all[String(base)];
