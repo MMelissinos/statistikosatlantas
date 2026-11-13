@@ -20,7 +20,7 @@
 
 **[tools.statistikosatlantas.com/xartis](https://tools.statistikosatlantas.com/xartis/)**
 
-28 δείκτες σε 8 ιστορίες, για τις 13 περιφέρειες και τις 52 περιφερειακές ενότητες:
+29 δείκτες σε 8 ιστορίες, για τις 13 περιφέρειες και τις 52 περιφερειακές ενότητες:
 
 | Ιστορία | Τι δείχνει |
 |---|---|
@@ -28,7 +28,7 @@
 | Ποιοι ζουν εδώ | πληθυσμός απογραφής, γήρανση, κάτοικοι χωρίς ελληνική ιθαγένεια |
 | Δουλειά και εισόδημα | ανεργία, απασχόληση, ΑΕΠ, εισόδημα νοικοκυριών, κίνδυνος φτώχειας |
 | Από τι ζούμε | πρωτογενής τομέας, τουρισμός, διανυκτερεύσεις |
-| Υγεία | προσδόκιμο ζωής, βρεφική θνησιμότητα, γιατροί, νοσοκομειακές κλίνες |
+| Υγεία | προσδόκιμο ζωής, βρεφική θνησιμότητα, νεκροί σε τροχαία, γιατροί, νοσοκομειακές κλίνες |
 | Πόσοι σπούδασαν | απόφοιτοι τριτοβάθμιας (απογραφή και έρευνα εργατικού δυναμικού) |
 | Άδεια σπίτια | κενές κατοικίες |
 | Θέρμανση και ενέργεια | βαθμοημέρες θέρμανσης, πετρέλαιο, φυσικό αέριο, ρεύμα |
@@ -68,7 +68,7 @@
 
 **Statistikos Atlantas** ("Statistical Atlas") is an independent data-journalism project about Greece. It takes official statistics from ELSTAT (the Hellenic Statistical Authority) and Eurostat and maps them where people live: the 13 regions and 52 regional units of Greece.
 
-- **[Interactive map](https://tools.statistikosatlantas.com/xartis/):** 28 indicators in 8 stories (births and deaths, population, work and income, livelihoods, health, education, housing, heating and energy), each with a time series, the national comparison, a ranking and notes on what is not comparable.
+- **[Interactive map](https://tools.statistikosatlantas.com/xartis/):** 29 indicators in 8 stories (births and deaths, population, work and income, livelihoods, health, education, housing, heating and energy), each with a time series, the national comparison, a ranking and notes on what is not comparable.
 - **[Tools](https://tools.statistikosatlantas.com/):** your area in numbers, heating-allowance and social-tariff eligibility checkers, rent burden, electricity cost by supplier.
 - **[Blog](https://statistikosatlantas.com/category/english/):** short findings and longer articles, in Greek and English.
 
