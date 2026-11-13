@@ -1,0 +1,152 @@
+<!doctype html><html lang="el"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Δικαιούμαι Κοινωνικό Οικιακό Τιμολόγιο; · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Απαντήστε σε λίγες ερωτήσεις και δείτε αν πιθανότατα δικαιούστε το Κοινωνικό Οικιακό Τιμολόγιο (ΚΟΤ Α, Β ή Γ), πόση είναι η έκπτωση και πού κάνετε αίτηση.">
+<link rel="stylesheet" href="../style.css">
+<style>
+fieldset{border:0;margin:0;padding:0}legend{font-weight:700;margin:18px 0 6px;padding:0}
+.opt{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:0;padding:9px 12px;border:1px solid #c9d3e0;border-radius:6px;margin-bottom:6px;cursor:pointer}
+.opt input{margin-top:.35rem;flex:none}
+.hint{font-size:.9rem;color:var(--muted);margin:4px 0 0}
+.hid{display:none}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two label{margin-top:18px}
+button.go{font:inherit;font-weight:700;margin-top:22px;padding:12px 22px;border:0;border-radius:8px;background:var(--blue);color:#fff;cursor:pointer;width:100%;max-width:340px}
+.ans{margin-top:26px;border:1px solid var(--line);border-left:6px solid var(--blue);border-radius:8px;padding:16px 18px;background:var(--pale)}
+.ans.no{border-left-color:#b26a00;background:#fbf4e8}
+.ans h2{margin:0 0 6px;font-size:1.3rem}.ans ul{margin:.4rem 0;padding-left:1.2rem}
+.warn{color:#8a4b00}
+</style></head><body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main><div class="kicker">Εργαλείο · Ρεύμα</div><h1>Δικαιούμαι Κοινωνικό Οικιακό Τιμολόγιο;</h1>
+<p class="muted">Το ΚΟΤ δίνει έκπτωση 4,5 έως 10 λεπτά ανά κιλοβατώρα στη χρέωση προμήθειας, μόνο για την κύρια κατοικία. Κανόνες 2026–27, όπως ισχύουν στις 13/11/2026.</p>
+<p><b>Η αίτηση γίνεται ηλεκτρονικά στην πλατφόρμα ΚΟΤ της ΗΔΙΚΑ, με κωδικούς Taxisnet, και μπορεί να υποβληθεί οποιαδήποτε στιγμή μέσα στη χρονιά.</b></p>
+
+<form id="f" onsubmit="return false" novalidate>
+<fieldset><legend>1. Είστε δικαιούχος του Ελάχιστου Εγγυημένου Εισοδήματος (πρώην ΚΕΑ), με ενεργή εγκεκριμένη αίτηση;</legend>
+<label class="opt"><input type="radio" name="kea" value="0" checked> Όχι</label>
+<label class="opt"><input type="radio" name="kea" value="1"> Ναι</label></fieldset>
+
+<fieldset><legend>2. Το ρεύμα αφορά την κύρια κατοικία σας και ο λογαριασμός βγαίνει στο όνομά σας;</legend>
+<label class="opt"><input type="radio" name="res" value="1" checked> Ναι</label>
+<label class="opt"><input type="radio" name="res" value="0"> Όχι</label></fieldset>
+
+<div class="two"><div><label for="ad">3. Ενήλικα μέλη του νοικοκυριού</label><input id="ad" type="number" min="1" max="8" step="1" value="1" inputmode="numeric"></div>
+<div><label for="mi">Ανήλικα μέλη</label><input id="mi" type="number" min="0" max="10" step="1" value="0" inputmode="numeric"></div></div>
+<p class="hint">Νοικοκυριό όπως το ορίζει το πρόγραμμα Κοινωνικό Εισόδημα Αλληλεγγύης. Ένας γονέας με παιδιά είναι «μονογονεϊκή οικογένεια» και υπολογίζεται αυτόματα.</p>
+
+<label for="inc">4. Συνολικό ετήσιο εισόδημα 2025 όλων των μελών (ευρώ)</label>
+<input id="inc" type="number" min="0" step="100" inputmode="numeric" placeholder="π.χ. 12000">
+<p class="hint">Πραγματικό ή τεκμαρτό, όπως στις φορολογικές δηλώσεις 2025.</p>
+
+<label for="prop">5. Συνολική φορολογητέα αξία ακίνητης περιουσίας (ευρώ)</label>
+<input id="prop" type="number" min="0" step="1000" inputmode="numeric" placeholder="π.χ. 60000">
+<p class="hint">Στην Ελλάδα ή στο εξωτερικό, όπως προκύπτει από την τελευταία πράξη προσδιορισμού ΕΝΦΙΑ.</p>
+
+<fieldset><legend>6. Υπάγεστε (εσείς ή μέλος του νοικοκυριού) στον φόρο πολυτελείας, ή δηλώνετε δαπάνες όπως δίδακτρα σε ιδιωτικά σχολεία, αμοιβές για οικιακούς βοηθούς ή οδηγούς, δασκάλους, πληρώματα σκαφών αναψυχής;</legend>
+<label class="opt"><input type="radio" name="lux" value="0" checked> Όχι</label>
+<label class="opt"><input type="radio" name="lux" value="1"> Ναι</label></fieldset>
+
+<fieldset><legend>7. Υπάρχει στο νοικοκυριό (επιλέξτε ό,τι ισχύει)</legend>
+<label class="opt"><input type="checkbox" id="dis"> Άτομο με αναπηρία 67% και άνω</label>
+<label class="opt"><input type="checkbox" id="dev"> Άτομο που χρειάζεται κατ’ οίκον μηχανική υποστήριξη με ιατρικές συσκευές, απαραίτητη για τη ζωή του</label></fieldset>
+
+<fieldset><legend>8. Είστε πολύτεκνος, με πιστοποιητικό της Ανώτατης Συνομοσπονδίας Πολυτέκνων Ελλάδας (ΑΣΠΕ);</legend>
+<label class="opt"><input type="radio" name="poly" value="0" checked> Όχι</label>
+<label class="opt"><input type="radio" name="poly" value="1"> Ναι</label></fieldset>
+<div id="polyBox" class="hid"><label for="ch">Πόσα εξαρτώμενα τέκνα έχετε;</label><input id="ch" type="number" min="1" max="15" step="1" value="4" inputmode="numeric"></div>
+
+<label for="kwh">9. Προαιρετικά: κατανάλωση ρεύματος ανά τετράμηνο (κιλοβατώρες)</label>
+<input id="kwh" type="number" min="0" step="10" inputmode="numeric" placeholder="π.χ. 900">
+<p class="hint">Το βρίσκετε στον λογαριασμό ρεύματος (kWh της περιόδου). Χρειάζεται μόνο για την εκτίμηση της έκπτωσης.</p>
+
+<button class="go" id="go" type="button">Δείτε αν δικαιούστε</button>
+</form>
+
+<div id="out" aria-live="polite"></div>
+
+<div class="note">
+<p><b>Ενδεικτικό εργαλείο, όχι επίσημη απόφαση· η αίτηση/έγκριση γίνεται στην επίσημη πλατφόρμα.</b> Το εργαλείο δεν ελέγχει στοιχεία: βασίζεται μόνο σε όσα γράφετε.</p>
+<p><b>Πώς κάνετε αίτηση:</b> στην <a href="https://www.idika.gr/kot">πλατφόρμα ΚΟΤ της ΗΔΙΚΑ</a>, με κωδικούς Taxisnet. Επιλέγετε το ΚΟΤ που θέλετε και συμπληρώνετε τον αριθμό παροχής ρεύματος, email και κινητό. Η αξιολόγηση γίνεται με τη φορολογική δήλωση 2025 και την εκκαθάριση ΕΝΦΙΑ. Στο ΚΟΤ Β, ενήλικοι φιλοξενούμενοι πρέπει να δώσουν συναίνεση με τους δικούς τους κωδικούς. Το ΚΟΤ δεν ανανεώνεται μόνο του: χρειάζεται νέα αίτηση κάθε χρόνο, μετά τη λήξη της προθεσμίας των φορολογικών δηλώσεων. Όσοι δεν υπέβαλαν νέα αίτηση έως 25/9/2026 απεντάχθηκαν αυτόματα· μπορούν να κάνουν νέα αίτηση οποιαδήποτε στιγμή.</p>
+<p><b>Τι δεν υπολογίζουμε:</b> την απαλλαγή από χρεώσεις δικτύου και χρήσης συστήματος, ούτε νοικοκυριά που δεν υπάρχουν στον πίνακα του ΔΕΔΔΗΕ (π.χ. τρεις ενήλικες με δύο ανήλικους): για αυτά δείτε το αποτέλεσμα στην πλατφόρμα. Για το ΚΟΤ Β η ΡΑΑΕΥ αναφέρει στις ερωτήσεις-απαντήσεις της και όριο αντικειμενικής δαπάνης οχημάτων, που ο ΔΕΔΔΗΕ δεν αναφέρει· η πλατφόρμα θα το ελέγξει.</p>
+<p>Αν η κατανάλωση είναι κάτω από 200 κιλοβατώρες το τετράμηνο, το ΚΟΤ δεν εφαρμόζεται. Όσοι εντάσσονται στο ΚΟΤ μπαίνουν αυτόματα στην κατηγορία Α του Μητρώου Ευάλωτων Πελατών, με προθεσμία εξόφλησης τουλάχιστον 40 ημερών, άτοκες δόσεις και αναστολή διακοπής ρεύματος Νοέμβριο–Μάρτιο και Ιούλιο–Αύγουστο.</p>
+<p><b>Πηγές:</b> <a href="https://www.idika.gr/">ΗΔΙΚΑ</a> · <a href="https://www.deddie.gr/">ΔΕΔΔΗΕ</a> · <a href="https://www.raaey.gr/">ΡΑΑΕΥ</a>.</p>
+<p>Δεν κρατάμε τίποτα από όσα γράφετε: ο υπολογισμός γίνεται μόνο στη συσκευή σας.</p></div>
+</main><footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+<script>
+// ==LOGIC==
+// Πηγή: ΔΕΔΔΗΕ, «Δικαιούχοι πελάτες» https://www.deddie.gr/el/ypiresies/eidika-timologia/koinoniko-oikiako-timologio-kai-evalwtoi-pelates/dikaiouchoi-pelates/
+// και «Όρια τετραμηνιαίας κατανάλωσης» https://www.deddie.gr/el/ypiresies/eidika-timologia/koinoniko-oikiako-timologio-kai-evalwtoi-pelates/oria-tetraminiaias-katanalosis/
+// (σελίδες που ανοίχτηκαν στις 12/11/2026)· τιμολόγηση https://www.deddie.gr/el/ypiresies/eidika-timologia/koinoniko-oikiako-timologio-kai-evalwtoi-pelates/timologisi/ ·
+// πλατφόρμα και έτος ελέγχου (φορολογική δήλωση 2025) https://www.idika.gr/kot
+// Οδηγός: «2026-11-19-odigos-kot». Οι πίνακες των δύο σελίδων ΔΕΔΔΗΕ μεταφέρονται αυτολεξεί:
+// Εισοδηματικό όριο ΚΟΤ Β και όριο τετραμηνιαίας κατανάλωσης ανά σύνθεση [ενήλικοι, ανήλικοι]. Η μονογονεϊκή = 1 ενήλικος + ανήλικοι.
+// ΠΡΟΣΟΧΗ: οι δύο τελευταίες σειρές (24.750 και 27.000 €) είναι όπως δημοσιεύονται στον πίνακα του ΔΕΔΔΗΕ, αλλά ΔΕΝ προκύπτουν από τον κανόνα της ίδιας σελίδας (+4.500 ανά ενήλικο, +2.250 ανά ανήλικο: 20.250 και 22.500 €).
+// Η υπουργική απόφαση δεν βρέθηκε ανοιχτά, άρα η διαφορά δεν λύθηκε: όταν το εισόδημα είναι ανάμεσα στις δύο τιμές (alt..inc) το εργαλείο δεν απαντά και στέλνει στην πλατφόρμα.
+const ROWS=[
+ {inc:9000,kwh:1400,m:[[1,0]]},
+ {inc:13500,kwh:1600,m:[[2,0],[1,1]]},
+ {inc:15750,kwh:1700,m:[[2,1],[1,2]]},
+ {inc:18000,kwh:1800,m:[[3,0],[2,2],[1,3]]},
+ {inc:24750,alt:20250,kwh:1900,m:[[3,1],[2,3],[1,4]]},
+ {inc:27000,alt:22500,kwh:2000,m:[[4,0],[2,4],[1,5]]}];
+// ΚΟΤ Γ (πολύτεκνοι): εισοδηματικό όριο 50.000 € για 4 εξαρτώμενα τέκνα, 52.500 για 5, 55.000 για 6, 57.500 για 7, 60.000 για 8·
+// όριο κατανάλωσης τετραμήνου 2.000, 2.200, 2.400, 2.600, 2.800 kWh (+200 ανά επιπλέον τέκνο έως 4.000).
+const POLY={4:[50000,2000],5:[52500,2200],6:[55000,2400],7:[57500,2600],8:[60000,2800]};
+// Έκπτωση στη χρέωση προμήθειας, €/kWh: Α 0,075 · Β 0,045 · Γ 0,100 (ΔΕΔΔΗΕ, «Τιμολόγηση»).
+const RATE={A:0.075,B:0.045,C:0.100};
+// Αναπηρία ≥67%: +8.000 € εισόδημα, +300 kWh· ιατρικές συσκευές: +15.000 €, +600 kWh. Περιουσία ΚΟΤ Β: 120.000 € + 15.000 € ανά επιπλέον μέλος, έως 180.000 €.
+// Ελάχιστη κατανάλωση για εφαρμογή ΚΟΤ: 200 kWh ανά τετράμηνο.
+function findRow(ad,mi){return ROWS.find(r=>r.m.some(x=>x[0]===ad&&x[1]===mi))||null}
+function fmt(v){return Number(v).toLocaleString("el-GR",{maximumFractionDigits:0})+" €"}
+function evaluate(a){
+ const cats=[];const ad=Math.floor(a.adults),mi=Math.floor(a.minors);
+ if(!a.res)return{status:"no",cats:[{id:"ALL",status:"no",reasons:["Το ΚΟΤ δίνεται μόνο για την κύρια κατοικία και με λογαριασμό στο όνομα του αιτούντος."]}],best:null};
+ const row0=findRow(ad,mi);
+ // Α
+ if(a.kea)cats.push({id:"A",status:"yes",rate:RATE.A,limit:(row0?row0.kwh+(a.dis?300:0)+(a.dev?600:0):null),reasons:["Έχετε ενεργή εγκεκριμένη αίτηση ΕΕΕ (ΚΕΑ). Τα κριτήρια του προγράμματος τα ελέγχει η πλατφόρμα."]});
+ else cats.push({id:"A",status:"no",reasons:["Δεν έχετε ενεργή εγκεκριμένη αίτηση ΕΕΕ (ΚΕΑ)."]});
+ // Β
+ const row=findRow(ad,mi);
+ if(!row)cats.push({id:"B",status:"maybe",reasons:["Η σύνθεση του νοικοκυριού σας ("+ad+" ενήλικοι, "+mi+" ανήλικοι) δεν υπάρχει στον πίνακα του ΔΕΔΔΗΕ· δείτε το αποτέλεσμα στην πλατφόρμα."]});
+ else{const bon=(a.dis?8000:0)+(a.dev?15000:0);const incLim=row.inc+bon;const kwhLim=row.kwh+(a.dis?300:0)+(a.dev?600:0);
+  const propLim=Math.min(120000+15000*(ad+mi-1),180000);const r=[];
+  if(a.income>incLim)r.push("Το εισόδημα ("+fmt(a.income)+") ξεπερνά το όριο των "+fmt(incLim)+" για το νοικοκυριό σας.");
+  if(a.property>propLim)r.push("Η ακίνητη περιουσία ("+fmt(a.property)+") ξεπερνά το όριο των "+fmt(propLim)+".");
+  if(a.lux)r.push("Δεν πρέπει να υπάγεστε στον φόρο πολυτελείας ούτε να δηλώνετε δαπάνες όπως δίδακτρα ιδιωτικών σχολείων ή αμοιβές οικιακών βοηθών και οδηγών.");
+  if(r.length)cats.push({id:"B",status:"no",reasons:r});
+  else if(row.alt&&a.income>row.alt+bon)cats.push({id:"B",status:"maybe",reasons:["Για τη σύνθεσή σας ο πίνακας του ΔΕΔΔΗΕ δίνει όριο "+fmt(incLim)+", ενώ ο κανόνας προσαύξησης της ίδιας σελίδας δίνει "+fmt(row.alt+bon)+". Το εισόδημά σας ("+fmt(a.income)+") είναι ανάμεσα στα δύο, οπότε δεν μπορούμε να απαντήσουμε: δείτε το αποτέλεσμα στην πλατφόρμα ΚΟΤ."]});
+  else cats.push({id:"B",status:"yes",rate:RATE.B,limit:kwhLim,reasons:["Εισόδημα έως "+fmt(row.alt?row.alt+bon:incLim)+" και ακίνητα έως "+fmt(propLim)+"."]})}
+ // Γ
+ if(a.poly){const p=POLY[a.children];
+  if(!p)cats.push({id:"C",status:"maybe",reasons:["Για "+a.children+" τέκνα το όριο δεν προκύπτει από τον πίνακα του ΔΕΔΔΗΕ· δείτε το αποτέλεσμα στην πλατφόρμα."]});
+  else if(a.income>p[0])cats.push({id:"C",status:"no",reasons:["Το εισόδημα ("+fmt(a.income)+") ξεπερνά το όριο των "+fmt(p[0])+" για "+a.children+" τέκνα."]});
+  else cats.push({id:"C",status:"yes",rate:RATE.C,limit:p[1]+(a.dis?300:0)+(a.dev?600:0),reasons:["Πολύτεκνη οικογένεια με "+a.children+" τέκνα, εισόδημα έως "+fmt(p[0])+". Χρειάζονται πιστοποιητικό ΑΣΠΕ και πιστοποιητικό οικογενειακής κατάστασης."]})}
+ const yes=cats.filter(c=>c.status==="yes");
+ const best=yes.sort((x,y)=>y.rate-x.rate)[0]||null;
+ const status=best?"yes":(cats.some(c=>c.status==="maybe")?"maybe":"no");
+ let savings=null,kwhNote=null;
+ if(best&&a.kwh!=null&&a.kwh!==""){ if(a.kwh<200)kwhNote="Με κατανάλωση κάτω από 200 kWh το τετράμηνο το ΚΟΤ δεν εφαρμόζεται.";
+  else{const cap=best.limit==null?a.kwh:Math.min(a.kwh,best.limit);savings=Math.round(cap*best.rate*100)/100;
+   if(best.limit!=null&&a.kwh>best.limit*1.1)kwhNote="Η κατανάλωσή σας ξεπερνά το όριο κατά πάνω από 10%: αν και ο μέσος όρος του έτους είναι πάνω από το όριο, το ΚΟΤ δεν εφαρμόζεται καθόλου για το τετράμηνο· αλλιώς εφαρμόζεται μόνο μέχρι το όριο."}}
+ return{status,cats:cats.slice().sort((x,y)=>x.id.localeCompare(y.id)),best,savings,kwhNote};
+}
+// ==/LOGIC==
+const $=id=>document.getElementById(id),val=n=>{const e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:null};
+const NAME={A:"ΚΟΤ Α",B:"ΚΟΤ Β",C:"ΚΟΤ Γ"};
+function num(id){const v=$(id).value;return v===""?null:+v}
+document.getElementById("f").addEventListener("change",()=>$("polyBox").classList.toggle("hid",val("poly")!=="1"));
+const el=x=>x.toLocaleString("el-GR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+$("go").onclick=()=>{const out=$("out");const miss=[];
+ if(num("inc")===null)miss.push("εισόδημα");if(num("prop")===null)miss.push("ακίνητη περιουσία");
+ if(!(num("ad")>=1))miss.push("ενήλικα μέλη");if(num("mi")===null)miss.push("ανήλικα μέλη");
+ if(miss.length){out.innerHTML='<div class="ans no"><b>Συμπληρώστε ακόμα:</b> '+miss.join(", ")+'.</div>';return}
+ const r=evaluate({kea:val("kea")==="1",res:val("res")==="1",adults:num("ad"),minors:num("mi"),income:num("inc"),property:num("prop"),lux:val("lux")==="1",
+  dis:$("dis").checked,dev:$("dev").checked,poly:val("poly")==="1",children:num("ch"),kwh:num("kwh")});
+ let h;
+ if(r.status==="yes"){const b=r.best;
+  h='<div class="ans"><h2>Πιθανότατα δικαιούσαι</h2><p>Η καλύτερη κατηγορία για εσάς είναι το <b>'+NAME[b.id]+'</b>: έκπτωση <b>'+(b.rate*100).toLocaleString("el-GR")+' λεπτά ανά κιλοβατώρα</b> στη χρέωση προμήθειας'+(b.limit?', για κατανάλωση έως '+b.limit.toLocaleString("el-GR")+' kWh το τετράμηνο':'')+'.</p>'+
+  (r.savings!=null?'<p>Με κατανάλωση '+num("kwh").toLocaleString("el-GR")+' kWh το τετράμηνο, η έκπτωση είναι περίπου <b>'+el(r.savings)+' το τετράμηνο</b>, χωρίς τις απαλλαγές από χρεώσεις δικτύου.</p>':"")+(r.kwhNote?'<p class="warn">'+r.kwhNote+'</p>':"")+'<ul>'+
+  r.cats.map(c=>'<li><b>'+NAME[c.id]+':</b> '+(c.status==="yes"?"πιθανότατα ναι. ":c.status==="maybe"?"δεν υπολογίζεται εδώ. ":"μάλλον όχι. ")+c.reasons.join(" ")+'</li>').join("")+'</ul>'+
+  '<p><b>Πού:</b> αίτηση στην <a href="https://www.idika.gr/kot">πλατφόρμα ΚΟΤ της ΗΔΙΚΑ</a>, με Taxisnet, οποιαδήποτε στιγμή μέσα στη χρονιά.</p></div>'}
+ else if(r.status==="maybe"){h='<div class="ans"><h2>Δεν μπορούμε να το υπολογίσουμε εδώ</h2><ul>'+r.cats.filter(c=>c.status==="maybe").map(c=>"<li>"+c.reasons.join(" ")+"</li>").join("")+'</ul><p>Δείτε το αποτέλεσμα στην <a href="https://www.idika.gr/kot">πλατφόρμα ΚΟΤ της ΗΔΙΚΑ</a>: εκεί γίνεται ο επίσημος έλεγχος.</p></div>'}
+ else{h='<div class="ans no"><h2>Μάλλον όχι</h2><ul>'+r.cats.map(c=>"<li>"+(c.id==="ALL"?"":"<b>"+NAME[c.id]+":</b> ")+c.reasons.join(" ")+"</li>").join("")+'</ul><p>Αν κάτι δεν ισχύει τελικά, δοκιμάστε στην <a href="https://www.idika.gr/kot">πλατφόρμα ΚΟΤ της ΗΔΙΚΑ</a>, όπου ελέγχονται τα στοιχεία της εφορίας.</p></div>'}
+ out.innerHTML=h;out.scrollIntoView({behavior:"smooth",block:"nearest"})};
+</script></body></html>
