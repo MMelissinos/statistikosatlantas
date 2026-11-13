@@ -1,0 +1,104 @@
+<!doctype html><html lang="el"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Η περιοχή σου σε αριθμούς · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Διάλεξε περιφερειακή ενότητα ή περιφέρεια και δες, για κάθε δείκτη του Στατιστικού Άτλαντα, την τελευταία τιμή, την τιμή της χώρας και τη θέση της περιοχής σου.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../style.css">
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.pick button{font:inherit;padding:8px 14px;border:1px solid #c9d3e0;background:#fff;border-radius:999px;cursor:pointer;min-height:44px;color:var(--ink)}.pick button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+select{font:inherit;font-size:1.05rem;padding:10px 12px;width:100%;max-width:420px;min-height:44px;border:1px solid #c9d3e0;border-radius:6px;background:#fff;color:var(--ink)}
+.res h2{font-size:clamp(1.35rem,4vw,1.8rem);line-height:1.2;margin:28px 0 2px}
+.res h3{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:26px 0 0;padding-bottom:4px;border-bottom:2px solid var(--blue)}
+.lead2{margin:0 0 4px;color:var(--muted)}
+.ind{padding:12px 0;border-bottom:1px solid var(--line)}
+.ind .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ind .t{font-weight:700;min-width:0;overflow-wrap:anywhere}.ind .yr{color:var(--muted);font-size:.85rem;white-space:nowrap}
+.nums{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;margin:2px 0}
+.val{font-size:1.45rem;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}.val small{font-size:.8rem;font-weight:400;color:var(--muted)}
+.nat{font-variant-numeric:tabular-nums}.nat b{font-weight:700}
+.rank{font-weight:700;font-variant-numeric:tabular-nums}
+.track{position:relative;height:6px;background:#e6ebf2;border-radius:3px;margin:8px 0 2px;max-width:420px}
+.track i{position:absolute;top:-4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--blue);border:2px solid #fff;box-shadow:0 0 0 1px var(--blue)}
+.ends{display:flex;justify-content:space-between;max-width:420px;font-size:.72rem;color:var(--muted)}
+.def{font-size:.9rem;color:var(--muted);margin:4px 0 0}
+.flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.flag{font-size:.78rem;border:1px solid #c9d3e0;border-radius:999px;padding:2px 9px;background:#fff;color:#444}
+.flag.warn{background:#f6f2e4;border-color:#d9cd9d}
+details{margin-top:6px;font-size:.85rem;color:var(--muted)}summary{cursor:pointer;color:var(--blue);padding:4px 0}
+details p{margin:4px 0}
+.btn{display:inline-block;padding:10px 16px;border-radius:999px;background:var(--blue);color:#fff;text-decoration:none;font-weight:700;margin:14px 0 0}
+.empty{margin-top:24px;padding:18px;border:1px dashed #c9d3e0;border-radius:8px;color:var(--muted)}
+@media(max-width:480px){.val{font-size:1.3rem}}
+</style></head><body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main><div class="kicker">Εργαλείο · Περιοχές</div><h1>Η περιοχή σου σε αριθμούς</h1>
+<p class="muted">Διάλεξε περιφερειακή ενότητα (η «περιοχή» σου, 52 συνολικά) ή περιφέρεια (13) και δες, για κάθε δείκτη του Στατιστικού Άτλαντα, την τελευταία τιμή, την τιμή της χώρας και τη θέση της περιοχής σου.</p>
+<div class="pick" role="group" aria-label="Επίπεδο περιοχής"><button type="button" data-l="nuts3" aria-pressed="true">Περιφερειακή ενότητα</button><button type="button" data-l="nuts2" aria-pressed="false">Περιφέρεια</button></div>
+<label for="area">Περιοχή</label><select id="area"></select>
+<div id="out" class="res" aria-live="polite"><div class="empty" id="empty">Διάλεξε μια περιοχή για να δεις το προφίλ της.</div></div>
+<div class="note"><p><b>Πώς το διαβάζεις:</b> η θέση μετρά από την <i>υψηλότερη</i> τιμή (1η) προς τη χαμηλότερη. Δείχνει πού βρίσκεται η περιοχή ανάμεσα στις άλλες, όχι αν είναι «καλύτερη» ή «χειρότερη»: μια υψηλή τιμή μπορεί να είναι καλό ή κακό, ανάλογα με τον δείκτη. Οι αριθμοί περιγράφουν, δεν εξηγούν γιατί μια περιοχή έχει την τιμή που έχει.</p>
+<p>Κάθε δείκτης έχει το δικό του τελευταίο έτος, γι' αυτό τα έτη διαφέρουν. Η «χώρα» είναι το σύνολο της Ελλάδας με τον ίδιο ορισμό. Δείκτες που η πηγή δίνει μόνο ανά περιφέρεια εμφανίζονται με την τιμή της περιφέρειας.</p>
+<p><b>Πηγές:</b> ΕΛΣΤΑΤ και Eurostat, όπως φαίνονται, με πλήρεις ορισμούς και σημειώσεις, στον <a href="https://tools.statistikosatlantas.com/xartis/">χάρτη του Στατιστικού Άτλαντα</a>. Δεν κρατάμε τίποτα από όσα επιλέγετε: όλα γίνονται στη συσκευή σας.</p></div>
+</main><footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+<script>
+const MAP="https://tools.statistikosatlantas.com/xartis/";
+let D=null,level="nuts3",code="";
+const $=id=>document.getElementById(id);
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+function num(v,dec){const neg=v<0,s=Math.abs(v).toFixed(dec),[i,f]=s.split(".");
+ const g=i.replace(/\B(?=(\d{3})+(?!\d))/g,".");return(neg&&+s!==0?"−":"")+g+(f?","+f:"")}
+const show=(ind,v)=>num(v,ind.dec)+ind.suf;
+function areaName(l,c){return l==="nuts3"?D.nuts3[c].name:D.nuts2[c]}
+function fillSelect(){const s=$("area");s.textContent="";
+ const o0=el("option","", "— Διάλεξε "+(level==="nuts3"?"περιφερειακή ενότητα":"περιφέρεια")+" —");o0.value="";s.append(o0);
+ if(level==="nuts2"){for(const c of Object.keys(D.nuts2)){const o=el("option","",D.nuts2[c]);o.value=c;s.append(o)}}
+ else for(const r of Object.keys(D.nuts2)){const g=document.createElement("optgroup");g.label=D.nuts2[r];
+  for(const c of Object.keys(D.nuts3))if(D.nuts3[c].region===r){const o=el("option","",D.nuts3[c].name);o.value=c;g.append(o)}s.append(g)}
+ s.value=code}
+function row(ind,lv,c,regionOnly,regName){
+ const [v,r]=lv.v[c],li=el("div","ind"),top=el("div","top");
+ top.append(el("span","t",ind.title),el("span","yr",lv.win?"τριετία "+(lv.year-lv.win+1)+"–"+lv.year:String(lv.year)));li.append(top);
+ const n=el("div","nums"),val=el("span","val",show(ind,v));if(ind.sub){const sm=el("small","","  "+ind.sub);val.append(sm)}
+ const nat=el("span","nat");nat.append("Ελλάδα: ",el("b","",show(ind,lv.nat)));
+ const rk=el("span","rank",r+"η από "+lv.n+(regionOnly?" περιφέρειες":""));n.append(val,nat,rk);li.append(n);
+ if(lv.cnt)n.append(el("span","nat",lv.cntLabel+": "+num(lv.cnt[c],0)));
+ const tr=el("div","track");tr.setAttribute("role","img");tr.setAttribute("aria-label","Θέση "+r+" από "+lv.n);
+ const dot=document.createElement("i");dot.style.left=(lv.n>1?(r-1)/(lv.n-1)*100:0)+"%";tr.append(dot);
+ const ends=el("div","ends");ends.append(el("span","","υψηλότερη"),el("span","","χαμηλότερη"));li.append(tr,ends);
+ li.append(el("p","def",ind.def));
+ const fl=el("div","flags");
+ if(regionOnly)fl.append(el("span","flag","ανά περιφέρεια μόνο· τιμή της Περιφέρειας "+regName));
+ if(lv.natnote)fl.append(el("span","flag warn",lv.natnote));
+ for(const k of lv.warn[c]||[])fl.append(el("span","flag warn",lv.notes[k]));
+ if(lv.brk&&lv.brk[0]===lv.year)fl.append(el("span","flag warn","σπάσιμο σειράς το "+lv.brk[0]));
+ if(fl.children.length)li.append(fl);
+ const d=document.createElement("details"),sm=el("summary","","Σημειώσεις και πηγή");d.append(sm);
+ if(ind.cav)d.append(el("p","",ind.cav));
+ if(lv.brk&&lv.brk[0]!==lv.year)d.append(el("p","","Σπάσιμο σειράς το "+lv.brk[0]+": "+lv.brk[1]+". Συγκρίσεις με παλαιότερα έτη είναι ενδεικτικές· εδώ δείχνουμε μόνο το τελευταίο έτος."));
+ d.append(el("p","","Πηγή: "+ind.src+". Πλήρης ορισμός στον χάρτη."));li.append(d);return li}
+function render(){const out=$("out");out.textContent="";
+ if(!code){const e=el("div","empty","Διάλεξε μια περιοχή για να δεις το προφίλ της.");e.id="empty";out.append(e);return}
+ const reg=level==="nuts3"?D.nuts3[code].region:code,regName=D.nuts2[reg];
+ out.append(el("h2","",areaName(level,code)));
+ out.append(el("p","lead2",level==="nuts3"?"Περιφερειακή ενότητα · Περιφέρεια "+regName:"Περιφέρεια"));
+ const a=el("a","btn","Δες τον πλήρη χάρτη");a.href=MAP;out.append(a);
+ let groups=[],last=null,rest=[];
+ for(const ind of D.indicators){const lv=ind.levels[level];
+  if(lv){if(last!==ind.group){last=ind.group;groups.push([ind.group,[]])}groups[groups.length-1][1].push(row(ind,lv,code,false))}
+  else if(level==="nuts3"&&ind.levels.nuts2)rest.push(ind)}
+ for(const [g,rows] of groups){out.append(el("h3","",g));for(const r of rows)out.append(r)}
+ if(rest.length){out.append(el("h3","","Μόνο ανά περιφέρεια"));
+  out.append(el("p","lead2","Για αυτούς τους δείκτες η πηγή δεν δίνει στοιχεία ανά περιφερειακή ενότητα: βλέπεις την τιμή της Περιφέρειας "+regName+", στην οποία ανήκει η περιοχή σου."));
+  for(const ind of rest)out.append(row(ind,ind.levels.nuts2,reg,true,regName))}
+}
+function setCode(c){code=c;try{history.replaceState(null,"",c?"#"+c:location.pathname+location.search)}catch(e){}render()}
+document.querySelectorAll(".pick button").forEach(b=>b.onclick=()=>{level=b.dataset.l;
+ document.querySelectorAll(".pick button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+ code="";fillSelect();setCode("")});
+$("area").onchange=e=>setCode(e.target.value);
+fetch("data.json").then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{D=d;
+ const h=location.hash.slice(1);
+ if(D.nuts3[h]){level="nuts3";code=h}else if(D.nuts2[h]){level="nuts2";code=h}
+ document.querySelectorAll(".pick button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.l===level));
+ fillSelect();render()}).catch(()=>{$("out").textContent="Δεν φορτώθηκαν τα στοιχεία. Δοκίμασε ξανά αργότερα."});
+</script></body></html>
