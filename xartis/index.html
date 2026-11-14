@@ -704,7 +704,8 @@ function colorScale() {
       ? { type: "sequential", step: Math.min(...fixed.slice(1).map((v, i) => v - fixed[i])), thresholds: fixed, colors: SEQUENTIAL }
       : state.metric === "level"
       ? sequential(d3.min(values), d3.max(values))
-      : diverging(d3.max(values, Math.abs) ?? 1, [0.5, 1, 2, 2.5, 5, 10, 20, 50, 100, 200, 250, 500]);
+      // ratio.diffSteps: δικά του βήματα για τη διαφορά, όταν οι τιμές είναι μικρές (π.χ. γονιμότητα, δέκατα του παιδιού).
+      : diverging(d3.max(values, Math.abs) ?? 1, ind.ratio?.diffSteps ?? [0.5, 1, 2, 2.5, 5, 10, 20, 50, 100, 200, 250, 500]);
   } else {
     const rates = [];
     for (const year of rateYears()) {
@@ -947,7 +948,7 @@ function renderLegend() {
       const center = (i - 5) * scale.step;
       label.textContent = i % 2 === 0 ? ""
         : state.metric === "change" ? pct(center, 0)
-        : state.metric === "diff" ? fmtDiff(center, false, scale.step >= 1 ? 0 : 1)
+        : state.metric === "diff" ? fmtDiff(center, false, scale.step >= 1 ? 0 : scale.step >= 0.05 ? 1 : 2)
         : fmtRate(center, true);
     } else {
       const t = scale.thresholds;
@@ -1067,6 +1068,13 @@ function renderDetail(block, blocks) {
       sub.append(document.createElement("br"), `Προσοχή (${note.years.join(", ")}): ${note.text}.`);
     }
     for (const note of flagNotes(block, year)) sub.append(document.createElement("br"), `Σημείωση της πηγής: ${note}.`);
+    // Η κάρτα δείχνει και τη διαφορά από το έτος σύγκρισης: οι σημάνσεις εκείνου του έτους μετρούν κι αυτές.
+    if (base !== year && then != null) {
+      const shown = flagNotes(block, year);
+      for (const note of flagNotes(block, base)) {
+        if (!shown.includes(note)) sub.append(document.createElement("br"), `Σημείωση της πηγής (έτος σύγκρισης ${period(base)}): ${note}.`);
+      }
+    }
     if (provisionalNote([year, base])) sub.append(document.createElement("br"), provisionalNote([year, base]));
     renderSpark((y) => blockRatio(block, level, y), fmtRatio);
     return;
