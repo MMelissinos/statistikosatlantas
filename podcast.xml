@@ -6,12 +6,12 @@
   <atom:link href="https://tools.statistikosatlantas.com/podcast.xml" rel="self" type="application/rss+xml"/>
   <language>el</language>
   <copyright>© 2026 Στατιστικός Άτλαντας</copyright>
-  <description>Η Ελλάδα, όπως τη λένε οι αριθμοί. Ηχητικά ντοκιμαντέρ για την Ελλάδα, με στοιχεία ελεγμένα στην πηγή τους (ΕΛΣΤΑΤ, Eurostat και άλλοι επίσημοι φορείς). Αφήγηση με τη φωνή του δημιουργού, παραγμένη με τεχνητή νοημοσύνη. Πηγές και κείμενα: https://statistikosatlantas.com/category/akouste/</description>
-  <itunes:summary>Η Ελλάδα, όπως τη λένε οι αριθμοί. Ηχητικά ντοκιμαντέρ για την Ελλάδα, με στοιχεία ελεγμένα στην πηγή τους (ΕΛΣΤΑΤ, Eurostat και άλλοι επίσημοι φορείς). Αφήγηση με τη φωνή του δημιουργού, παραγμένη με τεχνητή νοημοσύνη. Πηγές και κείμενα: https://statistikosatlantas.com/category/akouste/</itunes:summary>
+  <description>Η Ελλάδα, όπως τη λένε οι αριθμοί. Ηχητικά ντοκιμαντέρ για την Ελλάδα, με στοιχεία ελεγμένα στην πηγή τους (ΕΛΣΤΑΤ, Eurostat και άλλοι επίσημοι φορείς). Πηγές και κείμενα: https://statistikosatlantas.com/category/akouste/</description>
+  <itunes:summary>Η Ελλάδα, όπως τη λένε οι αριθμοί. Ηχητικά ντοκιμαντέρ για την Ελλάδα, με στοιχεία ελεγμένα στην πηγή τους (ΕΛΣΤΑΤ, Eurostat και άλλοι επίσημοι φορείς). Πηγές και κείμενα: https://statistikosatlantas.com/category/akouste/</itunes:summary>
   <itunes:author>Στατιστικός Άτλαντας</itunes:author>
   <managingEditor>statistikosatlantas@gmail.com (Στατιστικός Άτλαντας)</managingEditor>
   <webMaster>statistikosatlantas@gmail.com (Στατιστικός Άτλαντας)</webMaster>
-  <lastBuildDate>Sat, 14 Nov 2026 13:06:38 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 14 Nov 2026 13:18:44 +0000</lastBuildDate>
   <itunes:owner><itunes:name>Στατιστικός Άτλαντας</itunes:name><itunes:email>statistikosatlantas@gmail.com</itunes:email></itunes:owner>
   <itunes:image href="https://tools.statistikosatlantas.com/podcast-cover.jpg"/>
   <image><url>https://tools.statistikosatlantas.com/podcast-cover.jpg</url><title>Στατιστικός Άτλαντας: Ηχητικά ντοκιμαντέρ</title><link>https://statistikosatlantas.com/category/akouste/</link></image>
@@ -19,6 +19,18 @@
   <itunes:category text="Education"/>
   <itunes:explicit>false</itunes:explicit>
   <itunes:type>episodic</itunes:type>
+  <item>
+   <title>Επεισόδιο 3: Οι δρόμοι που σκοτώνουν</title>
+   <description>Το 2024 σκοτώθηκαν στους ελληνικούς δρόμους 664 άνθρωποι, 64 ανά εκατομμύριο κατοίκους, έναντι 44 στην Ευρωπαϊκή Ένωση, και η Ελλάδα είναι τρίτη χειρότερη στην ΕΕ. Μετά τη μεγάλη πτώση ως το 2014, από το 2019 ο ελληνικός αριθμός στάθηκε, ενώ ο ευρωπαϊκός συνέχισε να πέφτει. Σε περίπου δεκατρία λεπτά ακούμε τι δείχνουν οι αριθμοί για τα δίτροχα και για τον χάρτη, και τι δεν μπορούν να πουν. Πηγές και όλο το κείμενο: https://statistikosatlantas.com/2026/11/14/epeisodio-3-oi-dromoi-pou-skotonoun/</description>
+   <link>https://statistikosatlantas.com/2026/11/14/epeisodio-3-oi-dromoi-pou-skotonoun/</link>
+   <guid isPermaLink="false">statistikosatlantas-akouste-003</guid>
+   <pubDate>Sat, 14 Nov 2026 13:17:18 +0000</pubDate>
+   <enclosure url="https://statistikosatlantas.com/wp-content/uploads/2026/11/akouste-ep03-oi-dromoi-pou-skotonoun.mp3" length="16007881" type="audio/mpeg"/>
+   <itunes:duration>00:13:20</itunes:duration>
+   <itunes:episode>3</itunes:episode>
+   <itunes:episodeType>full</itunes:episodeType>
+   <itunes:explicit>false</itunes:explicit>
+  </item>
   <item>
    <title>Επεισόδιο 2: Αυτοί που έφυγαν, αυτοί που γυρίζουν</title>
    <description>Το 2012 η ΕΛΣΤΑΤ εκτιμά ότι έφυγαν από την Ελλάδα περίπου 135.000 άνθρωποι, οι περισσότεροι από το 1991. Το 2024 ήρθαν πια περισσότεροι απ' όσους έφυγαν, και στους Έλληνες πολίτες το ισοζύγιο γύρισε θετικό. Σε περίπου δεκαεπτά λεπτά ακολουθούμε ποιοι έφυγαν, πού πήγαν και πόσοι γυρίζουν, αλλά και γιατί σχεδόν όλοι αυτοί οι αριθμοί είναι εκτιμήσεις. Πηγές και όλο το κείμενο: https://statistikosatlantas.com/2026/11/14/epeisodio-2-aftoi-pou-efygan-aftoi-pou-gyrizoun/</description>
