@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+ <channel>
+  <title>Στατιστικός Άτλαντας: Ηχητικά ντοκιμαντέρ</title>
+  <link>https://statistikosatlantas.com/category/akouste/</link>
+  <atom:link href="https://tools.statistikosatlantas.com/podcast.xml" rel="self" type="application/rss+xml"/>
+  <language>el</language>
+  <copyright>© 2026 Στατιστικός Άτλαντας</copyright>
+  <description>Η Ελλάδα, όπως τη λένε οι αριθμοί. Ηχητικά ντοκιμαντέρ για την Ελλάδα, με στοιχεία ελεγμένα στην πηγή τους (ΕΛΣΤΑΤ, Eurostat και άλλοι επίσημοι φορείς). Αφήγηση με τη φωνή του δημιουργού, παραγμένη με τεχνητή νοημοσύνη. Πηγές και κείμενα: https://statistikosatlantas.com/category/akouste/</description>
+  <itunes:summary>Η Ελλάδα, όπως τη λένε οι αριθμοί. Ηχητικά ντοκιμαντέρ για την Ελλάδα, με στοιχεία ελεγμένα στην πηγή τους (ΕΛΣΤΑΤ, Eurostat και άλλοι επίσημοι φορείς). Αφήγηση με τη φωνή του δημιουργού, παραγμένη με τεχνητή νοημοσύνη. Πηγές και κείμενα: https://statistikosatlantas.com/category/akouste/</itunes:summary>
+  <itunes:author>Στατιστικός Άτλαντας</itunes:author>
+  <itunes:owner><itunes:name>Στατιστικός Άτλαντας</itunes:name><itunes:email>statistikosatlantas@gmail.com</itunes:email></itunes:owner>
+  <itunes:image href="https://tools.statistikosatlantas.com/podcast-cover.jpg"/>
+  <image><url>https://tools.statistikosatlantas.com/podcast-cover.jpg</url><title>Στατιστικός Άτλαντας: Ηχητικά ντοκιμαντέρ</title><link>https://statistikosatlantas.com/category/akouste/</link></image>
+  <itunes:category text="Society &amp; Culture"><itunes:category text="Documentary"/></itunes:category>
+  <itunes:category text="Education"/>
+  <itunes:explicit>false</itunes:explicit>
+  <itunes:type>episodic</itunes:type>
+  <item>
+   <title>Επεισόδιο 2: Αυτοί που έφυγαν, αυτοί που γυρίζουν</title>
+   <description>Το 2012 η ΕΛΣΤΑΤ εκτιμά ότι έφυγαν από την Ελλάδα περίπου 135.000 άνθρωποι, οι περισσότεροι από το 1991. Το 2024 ήρθαν πια περισσότεροι απ' όσους έφυγαν, και στους Έλληνες πολίτες το ισοζύγιο γύρισε θετικό. Σε περίπου δεκαεπτά λεπτά ακολουθούμε ποιοι έφυγαν, πού πήγαν και πόσοι γυρίζουν, αλλά και γιατί σχεδόν όλοι αυτοί οι αριθμοί είναι εκτιμήσεις. Πηγές και όλο το κείμενο: https://statistikosatlantas.com/2026/11/14/epeisodio-2-aftoi-pou-efygan-aftoi-pou-gyrizoun/</description>
+   <link>https://statistikosatlantas.com/2026/11/14/epeisodio-2-aftoi-pou-efygan-aftoi-pou-gyrizoun/</link>
+   <guid isPermaLink="false">statistikosatlantas-akouste-002</guid>
+   <pubDate>Sat, 14 Nov 2026 09:15:34 +0000</pubDate>
+   <enclosure url="https://statistikosatlantas.com/wp-content/uploads/2026/11/akouste-ep02-aftoi-pou-efygan.mp3" length="20074624" type="audio/mpeg"/>
+   <itunes:duration>00:16:43</itunes:duration>
+   <itunes:episode>2</itunes:episode>
+   <itunes:episodeType>full</itunes:episodeType>
+   <itunes:explicit>false</itunes:explicit>
+  </item>
+  <item>
+   <title>Η χώρα που κρυώνει στο σπίτι: το πρώτο ηχητικό ντοκιμαντέρ</title>
+   <description>Η Ελλάδα, μια χώρα με ήπιους χειμώνες, ήταν πρώτη στην Ευρωπαϊκή Ένωση το 2025 στους ανθρώπους που δεν μπορούν να ζεστάνουν σωστά το σπίτι τους. Σε έντεκα περίπου λεπτά ακολουθούμε πώς άλλαξε η θέρμανση των σπιτιών από την απογραφή του 2011 ως την απογραφή του 2021, από τον καυστήρα πετρελαίου στο κλιματιστικό και στο αέριο, περιφέρεια με περιφέρεια. Μιλάμε επίσης για όσα δεν μπορούν να μας πουν οι αριθμοί. Πηγές και όλο το κείμενο: https://statistikosatlantas.com/2026/11/14/i-chora-pou-kryonei-sto-spiti-ichitiko-ntokimanter/</description>
+   <link>https://statistikosatlantas.com/2026/11/14/i-chora-pou-kryonei-sto-spiti-ichitiko-ntokimanter/</link>
+   <guid isPermaLink="false">statistikosatlantas-akouste-001</guid>
+   <pubDate>Sat, 14 Nov 2026 08:40:07 +0000</pubDate>
+   <enclosure url="https://statistikosatlantas.com/wp-content/uploads/2026/11/akouste-ep01-44k.mp3" length="13811506" type="audio/mpeg"/>
+   <itunes:duration>00:11:30</itunes:duration>
+   <itunes:episode>1</itunes:episode>
+   <itunes:episodeType>full</itunes:episodeType>
+   <itunes:explicit>false</itunes:explicit>
+  </item>
+ </channel>
+</rss>
