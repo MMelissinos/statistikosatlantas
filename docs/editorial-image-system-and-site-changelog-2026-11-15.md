@@ -164,3 +164,19 @@ Further batches should append records here or in a dedicated image migration led
 - Electric heating image: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-electric-heating-1600x900-1.webp`, 1600 × 900 WebP, 122,366 bytes; AI-generated domestic electric heater scene.
 - Digital skills image: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-digital-skills-1600x900-1.webp`, 1600 × 900 WebP, 70,542 bytes; AI-generated classroom scene with laptops, illustrative only.
 - Original media retained for rollback. No post text or statistics changed. WordPress API state verified, live browser visual inspection pending.
+
+## Batch 9: Gas heating, women's employment, housing burden (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 1170 | Gas heating (EL) | 1453 | 1672 | yes |
+| 1175 | Gas heating (EN) | 1453 | 1672 | yes |
+| 1127 | Women's employment (EL) | 1459 | 1673 | yes |
+| 1128 | Women's employment (EN) | 1459 | 1673 | yes |
+| 1058 | Housing cost burden among owners (EL) | 1462 | 1674 | yes |
+| 1059 | Housing cost burden among owners (EN) | 1462 | 1674 | yes |
+
+- Gas heating: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-gas-1600x900-1.webp`, **1600 × 900 WebP**, **81,332 bytes**. AI-generated radiator and gas piping in apartment, illustrative only.
+- Women's employment: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-women-1600x900-1.webp`, **1600 × 900 WebP**, **75,500 bytes**. AI-generated women at computers in an office.
+- Housing cost burden: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-housing-1600x900-1.webp`, **1600 × 900 WebP**, **69,772 bytes**. AI-generated homeowner studying household bills.
+- Originals retained for rollback; no article text or statistics edited. Images were cropped from AI-generated composites and resized, not documentary photographs. WordPress featured_media IDs verified; actual browser/mobile visual QA pending.
