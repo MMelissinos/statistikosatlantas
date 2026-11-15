@@ -205,3 +205,14 @@ Further batches should append records here or in a dedicated image migration led
 - Electricity: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-electricity-disconnection-1600x900-1.webp`, **1600 × 900 WebP**, **95,120 bytes**. AI-generated household electricity meter/panel, symbolic rather than an authentic disconnection incident.
 - Housing calculator: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-rent-mortgage-tool-1600x900-1.webp`, **1600 × 900 WebP**, **51,488 bytes**. AI-generated miniature house, keys, calculator and paperwork, symbolic illustration.
 - Original media retained for rollback; no article text/data modified. Featured-media API re-read confirmed all four changes. Live browser/mobile visual verification still pending.
+
+## Batch 12: Regional indicators tool (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 939 | Regional indicators tool (EL) | 1477 | 1693 | yes |
+| 940 | Regional indicators tool (EN) | 1477 | 1693 | yes |
+
+- Media **1693**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-regional-indicators-1600x900-1.webp`.
+- **1600 × 900 WebP**, **138,458 bytes**. AI-generated scene of a person studying a map; geographic shapes are decorative and must not be interpreted as cartographically accurate.
+- Original media **1477** retained for rollback. No article content/data changed. Featured media IDs re-read from WordPress; live browser/mobile appearance not independently checked.
