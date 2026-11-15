@@ -73,3 +73,18 @@ Further batches should append records here or in a dedicated image migration led
 - Greek post **15** and English post **303**: previous featured media **1422** → new **1642**. WordPress API re-read confirmed both new featured media IDs.
 - Illustration is **not** an authentic photo of the Kozani plant; media alt text explicitly states this.
 - **Deviation from target production spec:** source PNG is 1672 × 941 px, not yet resized to 1600 × 900 WebP. Before scaling the workflow, optimize subsequent uploads to the approved output spec. Browser/mobile rendering not independently tested.
+
+## Batch 3: paired translations and healthy-life-years image (2026-11-15)
+
+| Post ID | Subject | Old featured media | New featured media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 305 | Heating hardship (EN) | 652 | 1636 | yes |
+| 1347 | Self-employment (EN) | 1321 | 1637 | yes |
+| 1345 | Fertility (EN) | 1315 | 1638 | yes |
+| 1320 | Healthy life years (EL) | 1318 | 1645 | yes |
+| 1346 | Healthy life years (EN) | 1318 | 1645 | yes |
+
+- New featured image media **1645**, `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-healthy-years-1600x900-1.webp`.
+- Output independently resized and compressed to **1600 × 900 WebP**, **164,404 bytes**, meeting v1 production spec.
+- Visual: AI-generated editorial illustration of older adults walking in a sunny park; **not** documentary photography or evidence of a specific Greek location.
+- No article bodies or statistics edited. Actual live-browser appearance still unverified.
