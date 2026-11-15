@@ -100,3 +100,15 @@ Further batches should append records here or in a dedicated image migration led
 - Output **1600 × 900 WebP**, **142,548 bytes**; editorial AI-generated scene of shopping at a Greek market, not documentary evidence.
 - Attempted imagery for municipal waste did not match the topic and **was not uploaded or published**. Municipal waste posts **1244/1245** remain unchanged (featured media **1243**).
 - No article body/data changes; live browser visual verification pending.
+
+## Batch 5: Municipal waste (2026-11-16)
+
+| Post ID | Subject | Old featured media | New featured media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 1244 | Municipal waste (EL) | 1243 | 1654 | yes |
+| 1245 | Municipal waste (EN) | 1243 | 1654 | yes |
+
+- Media **1654**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-municipal-waste-1600x900-1.webp`.
+- Output **1600 × 900 WebP**, **173,094 bytes**.
+- AI-generated illustrative waste-sorting facility with disposal area in the background. **Not** an authentic photo of any Greek facility or evidence of waste treatment statistics.
+- Original featured image **1243** retained for rollback. No article content/data changed; live browser/mobile rendering not independently verified.
