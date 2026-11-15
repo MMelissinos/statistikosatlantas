@@ -235,3 +235,16 @@ User noticed featured image on article cards differed from imagery visible after
 | 1663 | 1184, 1185 |
 
 **Important:** This operation **prepended** a new image; it did NOT delete existing in-body images, since many are actual statistical figures and must be preserved. In particular, older in-body owl-branded image blocks may still remain farther down in some articles. Inspect before deciding to remove any. WordPress post revisions support rollback. Remaining previously changed featured-image posts are still pending this inline sync. Live browser/mobile visual inspection pending.
+
+## Batch 12: Heating-allowance tools and regional comparisons (2026-11-16)
+
+| Post ID | Subject | Old featured media | New featured media | Featured and inline image verified |
+| ---: | --- | ---: | ---: | --- |
+| 825 | Heating allowance and social tariff tools (EL) | 1486 | 1717 | yes |
+| 826 | Heating allowance and social tariff tools (EN) | 1486 | 1717 | yes |
+| 866 | Five areas rank poorly on four indicators (EL) | 1480 | 1718 | yes |
+| 867 | Five areas rank poorly on four indicators (EN) | 1480 | 1718 | yes |
+
+- Media 1717: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-heating-allowance-1600x900-1.webp`, 1600×900 WebP, 149,894 bytes; AI-generated household bills and radiator, symbolic illustration.
+- Media 1718: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-regional-comparison-1600x900-1.webp`, 1600×900 WebP, 126,048 bytes; AI-generated woman studying regional charts on laptop, symbolic illustration, charts not real data.
+- For post 825, replaced its first decorative `atlas-card` image block with the new image. For 826, 866, 867, prepended the same image used as featured media, retaining existing body figures. No statistical charts or prose edited. Previous featured media retained for rollback; WordPress revisions available for body changes. API verified; browser/mobile rendering pending.
