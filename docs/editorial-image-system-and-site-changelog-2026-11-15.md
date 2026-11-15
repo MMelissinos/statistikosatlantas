@@ -192,3 +192,16 @@ Further batches should append records here or in a dedicated image migration led
 - Output **1600 × 900 WebP**, **118,222 bytes**; AI-generated heating-oil tank in basement, not a real documented facility.
 - Planned electricity-disconnections and rent/mortgage illustrations were **not applied**: generated alternatives were off-topic. No unsuitable images were uploaded for these subjects.
 - Original media **1497** retained for rollback. Article content and data unchanged; WordPress featured_media re-read verified. Live browser rendering not checked.
+
+## Batch 11: Electricity disconnections and housing-cost calculator (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 13 | Electricity disconnections (EL) | 1500 | 1684 | yes |
+| 301 | Electricity disconnections (EN) | 1500 | 1684 | yes |
+| 1051 | Rent/mortgage burden tool (EL) | 1465 | 1685 | yes |
+| 1052 | Rent/mortgage burden tool (EN) | 1465 | 1685 | yes |
+
+- Electricity: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-electricity-disconnection-1600x900-1.webp`, **1600 × 900 WebP**, **95,120 bytes**. AI-generated household electricity meter/panel, symbolic rather than an authentic disconnection incident.
+- Housing calculator: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-rent-mortgage-tool-1600x900-1.webp`, **1600 × 900 WebP**, **51,488 bytes**. AI-generated miniature house, keys, calculator and paperwork, symbolic illustration.
+- Original media retained for rollback; no article text/data modified. Featured-media API re-read confirmed all four changes. Live browser/mobile visual verification still pending.
