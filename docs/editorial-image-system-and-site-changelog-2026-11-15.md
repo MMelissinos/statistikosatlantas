@@ -261,3 +261,14 @@ User noticed featured image on article cards differed from imagery visible after
 - Media 1723: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-home-heating-cold-1600x900-1.webp`, 1600×900 WebP, 139,472 bytes; AI-generated illustrative image of older woman with blanket in winter apartment.
 - Media 1724: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-inflation-groceries-1600x900-1.webp`, 1600×900 WebP, 154,934 bytes; AI-generated illustrative image of supermarket shopping cart and receipt. Not a statistical graphic.
 - For post 740, replaced the first decorative `atlas-card` image block. For 857, 858 and 741, prepended the new featured image as an inline Gutenberg image. Other existing figures left untouched. Previous featured media IDs retained for rollback; WordPress revisions available for body changes. API read-back verified featured media and body URL for all four posts. Browser visual verification pending.
+
+## Batch 14: Access to healthcare (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | Featured and inline verified |
+| ---: | --- | ---: | ---: | --- |
+| 813 | Healthcare access (EL) | 1489 | 1729 | yes |
+| 814 | Healthcare access (EN) | 1489 | 1729 | yes |
+
+- Media **1729**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-healthcare-access-1600x900-1.webp`, 1600×900 WebP, 107,390 bytes. AI-generated illustrative clinic waiting-room scene, not actual patients or a documented healthcare facility.
+- Same image used as featured media and prepended to article body; existing figures/text untouched. Previous featured media 1489 retained for rollback, post revisions available for body changes. API read-back confirmed both updates; browser/mobile QA pending.
+- Other generated candidate imagery in this batch was not applied because it was not sufficiently matched to the remaining article topics.
