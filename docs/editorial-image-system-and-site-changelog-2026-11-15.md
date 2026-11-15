@@ -248,3 +248,16 @@ User noticed featured image on article cards differed from imagery visible after
 - Media 1717: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-heating-allowance-1600x900-1.webp`, 1600×900 WebP, 149,894 bytes; AI-generated household bills and radiator, symbolic illustration.
 - Media 1718: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-regional-comparison-1600x900-1.webp`, 1600×900 WebP, 126,048 bytes; AI-generated woman studying regional charts on laptop, symbolic illustration, charts not real data.
 - For post 825, replaced its first decorative `atlas-card` image block with the new image. For 826, 866, 867, prepended the same image used as featured media, retaining existing body figures. No statistical charts or prose edited. Previous featured media retained for rollback; WordPress revisions available for body changes. API verified; browser/mobile rendering pending.
+
+## Batch 13: Cold homes and inflation (2026-11-16)
+
+| Post ID | Subject | Old featured media | New featured media | Featured and inline image verified |
+| ---: | --- | ---: | ---: | --- |
+| 857 | Cold homes (EL) | 1483 | 1723 | yes |
+| 858 | Cold homes (EN) | 1483 | 1723 | yes |
+| 740 | October inflation energy contribution (EL) | 1492 | 1724 | yes |
+| 741 | October inflation energy contribution (EN) | 1492 | 1724 | yes |
+
+- Media 1723: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-home-heating-cold-1600x900-1.webp`, 1600×900 WebP, 139,472 bytes; AI-generated illustrative image of older woman with blanket in winter apartment.
+- Media 1724: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-inflation-groceries-1600x900-1.webp`, 1600×900 WebP, 154,934 bytes; AI-generated illustrative image of supermarket shopping cart and receipt. Not a statistical graphic.
+- For post 740, replaced the first decorative `atlas-card` image block. For 857, 858 and 741, prepended the new featured image as an inline Gutenberg image. Other existing figures left untouched. Previous featured media IDs retained for rollback; WordPress revisions available for body changes. API read-back verified featured media and body URL for all four posts. Browser visual verification pending.
