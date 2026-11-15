@@ -272,3 +272,13 @@ User noticed featured image on article cards differed from imagery visible after
 - Media **1729**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-healthcare-access-1600x900-1.webp`, 1600×900 WebP, 107,390 bytes. AI-generated illustrative clinic waiting-room scene, not actual patients or a documented healthcare facility.
 - Same image used as featured media and prepended to article body; existing figures/text untouched. Previous featured media 1489 retained for rollback, post revisions available for body changes. API read-back confirmed both updates; browser/mobile QA pending.
 - Other generated candidate imagery in this batch was not applied because it was not sufficiently matched to the remaining article topics.
+
+## Batch 15: Heating-oil pump subsidy (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New featured media | API read-back |
+| ---: | --- | ---: | ---: | --- |
+| 379 | Heating oil subsidy (EL) | 1503 | 1732 | verified |
+| 380 | Heating oil subsidy (EN) | 1503 | 1732 | verified |
+
+- Media 1732: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-heating-oil-delivery-1600x900-1.webp`, **1600 × 900 WebP**, **164,216 bytes**. AI-generated illustrative oil delivery to a residential building, not a photo of an actual delivery.
+- Set as featured media and prepended the same image in the post body for both language editions. Original in-body image in EL post includes a numeric claim and **was intentionally preserved**, not silently deleted; this means the old graphic may still be visible below the new hero image. No statistical graphics, prose or figures were changed. Original featured media retained for rollback and WordPress post revisions available. Live mobile/browser visual check pending.
