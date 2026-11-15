@@ -148,3 +148,19 @@ Further batches should append records here or in a dedicated image migration led
 - Output **1600 × 900 WebP**, **235,192 bytes**.
 - AI-generated editorial image of a winding mountain road and a car at sunset; not a photo of a real location, collision, or statistical evidence.
 - Original media **1447** retained for rollback. No article text/data edited; live browser/mobile appearance not independently verified.
+
+## Batch 8: Road safety, electric heating, digital skills (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 1184 | Road safety (EL) | 1447 | 1663 | yes |
+| 1185 | Road safety (EN) | 1447 | 1663 | yes |
+| 1174 | Electric heating (EL) | 1450 | 1666 | yes |
+| 1177 | Electric heating (EN) | 1450 | 1666 | yes |
+| 1163 | Digital skills (EL) | 1456 | 1667 | yes |
+| 1164 | Digital skills (EN) | 1456 | 1667 | yes |
+
+- Road safety image: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-road-safety-1600x900-1.webp`, 1600 × 900 WebP, 235,192 bytes; AI-generated winding road scene, not a real crash or identified location.
+- Electric heating image: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-electric-heating-1600x900-1.webp`, 1600 × 900 WebP, 122,366 bytes; AI-generated domestic electric heater scene.
+- Digital skills image: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-digital-skills-1600x900-1.webp`, 1600 × 900 WebP, 70,542 bytes; AI-generated classroom scene with laptops, illustrative only.
+- Original media retained for rollback. No post text or statistics changed. WordPress API state verified, live browser visual inspection pending.
