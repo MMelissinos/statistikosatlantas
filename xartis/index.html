@@ -71,6 +71,11 @@ button, select, input { font: inherit; color: inherit; }
 }
 .stories button span { flex: none; font-family: var(--font-display); font-size: var(--step-1); font-weight: 400; color: var(--muted); }
 .stories button[aria-current="true"] { color: var(--ink); border-bottom: 2px solid var(--ink); padding-bottom: 5px; }
+/* 15/11: οι καρτέλες μπαίνουν από JS μετά το manifest· ως τότε κρατάμε τον χώρο τους (8 χάρτες: 4 σειρές στο κινητό,
+   2 ως 1199px, 1 από εκεί και πάνω), ώστε ο τίτλος και ο χάρτης να μη σπρώχνονται προς τα κάτω (CLS 0,36). */
+.stories.loading { visibility: hidden; min-height: 192px; }
+@media (min-width: 640px) { .stories.loading { min-height: 90px; } }
+@media (min-width: 1200px) { .stories.loading { min-height: 46px; } }
 @media (min-width: 640px) {
   .stories { display: flex; flex-wrap: wrap; gap: 0 22px; border-bottom: 1px solid var(--rule); }
   .stories button { flex: none; min-height: 44px; padding: 8px 0 10px; margin-bottom: -1px; border-bottom: 2px solid transparent; line-height: inherit; }
@@ -270,7 +275,7 @@ select {
 </style>
 
 <div class="page">
-  <nav class="stories" id="storyNav" aria-label="Χάρτες" hidden></nav>
+  <nav class="stories loading" id="storyNav" aria-label="Χάρτες"></nav>
   <header class="masthead">
     <p class="eyebrow">Στατιστικός Άτλας Ελλάδας<span class="eyebrow-topic"> · <span id="eyebrowTopic">Δημογραφία</span></span></p>
     <h1 id="headline">Οι γεννήσεις στην Ελλάδα, περιοχή προς περιοχή</h1>
@@ -1450,6 +1455,7 @@ function renderStoryNav() {
   const nav = $("storyNav");
   const list = stories();
   nav.hidden = list.length < 2;
+  nav.classList.remove("loading");
   nav.innerHTML = "";
   list.forEach((story, i) => {
     const button = document.createElement("button");
