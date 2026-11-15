@@ -112,3 +112,15 @@ Further batches should append records here or in a dedicated image migration led
 - Output **1600 × 900 WebP**, **173,094 bytes**.
 - AI-generated illustrative waste-sorting facility with disposal area in the background. **Not** an authentic photo of any Greek facility or evidence of waste treatment statistics.
 - Original featured image **1243** retained for rollback. No article content/data changed; live browser/mobile rendering not independently verified.
+
+## Batch 6: Youth unemployment and parental home (2026-11-16)
+
+| Post ID | Subject | Old featured media | New featured media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 1232 | Youth unemployment / parental home (EL) | 1231 | 1657 | yes |
+| 1233 | Youth unemployment / parental home (EN) | 1231 | 1657 | yes |
+
+- Media **1657**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-youth-parental-home-1600x900-1.webp`.
+- Output **1600 × 900 WebP**, **97,612 bytes**.
+- AI-generated editorial scene of a young adult using a laptop at the family home; illustrative, not an authentic photo of any person or a depiction of a particular statistic.
+- Original media **1231** retained for rollback. Article text/data unchanged; browser/mobile rendering not independently verified.
