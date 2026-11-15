@@ -216,3 +216,22 @@ Further batches should append records here or in a dedicated image migration led
 - Media **1693**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-regional-indicators-1600x900-1.webp`.
 - **1600 × 900 WebP**, **138,458 bytes**. AI-generated scene of a person studying a map; geographic shapes are decorative and must not be interpreted as cartographically accurate.
 - Original media **1477** retained for rollback. No article content/data changed. Featured media IDs re-read from WordPress; live browser/mobile appearance not independently checked.
+
+## Inline hero-image synchronization, partial batch (2026-11-16)
+
+User noticed featured image on article cards differed from imagery visible after opening articles. WordPress single template did not include a featured-image block. For the following **20** posts, inserted at the start of the existing post content a Gutenberg image block (`atlas-featured-inline`) using each post's already-assigned featured media URL, after checking the media ID and ensuring that URL was not already present:
+
+| Featured media | Post IDs |
+| ---: | --- |
+| 1636 | 17, 305 |
+| 1637 | 1323, 1347 |
+| 1638 | 1317, 1345 |
+| 1642 | 15, 303 |
+| 1645 | 1320, 1346 |
+| 1651 | 1254, 1255 |
+| 1654 | 1244, 1245 |
+| 1657 | 1232, 1233 |
+| 1660 | 1192, 1193 |
+| 1663 | 1184, 1185 |
+
+**Important:** This operation **prepended** a new image; it did NOT delete existing in-body images, since many are actual statistical figures and must be preserved. In particular, older in-body owl-branded image blocks may still remain farther down in some articles. Inspect before deciding to remove any. WordPress post revisions support rollback. Remaining previously changed featured-image posts are still pending this inline sync. Live browser/mobile visual inspection pending.
