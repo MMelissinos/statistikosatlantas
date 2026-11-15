@@ -88,3 +88,15 @@ Further batches should append records here or in a dedicated image migration led
 - Output independently resized and compressed to **1600 × 900 WebP**, **164,404 bytes**, meeting v1 production spec.
 - Visual: AI-generated editorial illustration of older adults walking in a sunny park; **not** documentary photography or evidence of a specific Greek location.
 - No article bodies or statistics edited. Actual live-browser appearance still unverified.
+
+## Batch 4: Food prices (2026-11-15)
+
+| Post ID | Subject | Old featured media | New featured media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 1254 | Food prices (EL) | 1253 | 1651 | yes |
+| 1255 | Food prices (EN) | 1253 | 1651 | yes |
+
+- Media **1651**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-food-prices-1600x900-1.webp`.
+- Output **1600 × 900 WebP**, **142,548 bytes**; editorial AI-generated scene of shopping at a Greek market, not documentary evidence.
+- Attempted imagery for municipal waste did not match the topic and **was not uploaded or published**. Municipal waste posts **1244/1245** remain unchanged (featured media **1243**).
+- No article body/data changes; live browser visual verification pending.
