@@ -180,3 +180,15 @@ Further batches should append records here or in a dedicated image migration led
 - Women's employment: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-women-1600x900-1.webp`, **1600 × 900 WebP**, **75,500 bytes**. AI-generated women at computers in an office.
 - Housing cost burden: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-housing-1600x900-1.webp`, **1600 × 900 WebP**, **69,772 bytes**. AI-generated homeowner studying household bills.
 - Originals retained for rollback; no article text or statistics edited. Images were cropped from AI-generated composites and resized, not documentary photographs. WordPress featured_media IDs verified; actual browser/mobile visual QA pending.
+
+## Batch 10: Heating oil consumption (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 238 | Heating oil consumption (EL) | 1497 | 1681 | yes |
+| 309 | Heating oil consumption (EN) | 1497 | 1681 | yes |
+
+- Media **1681**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-heating-oil-1600x900-1.webp`.
+- Output **1600 × 900 WebP**, **118,222 bytes**; AI-generated heating-oil tank in basement, not a real documented facility.
+- Planned electricity-disconnections and rent/mortgage illustrations were **not applied**: generated alternatives were off-topic. No unsuitable images were uploaded for these subjects.
+- Original media **1497** retained for rollback. Article content and data unchanged; WordPress featured_media re-read verified. Live browser rendering not checked.
