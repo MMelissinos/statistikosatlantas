@@ -136,3 +136,15 @@ Further batches should append records here or in a dedicated image migration led
 - Output **1600 × 900 WebP**, **116,156 bytes**.
 - AI-generated editorial scene of travelers at a ferry port; symbolic illustration, not an authentic depiction of migration statistics or a real event.
 - Original media **1444** retained for rollback. No article text/data edited. Live browser/mobile rendering not independently verified.
+
+## Batch 8: Road safety (2026-11-16)
+
+| Post ID | Subject | Old featured media | New featured media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 1184 | Road safety (EL) | 1447 | 1663 | yes |
+| 1185 | Road safety (EN) | 1447 | 1663 | yes |
+
+- Media **1663**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-road-safety-1600x900-1.webp`.
+- Output **1600 × 900 WebP**, **235,192 bytes**.
+- AI-generated editorial image of a winding mountain road and a car at sunset; not a photo of a real location, collision, or statistical evidence.
+- Original media **1447** retained for rollback. No article text/data edited; live browser/mobile appearance not independently verified.
