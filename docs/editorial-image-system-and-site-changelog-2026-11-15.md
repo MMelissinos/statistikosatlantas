@@ -66,3 +66,10 @@ Past changes were made via WordPress API; no reliable claim of browser screensho
 | 1317 | 1315 | 1638 |
 
 Further batches should append records here or in a dedicated image migration ledger.
+
+## Batch 2: Kozani district heating (2026-11-15)
+
+- Editorial image uploaded as WordPress media **1642**: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-kozani-district-heating-editorial.png`.
+- Greek post **15** and English post **303**: previous featured media **1422** → new **1642**. WordPress API re-read confirmed both new featured media IDs.
+- Illustration is **not** an authentic photo of the Kozani plant; media alt text explicitly states this.
+- **Deviation from target production spec:** source PNG is 1672 × 941 px, not yet resized to 1600 × 900 WebP. Before scaling the workflow, optimize subsequent uploads to the approved output spec. Browser/mobile rendering not independently tested.
