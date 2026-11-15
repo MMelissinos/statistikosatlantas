@@ -282,3 +282,13 @@ User noticed featured image on article cards differed from imagery visible after
 
 - Media 1732: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-heating-oil-delivery-1600x900-1.webp`, **1600 × 900 WebP**, **164,216 bytes**. AI-generated illustrative oil delivery to a residential building, not a photo of an actual delivery.
 - Set as featured media and prepended the same image in the post body for both language editions. Original in-body image in EL post includes a numeric claim and **was intentionally preserved**, not silently deleted; this means the old graphic may still be visible below the new hero image. No statistical graphics, prose or figures were changed. Original featured media retained for rollback and WordPress post revisions available. Live mobile/browser visual check pending.
+
+## Batch 16: Western Macedonia population decline (2026-11-16)
+
+| Post ID | Subject | Previous featured media | New media | API verified |
+| ---: | --- | ---: | ---: | --- |
+| 234 | Western Macedonia population decline (EL) | 1506 | 1735 | yes |
+| 307 | Western Macedonia population decline (EN) | 1506 | 1735 | yes |
+
+- Media 1735: `https://statistikosatlantas.com/wp-content/uploads/2026/11/atlas-western-macedonia-town-1600x900-1.webp`, 1600×900 WebP. AI-generated symbolic mountain-town square, **not a documentary photograph of an identifiable Western Macedonia locality**.
+- Applied as featured media and prepended the same image as an inline Gutenberg block in both language editions. The EL article's existing image contains numerical data and was preserved below the new image; it may still show owl branding. No text or statistical content edited. Original featured media 1506 retained for rollback; post revisions available. WordPress API re-read confirmed both featured-media IDs and inline URLs. Browser/mobile visual inspection pending.
