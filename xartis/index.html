@@ -74,6 +74,21 @@ button, select, input { font: inherit; color: inherit; }
 /* 15/11: οι καρτέλες μπαίνουν από JS μετά το manifest· ως τότε κρατάμε τον χώρο τους (8 χάρτες: 4 σειρές στο κινητό,
    2 ως 1199px, 1 από εκεί και πάνω), ώστε ο τίτλος και ο χάρτης να μη σπρώχνονται προς τα κάτω (CLS 0,36). */
 .stories.loading { visibility: hidden; min-height: 192px; }
+/* 16/11: στο κινητό φαίνεται μόνο ο ανοιχτός χάρτης («1 Γεννήσεις και θάνατοι ▾») και με ένα πάτημα ανοίγει το πλέγμα
+   με όλους· κερδίζονται ~144px και ο χάρτης ανεβαίνει προς την πρώτη οθόνη. Στον υπολογιστή τίποτα δεν αλλάζει. */
+@media (max-width: 639px) {
+  .stories.loading { min-height: 48px; }
+  /* ως τη φόρτωση: οι επιλογές αόρατες, με το ύψος που παίρνουν στον πρώτο χάρτη, ώστε να μη σπρώχνουν τον χάρτη */
+  .stories.loading ~ .layout .controls { min-height: 374px; }
+  .stories.loading ~ .layout .controls > * { visibility: hidden; }
+  .stories.collapsible:not(.open) button:not([aria-current="true"]) { display: none; }
+  .stories.collapsible:not(.open) button[aria-current="true"] { grid-column: 1 / -1; }
+  .stories.collapsible button[aria-current="true"]::after {
+    content: ""; margin-inline: auto 4px; width: 8px; height: 8px; flex: none;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg);
+  }
+  .stories.collapsible.open button[aria-current="true"]::after { transform: translateY(2px) rotate(-135deg); }
+}
 @media (min-width: 640px) { .stories.loading { min-height: 90px; } }
 @media (min-width: 1200px) { .stories.loading { min-height: 46px; } }
 @media (min-width: 640px) {
@@ -234,7 +249,9 @@ select {
   padding: 7px 4px; border: 0; border-bottom: 1px solid var(--rule); background: none; cursor: pointer; text-align: left;
   font-size: var(--step--1);
 }
-.rank-list button[aria-current="true"] { background: var(--surface); font-weight: 600; }
+.rank-list button[aria-current="true"] { background: var(--surface); }
+/* 16/11: τα έντονα μόνο στο όνομα και την τιμή, όχι στο κουμπί, ώστε οι στήλες σε ch (και η βάση της μπάρας) να μένουν ίδιες στην επιλεγμένη γραμμή */
+.rank-list button[aria-current="true"] :is(.name, .v) { font-weight: 600; }
 .rank-list .n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
 .rank-list .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rank-list .bar { height: 8px; border-radius: 0 4px 4px 0; background: var(--bubble); min-width: 2px; }
@@ -247,12 +264,14 @@ select {
 .ranking { container: rank / inline-size; }
 @container rank (max-width: 459px) {
   .rank-list button {
-    grid-template-columns: 2ch minmax(0, 1fr) 6.5ch; grid-template-areas: "n name v" ". bar .";
+    /* 16/11: η τιμή παίρνει όσο χρειάζεται (καμία δεν βγαίνει έξω ή σπάει, π.χ. «38.360.186», «−10,4 μον.») και η μπάρα απλώνεται
+       κάτω από όνομα και τιμή, ώστε όλες οι μπάρες να έχουν την ίδια βάση και το ίδιο μέγιστο μήκος (τίμια σύγκριση) */
+    grid-template-columns: 2ch minmax(0, 1fr) auto; grid-template-areas: "n name v" ". bar bar";
     align-items: start; row-gap: 4px; min-height: 44px; padding: 6px 4px 8px;
   }
   .rank-list .n { grid-area: n; }
   .rank-list .name { grid-area: name; white-space: normal; overflow-wrap: anywhere; }
-  .rank-list .v { grid-area: v; }
+  .rank-list .v { grid-area: v; white-space: nowrap; }
   .rank-list .barcell { grid-area: bar; }
   .more { min-height: 44px; padding-inline: 18px; }
 }
@@ -1456,6 +1475,7 @@ function renderStoryNav() {
   const list = stories();
   nav.hidden = list.length < 2;
   nav.classList.remove("loading");
+  nav.classList.add("collapsible");
   nav.innerHTML = "";
   list.forEach((story, i) => {
     const button = document.createElement("button");
@@ -1464,7 +1484,18 @@ function renderStoryNav() {
     button.innerHTML = `<span></span>`;
     button.querySelector("span").textContent = i + 1;
     button.append(story.title);
-    button.addEventListener("click", () => openStory(story.id));
+    button.addEventListener("click", () => {
+      // κινητό: ο ανοιχτός χάρτης ανοιγοκλείνει τη λίστα, οι άλλοι ανοίγουν και την κλείνουν
+      const compact = matchMedia("(max-width: 639px)").matches;
+      if (compact && state.story === story.id) {
+        const open = nav.classList.toggle("open");
+        button.setAttribute("aria-expanded", String(open));
+        return;
+      }
+      nav.classList.remove("open");
+      nav.querySelectorAll("button").forEach((b) => b.removeAttribute("aria-expanded"));
+      openStory(story.id);
+    });
     nav.append(button);
   });
 }
