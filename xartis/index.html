@@ -1538,6 +1538,20 @@ function renderIndicatorPicker(story) {
   }
 }
 
+// 17/11: link σε συγκεκριμένο σημείο του χάρτη: #θέμα/δείκτης/περιοχή (π.χ. #residents/census/EL53).
+// Περιοχή με 4 χαρακτήρες = περιφέρεια (NUTS2), με 5 = περιφερειακή ενότητα (NUTS3).
+function linkTarget() {
+  const [story, indicator, code] = decodeURIComponent(location.hash.slice(1)).split("/");
+  const out = { story };
+  if (indicator && manifest.indicators.some((i) => i.id === indicator)) out.indicator = indicator;
+  if (code && /^EL[0-9A-Z]{2,3}$/.test(code)) {
+    const level = code.length === 4 ? "nuts2" : "nuts3";
+    const member = level === "nuts2" ? NUTS3.find((c) => c.startsWith(code)) : (NUTS3.includes(code) ? code : null);
+    if (member) Object.assign(out, { selected: member, level, preferredLevel: level });
+  }
+  return out;
+}
+
 async function openStory(id, saved = {}) {
   const list = stories();
   const story = list.find((s) => s.id === id) ?? list[0];
@@ -1547,7 +1561,7 @@ async function openStory(id, saved = {}) {
   state.baseChosen = false;
   document.querySelectorAll("[data-story]").forEach((b) => b.setAttribute("aria-current", String(b.dataset.story === story.id)));
   $("eyebrowTopic").textContent = story.title;
-  if (list.length > 1 && location.hash.slice(1) !== story.id) {
+  if (list.length > 1 && location.hash.slice(1).split("/")[0] !== story.id) {
     try { history.replaceState(null, "", `#${story.id}`); } catch { /* σε κάποιες προβολές δεν επιτρέπεται */ }
   }
   renderIndicatorPicker(story);
@@ -1565,6 +1579,8 @@ async function start(saved = {}) {
 
     // Δείκτες με hidden (π.χ. οι ετήσιες εκτιμήσεις πληθυσμού) δεν είναι επιλογές του χάρτη.
     renderStoryNav();
+    const link = linkTarget();
+    if (link.indicator || link.selected) saved = { ...saved, ...link };
     Object.assign(state, {
       preferredMetric: saved.preferredMetric ?? saved.metric ?? "change",
       level: saved.level ?? state.level,
@@ -1572,12 +1588,15 @@ async function start(saved = {}) {
     });
     setPressed("level", state.level);
     const list = stories();
-    const fromLink = list.find((s) => s.id === location.hash.slice(1))?.id;
+    const fromLink = list.find((s) => s.id === link.story)?.id;
     const fromSaved = list.find((s) => s.id === saved.story || s.indicators.includes(saved.indicator))?.id;
     await openStory(fromLink ?? fromSaved ?? list[0].id, saved);
     window.addEventListener("hashchange", () => {
-      const id = location.hash.slice(1);
-      if (id !== state.story && stories().some((s) => s.id === id)) openStory(id);
+      const t = linkTarget();
+      if (stories().some((s) => s.id === t.story) && (t.story !== state.story || t.indicator || t.selected)) {
+        if (t.level) { state.level = t.level; state.preferredLevel = t.level; setPressed("level", t.level); }
+        openStory(t.story, t);
+      }
     });
     $("mapStatus").hidden = true;
   } catch (error) {
