@@ -78,9 +78,6 @@ button, select, input { font: inherit; color: inherit; }
    με όλους· κερδίζονται ~144px και ο χάρτης ανεβαίνει προς την πρώτη οθόνη. Στον υπολογιστή τίποτα δεν αλλάζει. */
 @media (max-width: 639px) {
   .stories.loading { min-height: 48px; }
-  /* ως τη φόρτωση: οι επιλογές αόρατες, με το ύψος που παίρνουν στον πρώτο χάρτη, ώστε να μη σπρώχνουν τον χάρτη */
-  .stories.loading ~ .layout .controls { min-height: 374px; }
-  .stories.loading ~ .layout .controls > * { visibility: hidden; }
   .stories.collapsible:not(.open) button:not([aria-current="true"]) { display: none; }
   .stories.collapsible:not(.open) button[aria-current="true"] { grid-column: 1 / -1; }
   .stories.collapsible button[aria-current="true"]::after {
@@ -115,6 +112,11 @@ button, select, input { font: inherit; color: inherit; }
 
 .layout { display: grid; gap: 20px; grid-template-areas: "controls" "map" "detail" "ranking"; }
 .layout > * { min-width: 0; }
+/* 16/11 (απόφαση χρήστη): στο κινητό ο χάρτης πρώτος και οι επιλογές ακριβώς από κάτω, ώστε ο χάρτης να φαίνεται
+   στην πρώτη οθόνη (σε 390×664 ξεκινά στα ~350px αντί για ~740px). Ο τίτλος πάνω από τον χάρτη λέει τι δείχνει. */
+@media (max-width: 639px) {
+  .layout { grid-template-areas: "map" "controls" "detail" "ranking"; }
+}
 @media (min-width: 900px) {
   .layout {
     grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
