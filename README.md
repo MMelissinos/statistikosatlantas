@@ -20,7 +20,7 @@
 
 **[tools.statistikosatlantas.com/xartis](https://tools.statistikosatlantas.com/xartis/)**
 
-30 δείκτες σε 8 ιστορίες, για τις 13 περιφέρειες και τις 52 περιφερειακές ενότητες:
+32 δείκτες σε 9 ιστορίες, για τις 13 περιφέρειες και τις 52 περιφερειακές ενότητες:
 
 | Ιστορία | Τι δείχνει |
 |---|---|
@@ -32,6 +32,7 @@
 | Πόσοι σπούδασαν | απόφοιτοι τριτοβάθμιας (απογραφή και έρευνα εργατικού δυναμικού) |
 | Άδεια σπίτια | κενές κατοικίες |
 | Θέρμανση και ενέργεια | βαθμοημέρες θέρμανσης, πετρέλαιο, φυσικό αέριο, ρεύμα |
+| Έρευνα και καινοτομία | δαπάνες Έρευνας & Ανάπτυξης, ερευνητές στη συνολική απασχόληση |
 
 Κάθε δείκτης έχει χρονοσειρά, σύγκριση με τη χώρα, κατάταξη και σημειώσεις για ό,τι δεν συγκρίνεται: αλλαγές μεθόδου, μικρούς αριθμούς, προσωρινά στοιχεία.
 
@@ -68,7 +69,7 @@
 
 **Statistikos Atlantas** ("Statistical Atlas") is an independent data-journalism project about Greece. It takes official statistics from ELSTAT (the Hellenic Statistical Authority) and Eurostat and maps them where people live: the 13 regions and 52 regional units of Greece.
 
-- **[Interactive map](https://tools.statistikosatlantas.com/xartis/):** 30 indicators in 8 stories (births and deaths, population, work and income, livelihoods, health, education, housing, heating and energy), each with a time series, the national comparison, a ranking and notes on what is not comparable.
+- **[Interactive map](https://tools.statistikosatlantas.com/xartis/):** 32 indicators in 9 stories (births and deaths, population, work and income, livelihoods, health, education, housing, heating and energy, research and innovation), each with a time series, the national comparison, a ranking and notes on what is not comparable.
 - **[Tools](https://tools.statistikosatlantas.com/):** your area in numbers, heating-allowance and social-tariff eligibility checkers, rent burden, electricity cost by supplier.
 - **[Blog](https://statistikosatlantas.com/category/english/):** short findings and longer articles, in Greek and English.
 
