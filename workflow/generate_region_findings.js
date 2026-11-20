@@ -77,7 +77,7 @@ for (const cfg of configs) {
     if (cfg.ratio) {
       const den = cfg.j.denominator.levels.nuts2[cfg.year];
       cfg.values = Object.fromEntries(codes.map(c => [c, raw[c] / den[c] * 100]));
-      cfg.national = cfg.j.national[cfg.year] / cfg.j.denominator.national.all[cfg.year] * 100;
+      cfg.national = cfg.j.national.all[cfg.year] / cfg.j.denominator.national.all[cfg.year] * 100;
     } else {
       cfg.values = raw;
       cfg.national = cfg.j.national.all[cfg.year];
