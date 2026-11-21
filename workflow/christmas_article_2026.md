@@ -55,6 +55,18 @@ regions:
 The article explicitly states that this is an unweighted directional check,
 not proof that every resident benefited and not a composite regional ranking.
 
+## English counterpart
+
+- WordPress post: 4208
+- Title: `Seven numbers that offer reasons for optimism this Christmas`
+- Publication: 2026-12-25 14:00 Europe/Athens
+- Category: English Articles (3205)
+- Featured media: 4171
+- Final WordPress read-back: 2,140 text words and 59/59 Gutenberg blocks
+- Reciprocal language pairing: 4201 ↔ 4208
+- SEO title, description, Article schema, excerpt, methodology, sources and
+  related reading are present; no placeholder tokens.
+
 ## Sources
 
 - lfst_r_lfe2emprt and lfst_r_lfu3rt: employment and unemployment
