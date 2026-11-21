@@ -1,0 +1,83 @@
+name: Weekly site audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check live sites
+        id: audit
+        continue-on-error: true
+        run: node scripts/site-audit.mjs
+
+      - name: Save report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-site-audit
+          path: site-audit-report.md
+          retention-days: 30
+
+      - name: Open or update issue when errors exist
+        if: steps.audit.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const title = 'Αυτόματος τεχνικός έλεγχος: βρέθηκαν προβλήματα';
+            const report = fs.readFileSync('site-audit-report.md', 'utf8');
+            const body = (report + '\n\n[Πλήρης αναφορά του run](' +
+              context.serverUrl + '/' + context.repo.owner + '/' + context.repo.repo +
+              '/actions/runs/' + context.runId + ')').slice(0, 60000);
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              ...context.repo, state: 'open'
+            });
+            const existing = open.find(issue => issue.title === title);
+            if (existing) {
+              await github.rest.issues.update({
+                ...context.repo, issue_number: existing.number, body
+              });
+            } else {
+              await github.rest.issues.create({
+                ...context.repo, title, body
+              });
+            }
+
+      - name: Close previous issue when the audit passes
+        if: steps.audit.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = 'Αυτόματος τεχνικός έλεγχος: βρέθηκαν προβλήματα';
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              ...context.repo, state: 'open'
+            });
+            const existing = open.find(issue => issue.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: existing.number,
+                body: 'Ο τελευταίος εβδομαδιαίος έλεγχος ολοκληρώθηκε χωρίς κρίσιμα σφάλματα.'
+              });
+              await github.rest.issues.update({
+                ...context.repo, issue_number: existing.number, state: 'closed'
+              });
+            }
+
+      - name: Fail workflow after reporting
+        if: steps.audit.outcome == 'failure'
+        run: exit 1
