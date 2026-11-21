@@ -2,13 +2,18 @@ import { writeFile } from "node:fs/promises";
 
 const SITEMAP = "https://statistikosatlantas.com/sitemap.xml";
 const MAX_PAGES = 300;
+const MIN_SIMILARITY = 0.18;
 const STOP = new Set(`
 και να το η ο οι τα των της του σε για με από που ως στο στη στην στον ένα μια
 είναι ήταν έχει έχουν αυτό αυτή αυτά τους τις μας σας δεν αλλά ή πιο ανά μεταξύ
+στατιστικος ατλαντας ελλαδα ελλαδας ευρωπαικη ενωση eurostat ελστατ πηγη
+στοιχεια αριθμοι ποσοστο εκατο δεικτης δεικτες χωρα χωρας ετος ετη χρονο χρονια
+μερος επισης ομως καθως συμφωνα πανω κατω μεσα ολα ολες ολοι αποτυπωνει δειχνει
 the and for with from that this are was were have has into about your their than
-what when where which will can not our its
+what when where which will can not our its greece greek data source eurostat
+statistikos atlantas percent year years share rate total more less also however
 `.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().split(/\s+/));
-const EXCLUDED = /\/(about|en-about|epikoinonia|en-contact|aporrito|en-privacy|piges|en-sources|diorthoseis|en-corrections|pos-douleuoume|en-how-we-work)\/?$/;
+const EXCLUDED = /\/(about|en-about|epikoinonia|en-contact|aporrito|en-privacy|piges|en-sources|diorthoseis|en-corrections|pos-douleuoume|en-how-we-work|logo|logo-blue|logo-wordmark|site-icon|site-icon-blue|glafka-owl)\/?$|^\/\d{4}-\d{2}-\d{2}(?:-[^/]+)?\/?$|-(hero|fig\d+|cover|recap|cartoon)(-\d+)?\/?$/i;
 
 const decode = (s = "") => s.replaceAll("&amp;", "&").replaceAll("&quot;", '"')
   .replaceAll("&#039;", "'").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
@@ -50,22 +55,26 @@ async function sitemapPages(url, seen = new Set(), pages = new Set()) {
 }
 
 function pageFromHtml(url, html) {
+  const bodyClass = (html.match(/<body\b[^>]*class=["']([^"']*)["']/i)?.[1] || "");
+  if (/\b(attachment|single-attachment)\b/i.test(bodyClass)) return null;
   const title = decode((html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)
     || html.match(/<title[^>]*>([\s\S]*?)<\/title>/i))?.[1]
     ?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || "");
-  const main = (html.match(/<main[^>]*>([\s\S]*?)<\/main>/i)
-    || html.match(/<article[^>]*>([\s\S]*?)<\/article>/i))?.[1] || html;
-  const clean = main.replace(/<(script|style|nav|footer)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+  const main = (html.match(/<article[^>]*>([\s\S]*?)<\/article>/i)
+    || html.match(/<main[^>]*>([\s\S]*?)<\/main>/i))?.[1] || html;
+  const clean = main.replace(/<(script|style|nav|footer|template)[^>]*>[\s\S]*?<\/\1>/gi, " ")
     .replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
   const words = tokens(`${title} ${title} ${clean}`);
+  const greekChars = (title.match(/[\u0370-\u03ff]/g) || []).length;
+  const lang = greekChars >= 3 ? "el" : "en";
   const links = new Set();
-  for (const match of main.matchAll(/<a\b[^>]*href=["']([^"'#]+)["']/gi)) {
+  for (const match of main.matchAll(/<a\b[^>]*\shref=["']([^"'#]+)["']/gi)) {
     try {
       const linked = normalizeUrl(new URL(decode(match[1]), url));
       if (new URL(linked).hostname === "statistikosatlantas.com") links.add(linked);
     } catch { /* ignore malformed links */ }
   }
-  return { url: normalizeUrl(url), title, words, links };
+  return { url: normalizeUrl(url), title, lang, words, links };
 }
 
 async function pool(items, worker, concurrency = 6) {
@@ -92,7 +101,7 @@ const failures = [];
 await pool(urls, async (url) => {
   try {
     const page = pageFromHtml(url, await fetchText(url));
-    if (page.title && page.words.length >= 120) pages.push(page);
+    if (page && page.title && page.words.length >= 120) pages.push(page);
   } catch (error) { failures.push(`${url} — ${error.message}`); }
 });
 
@@ -133,9 +142,9 @@ for (const page of pages) {
 const suggestions = [];
 for (const source of pages) {
   const candidates = pages
-    .filter((target) => target.url !== source.url && !source.links.has(target.url))
+    .filter((target) => target.url !== source.url && target.lang === source.lang && !source.links.has(target.url))
     .map((target) => ({ target, score: cosine(source, target) }))
-    .filter((item) => item.score >= 0.12)
+    .filter((item) => item.score >= MIN_SIMILARITY)
     .sort((a, b) => (b.score + 0.02 / (1 + incoming.get(b.target.url)))
       - (a.score + 0.02 / (1 + incoming.get(a.target.url))));
   for (const item of candidates.slice(0, 2)) suggestions.push({
