@@ -9,8 +9,8 @@
 - Publication: 2026-12-25 14:00 Europe/Athens
 - Featured media: 4171
 - Category: Articles (8592402)
-- Length at final read-back: 1,696 words
-- Gutenberg blocks: 42 opening / 42 closing
+- Length at final read-back: 2,573 words
+- Gutenberg blocks: 59 opening / 59 closing
 
 ## Editorial logic
 
@@ -38,6 +38,22 @@ nrg_ind_ured:
 
 - 2019: 17,344.233 / 55,421.492 GWh = 31.3%.
 - 2024: 29,278.3 / 57,130.5 GWh = 51.2%.
+
+## Regional breadth check
+
+The first and last year used in each section were compared for all 13 NUTS2
+regions:
+
+- Employment: improvement in 13/13 regions.
+- Tertiary graduates: improvement in 13/13.
+- Life expectancy: improvement in 13/13.
+- R&D expenditure: improvement in 12/13.
+- Tourism nights: improvement in 12/13.
+- Physicians per 100,000: improvement in 10/13.
+- Knowledge-intensive services: improvement in 9/13.
+
+The article explicitly states that this is an unweighted directional check,
+not proof that every resident benefited and not a composite regional ranking.
 
 ## Sources
 
