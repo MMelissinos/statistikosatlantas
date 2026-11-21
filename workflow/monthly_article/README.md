@@ -11,7 +11,10 @@ Publication gate:
 - methodological review: publish only as descriptive ecological analysis;
 - editorial draft and final QA checklist: complete.
 
-WordPress draft 1605 remains a draft pending the owner's choice of publication
-date and image. Related full articles 1592 and 1603 were scheduled for
-2026-11-21 and 2026-11-22 respectively, both at 14:00 site time.
+Final pre-publication QA was completed on 2026-11-21 and is recorded in
+final_qa_2026-11-21.md. WordPress post 1605 is scheduled for the first
+Monday of December, 2026-12-07 at 14:00 Europe/Athens.
+
+WordPress post 1605 is a scheduled release candidate with featured media 4150.
+Related full articles 1592 and 1603 are scheduled before it.
 
