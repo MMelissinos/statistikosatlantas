@@ -85,7 +85,10 @@ function inspect(url, html, finalUrl) {
   if (missingAlt) warnings.push(`${missingAlt} image(s) without alt: ${url}`);
 
   const links = new Set();
-  for (const match of html.matchAll(/<a\b[^>]*href=["']([^"'#]+)["']/gi)) {
+  const linkScanHtml = html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<template\b[^>]*>[\s\S]*?<\/template>/gi, "");
+  for (const match of linkScanHtml.matchAll(/<a\b[^>]*\shref=["']([^"'#]+)["']/gi)) {
     try {
       const href = clean(new URL(decode(match[1]), finalUrl));
       if (own(href) && !ignored(href)) links.add(href);
