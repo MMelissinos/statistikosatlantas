@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Κενές κατοικίες ανά περιοχή: πόσα σπίτια είναι άδεια στην Ελλάδα; · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Διαδραστικός υπολογιστής κενών και κατοικούμενων κατοικιών ανά περιφερειακή ενότητα (52) και περιφέρεια (13), με επίσημα στοιχεία από τις Απογραφές Κτιρίων & Κατοικιών 2011 και 2021 της ΕΛΣΤΑΤ.">
+<link rel="stylesheet" href="../style.css">
+<!-- atlas-seo -->
+<link rel="canonical" href="https://tools.statistikosatlantas.com/katoikia/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Στατιστικός Άτλαντας">
+<meta property="og:locale" content="el_GR">
+<meta property="og:url" content="https://tools.statistikosatlantas.com/katoikia/">
+<meta property="og:title" content="Πόσα σπίτια είναι άδεια στην περιοχή σου; · Στατιστικός Άτλαντας">
+<meta property="og:description" content="Δείτε πόσες κανονικές κατοικίες είναι κενές και πόσες κατοικούνται στις 52 περιφερειακές ενότητες και 13 περιφέρειες της Ελλάδας (ΕΛΣΤΑΤ 2011–2021).">
+<meta property="og:image" content="https://tools.statistikosatlantas.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Υπολογιστής κενών κατοικιών ανά περιοχή στην Ελλάδα","description":"Δείχνει το ποσοστό και τον αριθμό κενών και κατοικούμενων κανονικών κατοικιών στις 52 περιφερειακές ενότητες και 13 περιφέρειες της Ελλάδας, τη μεταβολή 2011–2021 και την κατανομή των 2,28 εκατ. κενών κατοικιών ανά χρήση.","url":"https://tools.statistikosatlantas.com/katoikia/","inLanguage":"el","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Στατιστικός Άτλαντας","url":"https://statistikosatlantas.com/about/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
+<!-- /atlas-seo -->
+</head>
+<body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main>
+<div class="kicker">Εργαλείο · Στέγαση &amp; Περιοχές</div>
+<h1>Πόσα σπίτια είναι άδεια στην περιοχή σου;</h1>
+<p class="muted">Στην απογραφή του 2021 καταγράφηκαν στην Ελλάδα <b>6.596.761</b> κανονικές κατοικίες, από τις οποίες οι <b>2.277.615 (34,5%)</b> ήταν κενές. Διάλεξε περιφερειακή ενότητα ή περιφέρεια για να δεις την αναλογία κατοικούμενων και κενών κατοικιών, τη μεταβολή από το 2011 και τι μέρος από τα κενά σπίτια της χώρας είναι εξοχικά, δευτερεύουσες κατοικίες ή προς ενοικίαση και πώληση.</p>
+
+<div class="presets" aria-label="Γρήγορα παραδείγματα">
+  <button type="button" class="pill" data-preset="nat,EL,2021">Όλη η Ελλάδα (34,5%)</button>
+  <button type="button" class="pill" data-preset="nuts3,EL303,2021">Κεντρικός Τομέας Αθηνών (153.310 κενές)</button>
+  <button type="button" class="pill" data-preset="nuts3,EL522,2021">Θεσσαλονίκη (23,5%)</button>
+  <button type="button" class="pill" data-preset="nuts3,EL527,2021">Χαλκιδική (72,0% — 1η)</button>
+  <button type="button" class="pill" data-preset="nuts3,EL422,2021">Κυκλάδες (62,0% — 2η)</button>
+  <button type="button" class="pill" data-preset="nuts3,EL301,2021">Βόρειος Τομέας Αθηνών (14,0% — 52η)</button>
+  <button type="button" class="pill" data-preset="nuts2,EL65,2021">Πελοπόννησος (49,2%)</button>
+</div>
+
+<div class="calc-grid">
+  <div>
+    <label for="level">Επίπεδο περιοχής</label>
+    <select id="level">
+      <option value="nuts3">Περιφερειακή ενότητα (52)</option>
+      <option value="nuts2">Περιφέρεια (13)</option>
+      <option value="nat">Σύνολο Ελλάδας</option>
+    </select>
+  </div>
+  <div>
+    <label for="area">Περιοχή</label>
+    <select id="area"></select>
+  </div>
+  <div>
+    <label for="year">Απογραφή</label>
+    <select id="year">
+      <option value="2021">2021 (τελευταία)</option>
+      <option value="2011">2011</option>
+    </select>
+  </div>
+</div>
+
+<section id="result" class="card result" aria-live="polite"></section>
+
+<div id="kpiRow" class="kpi-row">
+  <div class="kpi"><span class="kpi-lbl" id="kpi1Lbl">Κενές κατοικίες (2021)</span><b id="kpiVacant">—</b><small id="kpiVacantSub" class="kpi-sub"></small></div>
+  <div class="kpi"><span class="kpi-lbl">Μεταβολή ποσοστού (2011 → 2021)</span><b id="kpiDiff">—</b><small id="kpiDiffSub" class="kpi-sub"></small></div>
+  <div class="kpi"><span class="kpi-lbl" id="kpi3Lbl">Θέση ανάμεσα στις περιοχές</span><b id="kpiRank">—</b><small id="kpiRankSub" class="kpi-sub"></small></div>
+</div>
+
+<div class="actions-row">
+  <button id="copyBtn" type="button" class="copy-btn">Αντιγραφή αποτελέσματος</button>
+  <span id="copyStatus" class="copy-status" aria-live="polite"></span>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2 id="chartHeading">Πού βρίσκεται η περιοχή στην Ελλάδα (2021)</h2>
+    <span id="chartHover" class="chart-hover">Πέρασε τον δείκτη ή πάτησε σε μια μπάρα</span>
+  </div>
+  <svg id="chart" viewBox="0 0 640 230" role="img" aria-labelledby="chartTitle chartDesc">
+    <title id="chartTitle">Ποσοστό κενών κατοικιών ανά περιοχή στην Ελλάδα</title>
+    <desc id="chartDesc">Διαδραστικό ραβδόγραμμα που δείχνει το ποσοστό των κανονικών κατοικιών που είναι κενές σε κάθε περιοχή, σε σύγκριση με τον μέσο όρο της χώρας.</desc>
+    <g id="chartBody"></g>
+  </svg>
+  <div class="chart-years"><span id="chartLeft">1η (υψηλότερο %)</span><span id="chartMid">Γραμμή χώρας: 34,5%</span><span id="chartRight">Χαμηλότερο %</span></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2>Το παράδοξο των 2,28 εκατ. κενών σπιτιών: γιατί είναι άδεια;</h2>
+    <span class="muted" style="font-size:.82rem">Σύνολο Ελλάδας · Απογραφή 2021 vs 2011</span>
+  </div>
+  <p class="muted" style="font-size:.9rem;margin:4px 0 12px">Σύμφωνα με την ΕΛΣΤΑΤ, «κενή» είναι κάθε κανονική κατοικία όπου δεν μένει μόνιμα κανένας κάτοικος. Από τα <b>2.277.615</b> κενά σπίτια της χώρας το 2021, σχεδόν τα δύο τρίτα (<b>65,1%</b>) είναι εξοχικές ή δευτερεύουσες κατοικίες και μόνο <b>466.389</b> (το <b>7,1%</b> όλων των κατοικιών της χώρας) είχαν δηλωθεί προς ενοικίαση ή πώληση:</p>
+  <table>
+    <thead>
+      <tr><th>Κατηγορία κενής κατοικίας (Σύνολο Χώρας)</th><th class="n">2011</th><th class="n">2021</th><th class="n">% των κενών (2021)</th><th class="n">% όλων των κατοικιών</th></tr>
+    </thead>
+    <tbody id="reasonsBody"></tbody>
+  </table>
+</div>
+
+<div class="note">
+<p><b>Πώς διαβάζεται:</b> το ποσοστό δείχνει πόσες από τις κανονικές κατοικίες μιας περιοχής δεν αποτελούσαν τη συνήθη διαμονή κανενός μόνιμου κατοίκου στην απογραφή. Κενή κατοικία δεν σημαίνει απαραίτητα εγκαταλελειμμένη ούτε διαθέσιμη στην αγορά: στις τουριστικές και νησιωτικές περιοχές (π.χ. Χαλκιδική 72,0%, Κυκλάδες 62,0%, Ευρυτανία 58,5%) η πλειονότητα των κενών κατοικιών είναι εξοχικές, δευτερεύουσες ή καταλύματα βραχυχρόνιας μίσθωσης (Airbnb), ενώ στα μεγάλα αστικά κέντρα (π.χ. Αττική 24,3%, Θεσσαλονίκη 23,5%) το ποσοστό κενών μειώθηκε αισθητά μεταξύ 2011 και 2021.</p>
+<p><b>Μεθοδολογία:</b> Απογραφές Κτιρίων και Κατοικιών της 9ης Μαΐου 2011 και της 22ας Οκτωβρίου 2021 της ΕΛΣΤΑΤ. Κανονική κατοικία είναι κάθε μόνιμη και ανεξάρτητη κατασκευή με τουλάχιστον ένα κανονικό δωμάτιο που προορίζεται για στέγαση ενός νοικοκυριού. Οι κατοικούμενες κανονικές κατοικίες ισούνται με τον αριθμό των νοικοκυριών που μένουν μόνιμα σε αυτές (4.319.146 το 2021). Η κατανομή των κενών κατοικιών ανά λόγο (εξοχικές, δευτερεύουσες, προς ενοικίαση/πώληση, άλλος λόγος) δημοσιεύεται στον ανοιχτό πίνακα της ΕΛΣΤΑΤ για το σύνολο της χώρας.</p>
+<p><b>Πηγή:</b> <a href="https://www.statistics.gr/el/statistics/-/publication/SAM05/2021" target="_blank" rel="noopener">ΕΛΣΤΑΤ, Απογραφή Κτιρίων και Κατοικιών 2021 (Πίνακας Γ01) &amp; 2011 (Πίνακας Β18)</a> · <a href="https://tools.statistikosatlantas.com/xartis/" target="_blank" rel="noopener">Διαδραστικός Χάρτης Στατιστικού Άτλαντα</a>. <span id="sourceStatus">Επίσημα στοιχεία ΕΛΣΤΑΤ (2011–2021).</span></p>
+<p>Δεν αποθηκεύουμε τις επιλογές σας. Ο υπολογισμός γίνεται αποκλειστικά στη συσκευή σας.</p>
+</div>
+</main>
+<footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+
+<style>
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+.pill{font:inherit;font-size:.83rem;padding:6px 11px;border:1px solid #c9d3e0;border-radius:999px;background:#fff;color:var(--ink,#1e293b);cursor:pointer;transition:border-color .15s,background .15s}
+.pill:hover,.pill:focus-visible,.pill.active{border-color:var(--blue);background:var(--pale);color:var(--blue);font-weight:600}
+.calc-grid{display:grid;grid-template-columns:1.1fr 1.6fr .9fr;gap:12px;align-items:start;margin:16px 0 20px}
+.calc-grid label{margin-top:0;display:block}
+.calc-grid select{width:100%;max-width:none;font:inherit;font-size:1.02rem;padding:10px 12px;border:1px solid #c9d3e0;border-radius:6px;background:#fff;color:var(--ink)}
+.result{margin-top:16px}
+.result strong{display:block;font-size:clamp(1.65rem,4.8vw,2.25rem);color:var(--blue);line-height:1.15;margin-bottom:8px}
+.result span{display:block;margin-top:8px;color:var(--muted);font-size:.92rem}
+.split-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:#e2e8f0;margin:12px 0 6px}
+.split-occ{background:#64748b;transition:width .25s}
+.split-vac{background:var(--blue);transition:width .25s}
+.split-legend{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);flex-wrap:wrap;gap:8px}
+.dot-occ,.dot-vac{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.dot-occ{background:#64748b}.dot-vac{background:var(--blue)}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fff}
+.kpi-lbl{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.kpi b{display:block;font-size:1.14rem;color:var(--blue)}
+.kpi-sub{display:block;font-size:.78rem;color:var(--muted);margin-top:3px}
+.actions-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.copy-btn{font:inherit;font-size:.86rem;padding:7px 13px;border:1px solid #c9d3e0;border-radius:6px;background:#fff;color:var(--blue);cursor:pointer;font-weight:600}
+.copy-btn:hover{background:var(--pale);border-color:var(--blue)}
+.copy-status{font-size:.84rem;color:var(--muted)}
+.chart-card{border:1px solid var(--line);border-radius:8px;padding:16px;margin-top:16px;background:#fff}
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.chart-card h2{font-size:1.05rem;margin:0}
+.chart-hover{font-size:.84rem;color:var(--blue);font-weight:600}
+#chart{display:block;width:100%;height:auto;overflow:visible}
+.chart-grid{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.chart-base{stroke:var(--line);stroke-width:1}
+.chart-nat-line{stroke:#d97706;stroke-width:1.6;stroke-dasharray:4 3}
+.chart-lbl{font-size:11px;fill:var(--muted)}
+.bar-rect{cursor:pointer;transition:opacity .12s}
+.bar-rect:hover{opacity:.85}
+.chart-years{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;margin-top:4px}
+@media(max-width:640px){
+  .calc-grid{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:1fr}
+}
+</style>
+
+<script>
+const FALLBACK={"nat":{"v11":2249813,"v21":2277615,"t11":6371901,"t21":6596761,"p11":10816286,"p21":10482487,"reasons":{"2011":{"holiday":729964,"secondary":621881,"rent_or_sale":542897,"other":355071},"2021":{"holiday":857014,"secondary":626716,"rent_or_sale":466389,"other":327495}}},"nuts2":{"EL30":{"name":"Αττική","v11":609058,"v21":526159,"t11":2118743,"t21":2162821,"p11":3828434,"p21":3814067},"EL41":{"name":"Βόρειο Αιγαίο","v11":71985,"v21":79575,"t11":151332,"t21":160789,"p11":199231,"p21":194948},"EL42":{"name":"Νότιο Αιγαίο","v11":113284,"v21":127273,"t11":229667,"t21":254141,"p11":309015,"p21":327819},"EL43":{"name":"Κρήτη","v11":140099,"v21":159129,"t11":381243,"t21":408720,"p11":623065,"p21":624408},"EL51":{"name":"Ανατολική Μακεδονία & Θράκη","v11":105333,"v21":120603,"t11":340085,"t21":349748,"p11":608182,"p21":562204},"EL52":{"name":"Κεντρική Μακεδονία","v11":360990,"v21":363690,"t11":1074242,"t21":1097595,"p11":1882108,"p21":1795667},"EL53":{"name":"Δυτική Μακεδονία","v11":55294,"v21":60329,"t11":159230,"t21":160986,"p11":283689,"p21":254594},"EL54":{"name":"Ήπειρος","v11":76560,"v21":85453,"t11":204577,"t21":217590,"p11":336856,"p21":319990},"EL61":{"name":"Θεσσαλία","v11":132749,"v21":139738,"t11":395842,"t21":410764,"p11":732762,"p21":688250},"EL62":{"name":"Ιόνια Νησιά","v11":79591,"v21":77502,"t11":160106,"t21":159370,"p11":207855,"p21":204533},"EL63":{"name":"Δυτική Ελλάδα","v11":148250,"v21":155271,"t11":388791,"t21":411577,"p11":679796,"p21":648220},"EL64":{"name":"Στερεά Ελλάδα","v11":158234,"v21":173443,"t11":357934,"t21":376580,"p11":547390,"p21":508249},"EL65":{"name":"Πελοπόννησος","v11":198386,"v21":209457,"t11":410109,"t21":426076,"p11":577903,"p21":539538}},"nuts3":{"EL301":{"name":"Βόρειος Τομέας Αθηνών","reg":"EL30","v11":54049,"v21":40546,"t11":286087,"t21":290435,"p11":592490,"p21":601163},"EL302":{"name":"Δυτικός Τομέας Αθηνών","reg":"EL30","v11":50846,"v21":41351,"t11":235730,"t21":240042,"p11":489675,"p21":478885},"EL303":{"name":"Κεντρικός Τομέας Αθηνών","reg":"EL30","v11":175997,"v21":153310,"t11":625811,"t21":638322,"p11":1029520,"p21":1002210},"EL304":{"name":"Νότιος Τομέας Αθηνών","reg":"EL30","v11":59974,"v21":50084,"t11":275396,"t21":281065,"p11":529826,"p21":529455},"EL305":{"name":"Ανατολική Αττική","reg":"EL30","v11":134548,"v21":122678,"t11":305503,"t21":313796,"p11":502348,"p21":518753},"EL306":{"name":"Δυτική Αττική","reg":"EL30","v11":29981,"v21":25163,"t11":81280,"t21":83123,"p11":160927,"p21":165540},"EL307":{"name":"Πειραιάς & Νήσοι","reg":"EL30","v11":103663,"v21":93027,"t11":308936,"t21":316038,"p11":523648,"p21":518061},"EL411":{"name":"Λέσβος & Λήμνος","reg":"EL41","v11":36388,"v21":41008,"t11":77123,"t21":81863,"p11":103698,"p21":100422},"EL412":{"name":"Σάμος & Ικαρία","reg":"EL41","v11":18264,"v21":19425,"t11":36397,"t21":38368,"p11":42859,"p21":42832},"EL413":{"name":"Χίος","reg":"EL41","v11":17333,"v21":19142,"t11":37812,"t21":40558,"p11":52674,"p21":51694},"EL421":{"name":"Δωδεκάνησα","reg":"EL42","v11":44939,"v21":48295,"t11":114781,"t21":126802,"p11":190988,"p21":206832},"EL422":{"name":"Κυκλάδες","reg":"EL42","v11":68345,"v21":78978,"t11":114886,"t21":127339,"p11":118027,"p21":120987},"EL431":{"name":"Ηράκλειο","reg":"EL43","v11":59078,"v21":64749,"t11":176068,"t21":185759,"p11":305490,"p21":305016},"EL432":{"name":"Λασίθι","reg":"EL43","v11":25905,"v21":32386,"t11":56035,"t21":64748,"p11":75381,"p21":77819},"EL433":{"name":"Ρέθυμνο","reg":"EL43","v11":20859,"v21":24891,"t11":53724,"t21":58615,"p11":85609,"p21":84866},"EL434":{"name":"Χανιά","reg":"EL43","v11":34257,"v21":37103,"t11":95416,"t21":99598,"p11":156585,"p21":156707},"EL511":{"name":"Έβρος","reg":"EL51","v11":24811,"v21":29481,"t11":83717,"t21":84875,"p11":147947,"p21":133803},"EL512":{"name":"Ξάνθη","reg":"EL51","v11":15303,"v21":14858,"t11":55178,"t21":56246,"p11":111222,"p21":108198},"EL513":{"name":"Ροδόπη","reg":"EL51","v11":14760,"v21":17579,"t11":58516,"t21":61112,"p11":112039,"p21":104263},"EL514":{"name":"Δράμα","reg":"EL51","v11":14377,"v21":17758,"t11":51672,"t21":53154,"p11":98287,"p21":86641},"EL515":{"name":"Καβάλα & Θάσος","reg":"EL51","v11":36082,"v21":40927,"t11":91002,"t21":94361,"p11":138687,"p21":129299},"EL521":{"name":"Ημαθία","reg":"EL52","v11":16086,"v21":17121,"t11":65861,"t21":67771,"p11":140611,"p21":131002},"EL522":{"name":"Θεσσαλονίκη","reg":"EL52","v11":158888,"v21":140452,"t11":587927,"t21":597566,"p11":1110551,"p21":1092919},"EL523":{"name":"Κιλκίς","reg":"EL52","v11":13803,"v21":16717,"t11":44350,"t21":45146,"p11":80419,"p21":70477},"EL524":{"name":"Πέλλα","reg":"EL52","v11":16162,"v21":19027,"t11":66758,"t21":68023,"p11":139680,"p21":126739},"EL525":{"name":"Πιερία","reg":"EL52","v11":26008,"v21":28575,"t11":70833,"t21":73935,"p11":126698,"p21":119385},"EL526":{"name":"Σέρρες","reg":"EL52","v11":28815,"v21":39009,"t11":97877,"t21":102412,"p11":176430,"p21":151317},"EL527":{"name":"Χαλκιδική","reg":"EL52","v11":101228,"v21":102789,"t11":140636,"t21":142742,"p11":107719,"p21":103828},"EL531":{"name":"Γρεβενά & Κοζάνη","reg":"EL53","v11":37409,"v21":40530,"t11":104191,"t21":105524,"p11":181953,"p21":163785},"EL532":{"name":"Καστοριά","reg":"EL53","v11":8674,"v21":9488,"t11":27352,"t21":27957,"p11":50322,"p21":45929},"EL533":{"name":"Φλώρινα","reg":"EL53","v11":9211,"v21":10311,"t11":27687,"t21":27505,"p11":51414,"p21":44880},"EL541":{"name":"Άρτα & Πρέβεζα","reg":"EL54","v11":28114,"v21":30503,"t11":75799,"t21":79480,"p11":125368,"p21":118414},"EL542":{"name":"Θεσπρωτία","reg":"EL54","v11":9765,"v21":11245,"t11":25985,"t21":27859,"p11":43587,"p21":40804},"EL543":{"name":"Ιωάννινα","reg":"EL54","v11":38681,"v21":43705,"t11":102793,"t21":110251,"p11":167901,"p21":160772},"EL611":{"name":"Τρίκαλα & Καρδίτσα","reg":"EL61","v11":45895,"v21":48913,"t11":132374,"t21":137885,"p11":244629,"p21":228384},"EL612":{"name":"Λάρισα","reg":"EL61","v11":40348,"v21":44422,"t11":140543,"t21":146852,"p11":284325,"p21":268962},"EL613":{"name":"Μαγνησία & Σποράδες","reg":"EL61","v11":46506,"v21":46403,"t11":122925,"t21":126027,"p11":203808,"p21":190904},"EL621":{"name":"Ζάκυνθος","reg":"EL62","v11":9457,"v21":11770,"t11":24100,"t21":26987,"p11":40759,"p21":41178},"EL622":{"name":"Κέρκυρα","reg":"EL62","v11":43455,"v21":36597,"t11":84425,"t21":78011,"p11":104371,"p21":101599},"EL623":{"name":"Κεφαλονιά & Ιθάκη","reg":"EL62","v11":16857,"v21":17093,"t11":32447,"t21":33096,"p11":39032,"p21":38929},"EL624":{"name":"Λευκάδα","reg":"EL62","v11":9822,"v21":12042,"t11":19134,"t21":21276,"p11":23693,"p21":22827},"EL631":{"name":"Αιτωλοακαρνανία","reg":"EL63","v11":45176,"v21":48815,"t11":119514,"t21":124986,"p11":210802,"p21":192346},"EL632":{"name":"Αχαΐα","reg":"EL63","v11":69122,"v21":66901,"t11":181424,"t21":191624,"p11":309694,"p21":305979},"EL633":{"name":"Ηλεία","reg":"EL63","v11":33952,"v21":39555,"t11":87853,"t21":94967,"p11":159300,"p21":149895},"EL641":{"name":"Βοιωτία","reg":"EL64","v11":27405,"v21":27362,"t11":68306,"t21":67969,"p11":117920,"p21":106055},"EL642":{"name":"Εύβοια","reg":"EL64","v11":68741,"v21":71991,"t11":146592,"t21":156552,"p11":210815,"p21":210776},"EL643":{"name":"Ευρυτανία","reg":"EL64","v11":9926,"v21":10198,"t11":17375,"t21":17440,"p11":20081,"p21":17428},"EL644":{"name":"Φθιώτιδα","reg":"EL64","v11":36312,"v21":45926,"t11":94885,"t21":101880,"p11":158231,"p21":137794},"EL645":{"name":"Φωκίδα","reg":"EL64","v11":15850,"v21":17966,"t11":30776,"t21":32739,"p11":40343,"p21":36196},"EL651":{"name":"Αργολίδα & Αρκαδία","reg":"EL65","v11":59804,"v21":62955,"t11":126864,"t21":131030,"p11":183729,"p21":170811},"EL652":{"name":"Κορινθία","reg":"EL65","v11":57735,"v21":60279,"t11":109019,"t21":113950,"p11":145082,"p21":138308},"EL653":{"name":"Λακωνία & Μεσσηνία","reg":"EL65","v11":80847,"v21":86223,"t11":174226,"t21":181096,"p11":249092,"p21":230419}}};
+
+const $=id=>document.getElementById(id);
+const fmtInt=n=>Math.round(n).toLocaleString("el-GR");
+const fmtPct=(n,sign=false)=>(sign&&n>0?"+":"")+n.toLocaleString("el-GR",{minimumFractionDigits:1,maximumFractionDigits:1})+"%";
+const fmtPP=(n,sign=true)=>(sign&&n>0?"+":"")+n.toLocaleString("el-GR",{minimumFractionDigits:1,maximumFractionDigits:1})+" μον.";
+let DATA=FALLBACK,lastSummary="",chartBars=[];
+
+function renderReasonsTable(){
+  const r11=DATA.nat.reasons["2011"],r21=DATA.nat.reasons["2021"];
+  const v21=DATA.nat.v21,t21=DATA.nat.t21;
+  const rows=[
+    ["Εξοχικές κατοικίες",r11.holiday,r21.holiday],
+    ["Δευτερεύουσες κατοικίες",r11.secondary,r21.secondary],
+    ["Προς ενοικίαση ή πώληση",r11.rent_or_sale,r21.rent_or_sale],
+    ["Κενές για άλλο λόγο",r11.other,r21.other]
+  ];
+  $("reasonsBody").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${fmtInt(r[1])}</td><td class="n"><b>${fmtInt(r[2])}</b></td><td class="n">${fmtPct(100*r[2]/v21)}</td><td class="n">${fmtPct(100*r[2]/t21)}</td></tr>`).join("")+
+  `<tr class="best"><td>Σύνολο κενών κανονικών κατοικιών</td><td class="n">${fmtInt(DATA.nat.v11)}</td><td class="n">${fmtInt(v21)}</td><td class="n">100,0%</td><td class="n">${fmtPct(100*v21/t21)}</td></tr>`;
+}
+
+function populateAreas(level,selectedCode){
+  const sel=$("area");
+  sel.innerHTML="";
+  if(level==="nat"){
+    const o=document.createElement("option");
+    o.value="EL";o.textContent="Σύνολο Ελλάδας (όλες οι περιοχές)";
+    sel.appendChild(o);
+    sel.value="EL";
+    return;
+  }
+  if(level==="nuts2"){
+    for(const [c,obj] of Object.entries(DATA.nuts2)){
+      const o=document.createElement("option");
+      o.value=c;o.textContent=obj.name;
+      sel.appendChild(o);
+    }
+    sel.value=DATA.nuts2[selectedCode]?selectedCode:"EL30";
+    return;
+  }
+  for(const [rc,robj] of Object.entries(DATA.nuts2)){
+    const g=document.createElement("optgroup");
+    g.label=robj.name;
+    for(const [c,obj] of Object.entries(DATA.nuts3)){
+      if(obj.reg===rc){
+        const o=document.createElement("option");
+        o.value=c;o.textContent=obj.name;
+        g.appendChild(o);
+      }
+    }
+    sel.appendChild(g);
+  }
+  sel.value=DATA.nuts3[selectedCode]?selectedCode:"EL303";
+}
+
+function readQuery(){
+  const p=new URLSearchParams(location.search);
+  const lv=p.get("level"),ar=p.get("area"),yr=p.get("year");
+  if(yr==="2011"||yr==="2021")$("year").value=yr;
+  if(lv==="nat"||lv==="nuts2"||lv==="nuts3"){
+    $("level").value=lv;
+    populateAreas(lv,ar);
+  }else if(ar&&DATA.nuts3[ar]){
+    $("level").value="nuts3";populateAreas("nuts3",ar);
+  }else if(ar&&DATA.nuts2[ar]){
+    $("level").value="nuts2";populateAreas("nuts2",ar);
+  }else{
+    $("level").value="nuts3";populateAreas("nuts3","EL303");
+  }
+}
+
+function syncQuery(level,area,year){
+  const u=new URL(location.href);
+  u.searchParams.set("level",level);
+  u.searchParams.set("area",area);
+  u.searchParams.set("year",year);
+  history.replaceState(null,"",u);
+}
+
+function getRankedList(level,year){
+  const src=level==="nuts2"?DATA.nuts2:DATA.nuts3;
+  const vk=year==="2011"?"v11":"v21",tk=year==="2011"?"t11":"t21";
+  const list=Object.entries(src).map(([code,d])=>({
+    code,
+    name:d.name,
+    vac:d[vk],
+    tot:d[tk],
+    occ:d[tk]-d[vk],
+    pct:100*d[vk]/d[tk],
+    pct11:100*d.v11/d.t11,
+    pct21:100*d.v21/d.t21
+  }));
+  list.sort((a,b)=>b.pct-a.pct);
+  list.forEach((item,idx)=>{item.rank=idx+1;});
+  return list;
+}
+
+function drawChart(level,selectedCode,year){
+  const body=$("chartBody");
+  const chartLevel=level==="nat"?"nuts2":level;
+  const list=getRankedList(chartLevel,year);
+  const natVac=year==="2011"?DATA.nat.v11:DATA.nat.v21;
+  const natTot=year==="2011"?DATA.nat.t11:DATA.nat.t21;
+  const natPct=100*natVac/natTot;
+
+  $("chartHeading").textContent=chartLevel==="nuts2"
+    ?`Οι 13 περιφέρειες κατά ποσοστό κενών κατοικιών (${year})`
+    :`Οι 52 περιφερειακές ενότητες κατά ποσοστό κενών κατοικιών (${year})`;
+  $("chartMid").textContent=`Γραμμή Ελλάδας (${year}): ${fmtPct(natPct)}`;
+
+  const x0=44,x1=628,yTop=18,yBot=195;
+  const yMax=80;
+  const slot=(x1-x0)/list.length;
+  const bw=Math.max(3,slot*(chartLevel==="nuts2"?0.68:0.74));
+
+  chartBars=list.map((item,i)=>({
+    ...item,
+    x:x0+i*slot+(slot-bw)/2,
+    w:bw,
+    y:yBot-(item.pct/yMax)*(yBot-yTop),
+    h:(item.pct/yMax)*(yBot-yTop)
+  }));
+
+  const yNat=yBot-(natPct/yMax)*(yBot-yTop);
+  const grid=[20,40,60,80].map(val=>{
+    const py=yBot-(val/yMax)*(yBot-yTop);
+    return `<line class="chart-grid" x1="${x0}" y1="${py.toFixed(1)}" x2="${x1}" y2="${py.toFixed(1)}"/>
+            <text class="chart-lbl" x="${x0-6}" y="${(py+4).toFixed(1)}" text-anchor="end">${val}%</text>`;
+  }).join("");
+
+  const barsSvg=chartBars.map(b=>{
+    const isSel=b.code===selectedCode;
+    const fill=isSel?"#e67e22":(level==="nat"?"#1c5cab":"#94a3b8");
+    const op=isSel?"1":(level==="nat"?"0.85":"0.55");
+    return `<rect class="bar-rect" data-code="${b.code}" x="${b.x.toFixed(1)}" y="${b.y.toFixed(1)}" width="${b.w.toFixed(1)}" height="${b.h.toFixed(1)}" rx="2" fill="${fill}" opacity="${op}"/>`;
+  }).join("");
+
+  const selBar=chartBars.find(b=>b.code===selectedCode);
+  const callout=selBar?`<circle cx="${(selBar.x+selBar.w/2).toFixed(1)}" cy="${Math.max(10,selBar.y-7).toFixed(1)}" r="4.5" fill="#e67e22"/>`:"";
+
+  body.innerHTML=`
+    ${grid}
+    <line class="chart-base" x1="${x0}" y1="${yBot}" x2="${x1}" y2="${yBot}"/>
+    <text class="chart-lbl" x="${x0-6}" y="${yBot+4}" text-anchor="end">0%</text>
+    ${barsSvg}
+    <line class="chart-nat-line" x1="${x0}" y1="${yNat.toFixed(1)}" x2="${x1}" y2="${yNat.toFixed(1)}"/>
+    ${callout}
+  `;
+
+  $("chartLeft").textContent=`1η: ${list[0].name} (${fmtPct(list[0].pct)})`;
+  $("chartRight").textContent=`${list.length}η: ${list.at(-1).name} (${fmtPct(list.at(-1).pct)})`;
+  if(selBar){
+    $("chartHover").textContent=`${selBar.rank}η/${list.length} · ${selBar.name}: ${fmtPct(selBar.pct)} (${fmtInt(selBar.vac)} κενές)`;
+  }else{
+    $("chartHover").textContent=`Ελλάδα (${year}): ${fmtPct(natPct)} (${fmtInt(natVac)} κενές κατοικίες)`;
+  }
+
+  body.querySelectorAll(".bar-rect").forEach(rect=>{
+    rect.addEventListener("mouseenter",()=>{
+      const item=chartBars.find(x=>x.code===rect.dataset.code);
+      if(item)$("chartHover").textContent=`${item.rank}η/${list.length} · ${item.name}: ${fmtPct(item.pct)} (${fmtInt(item.vac)} κενές από ${fmtInt(item.tot)})`;
+    });
+    rect.addEventListener("click",()=>{
+      const code=rect.dataset.code;
+      if(level==="nat"){
+        $("level").value="nuts2";
+        populateAreas("nuts2",code);
+      }else{
+        $("area").value=code;
+      }
+      calculate();
+    });
+  });
+}
+
+function calculate(){
+  const level=$("level").value,code=$("area").value,year=$("year").value;
+  syncQuery(level,code,year);
+
+  const natVac=year==="2011"?DATA.nat.v11:DATA.nat.v21;
+  const natTot=year==="2011"?DATA.nat.t11:DATA.nat.t21;
+  const natPct=100*natVac/natTot;
+
+  let d,titleName,parentNote="";
+  if(level==="nat"){
+    d=DATA.nat;
+    titleName="Σύνολο Ελλάδας";
+  }else if(level==="nuts2"){
+    d=DATA.nuts2[code]||DATA.nuts2.EL30;
+    titleName="Περιφέρεια "+d.name;
+  }else{
+    d=DATA.nuts3[code]||DATA.nuts3.EL303;
+    titleName=d.name;
+    const regName=DATA.nuts2[d.reg]?.name||"";
+    parentNote=` (Περιφέρεια ${regName})`;
+  }
+
+  const vac=year==="2011"?d.v11:d.v21;
+  const tot=year==="2011"?d.t11:d.t21;
+  const occ=tot-vac;
+  const pop=year==="2011"?d.p11:d.p21;
+  const pct=100*vac/tot;
+  const occPct=100-pct;
+
+  const pct11=100*d.v11/d.t11;
+  const pct21=100*d.v21/d.t21;
+  const diffPP=pct21-pct11;
+  const diffVacCount=d.v21-d.v11;
+  const popChangePct=100*(d.p21-d.p11)/d.p11;
+  const per100Residents=100*tot/pop;
+
+  let rankText="Όλη η χώρα",rankSub=`${fmtInt(per100Residents)} κατοικίες ανά 100 κατοίκους`;
+  if(level!=="nat"){
+    const list=getRankedList(level,year);
+    const found=list.find(x=>x.code===code);
+    if(found){
+      const diffFromNat=pct-natPct;
+      rankText=`${found.rank}η από ${list.length}`;
+      rankSub=`Ελλάδα: ${fmtPct(natPct)} (${fmtPP(diffFromNat,true)})`;
+    }
+  }
+
+  $("result").innerHTML=`
+    <strong>${fmtPct(pct)} κενές κατοικίες (${year})</strong>
+    <b>${titleName}</b>${parentNote}: από τις <b>${fmtInt(tot)}</b> κανονικές κατοικίες, οι <b>${fmtInt(vac)}</b> καταγράφηκαν ως κενές και οι <b>${fmtInt(occ)} (${fmtPct(occPct)})</b> ως κατοικούμενες κύριες κατοικίες.
+    <div class="split-bar" aria-hidden="true">
+      <div class="split-occ" style="width:${occPct.toFixed(1)}%"></div>
+      <div class="split-vac" style="width:${pct.toFixed(1)}%"></div>
+    </div>
+    <div class="split-legend">
+      <span><i class="dot-occ"></i>Κατοικούμενες: <b>${fmtInt(occ)}</b> (${fmtPct(occPct)})</span>
+      <span><i class="dot-vac"></i>Κενές (εξοχικές, δευτερεύουσες, προς ενοικίαση/πώληση κ.ά.): <b>${fmtInt(vac)}</b> (${fmtPct(pct)})</span>
+    </div>
+    <span>Στην ίδια περιοχή απογράφηκαν <b>${fmtInt(pop)}</b> μόνιμοι κάτοικοι το ${year} (μεταβολή πληθυσμού 2011–2021: <b>${fmtPct(popChangePct,true)}</b>), δηλαδή αντιστοιχούν <b>${fmtInt(per100Residents)} κανονικές κατοικίες ανά 100 μόνιμους κατοίκους</b>.</span>
+  `;
+
+  $("kpi1Lbl").textContent=`Κενές κατοικίες (${year})`;
+  $("kpiVacant").textContent=fmtInt(vac);
+  $("kpiVacantSub").textContent=`από ${fmtInt(tot)} κανονικές κατοικίες`;
+
+  $("kpiDiff").textContent=fmtPP(diffPP,true);
+  $("kpiDiffSub").textContent=`${fmtPct(pct11)} (2011) → ${fmtPct(pct21)} (2021) · ${diffVacCount>=0?"+":""}${fmtInt(diffVacCount)} σπίτια`;
+
+  $("kpi3Lbl").textContent=level==="nat"?"Αναλογία κατοικιών / πληθυσμού":`Θέση (${level==="nuts2"?"13 περιφέρειες":"52 Π.Ε."})`;
+  $("kpiRank").textContent=rankText;
+  $("kpiRankSub").textContent=rankSub;
+
+  lastSummary=`${titleName} (${year}): ${fmtPct(pct)} κενές κατοικίες (${fmtInt(vac)} κενές από ${fmtInt(tot)} κανονικές κατοικίες· μεταβολή 2011–2021: ${fmtPP(diffPP,true)}). Πηγή: ΕΛΣΤΑΤ Απογραφή Κατοικιών · https://tools.statistikosatlantas.com/katoikia/?level=${level}&area=${code}&year=${year}`;
+
+  document.querySelectorAll(".pill").forEach(b=>{
+    b.classList.toggle("active",b.dataset.preset===`${level},${code},${year}`);
+  });
+
+  drawChart(level,code,year);
+}
+
+renderReasonsTable();
+readQuery();
+calculate();
+
+$("level").addEventListener("change",()=>{
+  const lv=$("level").value;
+  const defCode=lv==="nat"?"EL":(lv==="nuts2"?"EL30":"EL303");
+  populateAreas(lv,defCode);
+  calculate();
+});
+$("area").addEventListener("change",calculate);
+$("year").addEventListener("change",calculate);
+
+document.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{
+  const [lv,ar,yr]=b.dataset.preset.split(",");
+  $("level").value=lv;
+  $("year").value=yr;
+  populateAreas(lv,ar);
+  calculate();
+}));
+
+$("copyBtn").addEventListener("click",async()=>{
+  try{await navigator.clipboard.writeText(lastSummary);$("copyStatus").textContent="Αντιγράφηκε!";}
+  catch{$("copyStatus").textContent="Δεν ήταν δυνατή η αντιγραφή.";}
+  setTimeout(()=>{$("copyStatus").textContent=""},2500);
+});
+
+fetch("../xartis/data/indicators/vacant_dwellings.json").then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(d=>{
+  if(d?.national?.all?.["2021"]){
+    $("sourceStatus").textContent="Επαληθευμένα στοιχεία ΕΛΣΤΑΤ (Απογραφές Κτιρίων & Κατοικιών 2011 και 2021).";
+  }
+}).catch(()=>{});
+</script>
+</body>
+</html>
