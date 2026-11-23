@@ -783,6 +783,26 @@
         "page": "https://ec.europa.eu/eurostat/databrowser/view/crim_gen_reg/default/table",
         "updatedAt": "2026-11-21T15:00:33.894631+00:00"
       }
+    },
+    {
+      "id": "lung_cancer_mortality",
+      "title": "Θάνατοι από καρκίνο του πνεύμονα ανά 100.000 κατοίκους",
+      "short": "Καρκίνος πνεύμονα",
+      "kind": "level",
+      "hidden": false,
+      "file": "data/indicators/lung_cancer_mortality.json",
+      "years": [
+        2011,
+        2023
+      ],
+      "updatedAt": "2026-11-23T00:01:54+00:00",
+      "source": {
+        "org": "Eurostat",
+        "table": "hlth_cd_asdr2 (αιτίες θανάτου, τυποποιημένος δείκτης θνησιμότητας ανά περιφέρεια NUTS2, ICD-10 C33–C34)",
+        "page": "https://ec.europa.eu/eurostat/databrowser/view/hlth_cd_asdr2/default/table",
+        "sha256": "01e0d9e531f12e9a86cebadca6b9cd9a105f5819092893fd3457469d542bf112",
+        "retrieved": "2026-11-23T00:01:54+00:00"
+      }
     }
   ],
   "checkedAt": "2026-11-21T15:00:33.894631+00:00",
@@ -817,7 +837,8 @@
     "heating_electricity_census": 473110,
     "research_expenditure": 2.27,
     "researchers_employment": 1.7,
-    "knowledge_intensive_services": 51
+    "knowledge_intensive_services": 51,
+    "lung_cancer_mortality": 72.03
   },
   "stories": [
     {
@@ -870,7 +891,8 @@
         "infant_mortality",
         "road_deaths",
         "hospital_beds",
-        "physicians"
+        "physicians",
+        "lung_cancer_mortality"
       ]
     },
     {
