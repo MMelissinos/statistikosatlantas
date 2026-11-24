@@ -16,6 +16,15 @@ workflow/scheduled_tools_backup/
 workflow/monthly_article/
 workflow/__pycache__/
 workflow/archive/
+workflow/secrets/
+workflow/stats/
+workflow/dashboard_export/
+workflow/region_findings_images/
+workflow/findings_cards_samples/
+workflow/image_bank/
+workflow/staging_iron_baroque/
+workflow/*.cmd
+workflow/*.md
 workflow/MEMORY.md
 workflow/weekly_plan.md
 workflow/mined_findings_candidates.json
