@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Πίνακας Άτλαντα</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#0E2746">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Άτλαντας">
+<style>
+:root {
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #f0f4fa;
+  --fg: #111827;
+  --fg-muted: #5b667a;
+  --border: #e2e8f0;
+  --accent: #1f5fbf;
+  --navy: #0e2746;
+  --ok: #15803d;
+  --ok-bg: #dcfce7;
+  --bad: #b91c1c;
+  --bad-bg: #fee2e2;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --bar: #1f5fbf;
+  --bar-best: #f29a2e;
+  --grid: #e5ecf5;
+  --shadow: 0 1px 3px rgba(14, 39, 70, 0.06);
+  --radius: 12px;
+}
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --surface: #121c2e;
+  --surface-2: #18253c;
+  --fg: #f1f5f9;
+  --fg-muted: #94a3b8;
+  --border: #24324a;
+  --accent: #60a5fa;
+  --navy: #0e2746;
+  --ok: #4ade80;
+  --ok-bg: rgba(34, 197, 94, 0.16);
+  --bad: #f87171;
+  --bad-bg: rgba(239, 68, 68, 0.16);
+  --warn: #fbbf24;
+  --warn-bg: rgba(245, 158, 11, 0.16);
+  --bar: #3b82f6;
+  --bar-best: #f59e0b;
+  --grid: #1e2d45;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(36px, env(safe-area-inset-bottom));
+}
+/* Lock screen */
+.lock-screen {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.lock-card {
+  width: 100%;
+  max-width: 360px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.lock-card img { width: 64px; height: 64px; border-radius: 14px; margin-bottom: 12px; }
+.lock-card h1 { font-size: 22px; margin: 0 0 6px; }
+.lock-card p { font-size: 14px; color: var(--fg-muted); margin: 0 0 18px; }
+.lock-form { display: flex; flex-direction: column; gap: 10px; }
+.lock-form input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--fg);
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+.lock-form input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+}
+.btn:hover { background: var(--surface-2); }
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+.btn-primary:hover { opacity: 0.92; background: var(--navy); }
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.lock-err { color: var(--bad); font-size: 13px; min-height: 18px; margin-top: 6px; }
+
+/* Header */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { width: 42px; height: 42px; border-radius: 10px; }
+.brand h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+.brand-sub { font-size: 12px; color: var(--fg-muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.lede {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 0 0 22px;
+  font-size: 14.5px;
+  color: var(--fg-muted);
+  box-shadow: var(--shadow);
+}
+.lede b { color: var(--fg); font-variant-numeric: tabular-nums; }
+.ios-tip {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--fg-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Sections */
+.sec {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.sec:first-of-type { margin-top: 8px; padding-top: 0; border-top: none; }
+.sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-bottom: 14px;
+}
+.sec h2 { font-size: 17px; margin: 0; }
+.when { font-size: 12px; color: var(--fg-muted); }
+
+/* Tiles */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 15px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.k { font-size: 12px; color: var(--fg-muted); font-weight: 500; }
+.v { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; letter-spacing: -0.02em; }
+.d { font-size: 12px; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.good { color: var(--ok); font-weight: 600; }
+.bad { color: var(--bad); font-weight: 600; }
+
+/* Chart */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.card h3 { font-size: 14px; margin: 0 0 10px; color: var(--fg); }
+.chart-wrap { position: relative; width: 100%; min-height: 190px; }
+.chart-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+.note { font-size: 12px; color: var(--fg-muted); margin: 8px 0 0; }
+
+/* Tables */
+.two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+}
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th {
+  text-align: left;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--fg-muted);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 8px 7px 0;
+}
+td {
+  padding: 8px 8px 8px 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td a { color: var(--accent); text-decoration: none; }
+td a:hover { text-decoration: underline; }
+.pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pill-ok { background: var(--ok-bg); color: var(--ok); }
+.pill-bad { background: var(--bad-bg); color: var(--bad); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); }
+.pill-tag { background: var(--surface-2); color: var(--fg-muted); }
+
+/* System health row */
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.health-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.health-label { font-size: 13px; font-weight: 600; }
+.health-sub { font-size: 11.5px; color: var(--fg-muted); }
+.hidden { display: none !important; }
+footer {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+</style>
+</head>
+<body>
+
+<div id="lockScreen" class="lock-screen hidden">
+  <div class="lock-card">
+    <img src="icon-192.png" alt="Στατιστικός Άτλαντας">
+    <h1>Πίνακας Άτλαντα</h1>
+    <p>Εισήγαγε τον κωδικό πρόσβασης μία φορά — θα αποθηκευτεί στη συσκευή σου.</p>
+    <form id="lockForm" class="lock-form">
+      <input id="pinInput" type="password" autocomplete="current-password" placeholder="Κωδικός πρόσβασης" required>
+      <button type="submit" class="btn btn-primary" style="padding:11px;font-size:15px">Ξεκλείδωμα</button>
+    </form>
+    <div id="lockErr" class="lock-err"></div>
+  </div>
+</div>
+
+<div id="app" class="wrap hidden">
+  <header class="topbar">
+    <div class="brand">
+      <img src="icon-192.png" alt="Άτλαντας">
+      <div>
+        <h1>Πίνακας Άτλαντα</h1>
+        <div class="brand-sub" id="syncTime">Φόρτωση…</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="installBtn" class="btn btn-accent hidden" type="button">Εγκατάσταση</button>
+      <button id="refreshBtn" class="btn" type="button">Ανανέωση</button>
+      <button id="themeBtn" class="btn" type="button" title="Εναλλαγή θέματος">Θέμα</button>
+      <button id="lockBtn" class="btn" type="button" title="Κλείδωμα συσκευής">Κλείδωμα</button>
+    </div>
+  </header>
+
+  <div id="iosTip" class="ios-tip hidden">
+    <span>Για εγκατάσταση σε iPhone/iPad: πάτα <b>Κοινοποίηση</b> → <b>Προσθήκη στην οθόνη Αφετηρίας</b>.</span>
+    <button id="iosClose" class="btn" type="button" style="padding:4px 8px">OK</button>
+  </div>
+
+  <p class="lede" id="lede">Φόρτωση δεδομένων…</p>
+
+  <section class="sec" id="sec-blog">
+    <div class="sec-head">
+      <h2>Blog · WordPress &amp; Jetpack</h2>
+      <span class="when" id="blogWhen">Αυτόματος συγχρονισμός</span>
+    </div>
+    <div class="tiles">
+      <div class="tile">
+        <span class="k">Προβολές · 7 ημέρες</span>
+        <span class="v" id="bViews7">—</span>
+        <span class="d"><span id="bWeekChg">—</span> έναντι προηγ. 7 ημ.</span>
+      </div>
+      <div class="tile">
+        <span class="k">Προβολές · 30 ημέρες</span>
+        <span class="v" id="bViews30">—</span>
+        <span class="d" id="bAllTime">Σύνολο: —</span>
+      </div>
+      <div class="tile">
+        <span class="k">Σήμερα / Χθες</span>
+        <span class="v" id="bTodayYest">—</span>
+        <span class="d" id="bBestDay">Καλύτερη μέρα: —</span>
+      </div>
+      <div class="tile">
+        <span class="k">Posts (Δημ. / Προγρ.)</span>
+        <span class="v" id="bPosts">—</span>
+        <span class="d" id="bFollowers">Followers: —</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Προβολές ανά ημέρα · τελευταίες 30 ημέρες</h3>
+      <div class="chart-wrap" id="dailyChart"></div>
+      <p class="note">Άγγιξε ή πέρασε το ποντίκι πάνω σε κάθε μπάρα για προβολές και επισκέπτες. Με πορτοκαλί η καλύτερη ημέρα της περιόδου.</p>
+    </div>
+
+    <div class="two">
+      <div class="card">
+        <h3>Επόμενα προγραμματισμένα (Άρθρα &amp; Podcasts)</h3>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Ημερομηνία</th><th>Τίτλος</th></tr></thead>
+            <tbody id="tblUpcoming"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Πρόσφατα δημοσιευμένα</h3>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Ημερομηνία</th><th>Τίτλος</th></tr></thead>
+            <tbody id="tblRecent"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="sec-gsc">
+    <div class="sec-head">
+      <h2>Google Search Console</h2>
+      <span class="when" id="gscWhen">28 ημέρες · Google API</span>
+    </div>
+    <div class="tiles">
+      <div class="tile"><span class="k">Κλικ</span><span class="v" id="gClicks">—</span></div>
+      <div class="tile"><span class="k">Εμφανίσεις</span><span class="v" id="gImpr">—</span></div>
+      <div class="tile"><span class="k">CTR %</span><span class="v" id="gCtr">—</span></div>
+      <div class="tile"><span class="k">Μέση θέση</span><span class="v" id="gPos">—</span></div>
+    </div>
+    <div class="two">
+      <div class="card">
+        <h3>Κορυφαίες αναζητήσεις</h3>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Αναζήτηση</th><th class="n">Εμφ.</th><th class="n">Κλικ</th><th class="n">Θέση</th></tr></thead>
+            <tbody id="tblGscQ"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Σελίδες στο Google</h3>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Σελίδα</th><th class="n">Εμφ.</th><th class="n">Κλικ</th><th class="n">Θέση</th></tr></thead>
+            <tbody id="tblGscP"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="sec-yt">
+    <div class="sec-head">
+      <h2>YouTube · Atlas Choir</h2>
+      <span class="when" id="ytWhen">28 ημέρες · YouTube API</span>
+    </div>
+    <div class="tiles">
+      <div class="tile"><span class="k">Προβολές · συνολικά</span><span class="v" id="yTotal">—</span></div>
+      <div class="tile"><span class="k">Προβολές · 28 ημ.</span><span class="v" id="y28">—</span></div>
+      <div class="tile"><span class="k">Ώρες θέασης · 28 ημ.</span><span class="v" id="yHours">—</span></div>
+      <div class="tile"><span class="k">Συνδρομητές</span><span class="v" id="ySubs">—</span></div>
+      <div class="tile"><span class="k">Βίντεο</span><span class="v" id="yVids">—</span></div>
+    </div>
+    <div class="card">
+      <h3>Κορυφαία βίντεο · 28 ημέρες</h3>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Βίντεο</th><th class="n">Προβολές</th></tr></thead>
+          <tbody id="tblYt"></tbody>
+        </table>
+      </div>
+      <p class="note">Το YouTube Analytics έχει καθυστέρηση 2–3 ημερών· τα νέα βίντεο φαίνονται πρώτα στις συνολικές προβολές.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="sec-sys">
+    <div class="sec-head">
+      <h2>Υγεία Συστήματος &amp; Αυτοματισμού</h2>
+      <span class="when">Καθημερινό Backup 02:00 &amp; API Sync</span>
+    </div>
+    <div class="health-grid" id="healthGrid"></div>
+  </section>
+
+  <footer>Πίνακας Άτλαντα · Αυτόνομο PWA (AES-256-GCM) · Μηδενική εξάρτηση από Claude</footer>
+</div>
+
+<script>
+(function () {
+  const PIN_KEY = 'atlas_pinakas_pin_v1';
+  const THEME_KEY = 'atlas_pinakas_theme_v1';
+  const $ = (id) => document.getElementById(id);
+
+  // Theme handling
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    $('themeBtn').textContent = t === 'dark' ? 'Φωτεινό' : 'Σκοτεινό';
+  }
+  const savedTheme = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  applyTheme(savedTheme);
+  $('themeBtn').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
+  });
+
+  // PWA Service Worker & Install prompt
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    $('installBtn').classList.remove('hidden');
+  });
+  $('installBtn').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const res = await deferredPrompt.userChoice;
+    if (res.outcome === 'accepted') $('installBtn').classList.add('hidden');
+    deferredPrompt = null;
+  });
+  window.addEventListener('appinstalled', () => $('installBtn').classList.add('hidden'));
+
+  // iOS Safari hint
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isIOS && !isStandalone && !localStorage.getItem('atlas_ios_tip_dismissed')) {
+    $('iosTip').classList.remove('hidden');
+    $('iosClose').addEventListener('click', () => {
+      $('iosTip').classList.add('hidden');
+      localStorage.setItem('atlas_ios_tip_dismissed', '1');
+    });
+  }
+
+  // Helpers
+  function fmt(v, dec = 0) {
+    if (v === null || v === undefined || v === '' || Number.isNaN(Number(v))) return '—';
+    return Number(v).toLocaleString('el-GR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  }
+  function fmtDateTime(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso.replace('T', ' ').slice(0, 16);
+    return d.toLocaleString('el-GR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+  function fmtShortDate(iso) {
+    if (!iso) return '—';
+    const m = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}:\d{2}))?/.exec(iso);
+    if (!m) return iso;
+    return m[4] ? `${m[3]}/${m[2]} ${m[4]}` : `${m[3]}/${m[2]}`;
+  }
+  function b64ToBytes(b64) {
+    const bin = atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return arr;
+  }
+
+  async function decryptPayload(enc, pin) {
+    const salt = b64ToBytes(enc.salt);
+    const iv = b64ToBytes(enc.iv);
+    const cipherBytes = b64ToBytes(enc.data);
+    const baseKey = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(pin),
+      'PBKDF2',
+      false,
+      ['deriveKey']
+    );
+    const aesKey = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: enc.iter || 100000, hash: 'SHA-256' },
+      baseKey,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, aesKey, cipherBytes);
+    return JSON.parse(new TextDecoder().decode(plainBuf));
+  }
+
+  function findMetric(list, key) {
+    if (!Array.isArray(list)) return undefined;
+    const row = list.find((x) => x && x.metric === key);
+    return row ? row.value : undefined;
+  }
+
+  function renderChart(daily) {
+    const el = $('dailyChart');
+    el.replaceChildren();
+    if (!Array.isArray(daily) || !daily.length) {
+      el.innerHTML = '<p class="note">Δεν υπάρχουν διαθέσιμα ημερήσια δεδομένα.</p>';
+      return;
+    }
+    const W = 720, H = 195, m = { t: 14, r: 8, b: 26, l: 38 };
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const maxV = Math.max(1, ...daily.map((d) => d.views || 0));
+    const niceMax = maxV <= 5 ? 5 : Math.ceil(maxV / 10) * 10;
+    const stepX = iw / daily.length;
+    const barW = Math.max(4, stepX * 0.72);
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Ημερήσιες προβολές blog 30 ημερών');
+
+    // Horizontal gridlines
+    for (let i = 0; i <= 4; i++) {
+      const val = Math.round((niceMax / 4) * i);
+      const y = m.t + ih - (val / niceMax) * ih;
+      const line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', m.l);
+      line.setAttribute('x2', W - m.r);
+      line.setAttribute('y1', y);
+      line.setAttribute('y2', y);
+      line.setAttribute('stroke', 'var(--grid)');
+      line.setAttribute('stroke-width', '1');
+      svg.appendChild(line);
+
+      const lbl = document.createElementNS(ns, 'text');
+      lbl.setAttribute('x', m.l - 6);
+      lbl.setAttribute('y', y + 4);
+      lbl.setAttribute('text-anchor', 'end');
+      lbl.setAttribute('fill', 'var(--fg-muted)');
+      lbl.setAttribute('font-size', '11');
+      lbl.textContent = fmt(val);
+      svg.appendChild(lbl);
+    }
+
+    const tip = document.createElement('div');
+    tip.className = 'chart-tip hidden';
+    el.appendChild(tip);
+
+    daily.forEach((d, idx) => {
+      const x = m.l + idx * stepX + (stepX - barW) / 2;
+      const h = Math.max(d.views > 0 ? 3 : 0, (d.views / niceMax) * ih);
+      const y = m.t + ih - h;
+
+      const rect = document.createElementNS(ns, 'rect');
+      rect.setAttribute('x', x.toFixed(1));
+      rect.setAttribute('y', y.toFixed(1));
+      rect.setAttribute('width', barW.toFixed(1));
+      rect.setAttribute('height', h.toFixed(1));
+      rect.setAttribute('rx', '2');
+      rect.setAttribute('fill', d.views === maxV && maxV > 0 ? 'var(--bar-best)' : 'var(--bar)');
+      rect.style.cursor = 'pointer';
+
+      const showTip = () => {
+        tip.textContent = `${fmtShortDate(d.date)} · ${fmt(d.views)} προβολές · ${fmt(d.visitors)} επισκέπτες`;
+        tip.classList.remove('hidden');
+        const cw = el.clientWidth || W;
+        const px = ((x + barW / 2) / W) * cw;
+        tip.style.left = Math.max(4, Math.min(px - 80, cw - tip.offsetWidth - 4)) + 'px';
+      };
+      rect.addEventListener('pointerenter', showTip);
+      rect.addEventListener('pointerdown', showTip);
+      rect.addEventListener('pointerleave', () => tip.classList.add('hidden'));
+      svg.appendChild(rect);
+
+      if (idx % 5 === 0 || idx === daily.length - 1) {
+        const xl = document.createElementNS(ns, 'text');
+        xl.setAttribute('x', (x + barW / 2).toFixed(1));
+        xl.setAttribute('y', H - 6);
+        xl.setAttribute('text-anchor', 'middle');
+        xl.setAttribute('fill', 'var(--fg-muted)');
+        xl.setAttribute('font-size', '10.5');
+        xl.textContent = fmtShortDate(d.date);
+        svg.appendChild(xl);
+      }
+    });
+
+    el.appendChild(svg);
+  }
+
+  function fillTable(tbodyId, rows, cols, emptyMsg) {
+    const tb = $(tbodyId);
+    tb.replaceChildren();
+    if (!Array.isArray(rows) || !rows.length) {
+      const td = tb.insertRow().insertCell();
+      td.colSpan = cols.length;
+      td.className = 'note';
+      td.textContent = emptyMsg || 'Δεν υπάρχουν ακόμη δεδομένα για αυτή την περίοδο.';
+      return;
+    }
+    rows.forEach((r) => {
+      const tr = tb.insertRow();
+      cols.forEach((c) => {
+        const td = tr.insertCell();
+        const val = typeof c.get === 'function' ? c.get(r) : r[c.f];
+        if (c.num) {
+          td.className = 'n';
+          td.textContent = fmt(val, c.dec || 0);
+        } else if (c.html) {
+          td.innerHTML = val;
+        } else if (c.link && r[c.link] && /^https?:\/\//.test(r[c.link])) {
+          const a = document.createElement('a');
+          a.href = r[c.link];
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.textContent = val || r[c.link];
+          td.appendChild(a);
+        } else {
+          td.textContent = val === undefined || val === null ? '' : String(val);
+        }
+      });
+    });
+  }
+
+  function render(data) {
+    $('syncTime').textContent = `Τελευταία ενημέρωση: ${fmtDateTime(data.generated_at)}`;
+
+    const blog = data.blog || {};
+    const jp = blog.jetpack || {};
+    const gsc = data.gsc || {};
+    const yt = data.youtube || {};
+    const sys = data.system || {};
+
+    const chg = jp.week_change_pct;
+    const chgText = chg === null || chg === undefined ? '—' : `${chg > 0 ? '+' : ''}${fmt(chg, 1)}%`;
+    const gImpr = findMetric(gsc.summary, 'impressions');
+    const yTot = findMetric(yt.summary, 'views_total');
+
+    $('lede').innerHTML =
+      `Το blog είχε <b>${fmt(jp.views_7d)}</b> προβολές τις τελευταίες 7 ημέρες ` +
+      `(<b class="${chg > 0 ? 'good' : chg < 0 ? 'bad' : ''}">${chgText}</b> έναντι των 7 προηγούμενων). ` +
+      `Στο Google είχε <b>${fmt(gImpr)}</b> εμφανίσεις σε 28 ημέρες και το Atlas Choir έχει <b>${fmt(yTot)}</b> συνολικές προβολές στο YouTube.`;
+
+    // Blog KPIs
+    $('bViews7').textContent = fmt(jp.views_7d);
+    const wc = $('bWeekChg');
+    wc.textContent = chgText;
+    wc.className = chg > 0 ? 'good' : chg < 0 ? 'bad' : '';
+    $('bViews30').textContent = fmt(jp.views_30d);
+    $('bAllTime').textContent = `Ιστορικό σύνολο: ${fmt(jp.views_all_time)}`;
+    $('bTodayYest').textContent = `${fmt(jp.views_today)} / ${fmt(jp.views_yesterday)}`;
+    $('bBestDay').textContent = jp.best_day ? `Καλύτερη: ${fmtShortDate(jp.best_day)} (${fmt(jp.best_day_views)})` : '—';
+    $('bPosts').textContent = `${fmt(blog.published_count)} / ${fmt(blog.scheduled_count)}`;
+    $('bFollowers').textContent = `Followers: ${fmt(jp.followers)}`;
+    if (blog.fetched_at) $('blogWhen').textContent = `WordPress & Jetpack · ${fmtShortDate(blog.fetched_at)}`;
+
+    renderChart(jp.daily || []);
+
+    fillTable('tblUpcoming', blog.upcoming_major || [], [
+      { get: (r) => `${fmtShortDate(r.date)}` },
+      { html: true, get: (r) => `<span class="pill pill-tag">${r.kind || 'Άρθρο'}</span> ${escapeHtml(r.title)}` }
+    ], 'Δεν υπάρχουν προγραμματισμένα άρθρα/podcasts.');
+
+    fillTable('tblRecent', blog.recent_posts || [], [
+      { get: (r) => fmtShortDate(r.date) },
+      { f: 'title', link: 'url' }
+    ], 'Δεν βρέθηκαν πρόσφατα posts.');
+
+    // GSC
+    if (Array.isArray(gsc.window) && gsc.window.length === 2) {
+      $('gscWhen').textContent = `${fmtShortDate(gsc.window[0])} – ${fmtShortDate(gsc.window[1])} · Google API`;
+    }
+    $('gClicks').textContent = fmt(findMetric(gsc.summary, 'clicks'));
+    $('gImpr').textContent = fmt(gImpr);
+    $('gCtr').textContent = fmt(findMetric(gsc.summary, 'ctr'), 1);
+    $('gPos').textContent = fmt(findMetric(gsc.summary, 'position'), 1);
+    fillTable('tblGscQ', gsc.queries || [], [
+      { f: 'query' },
+      { f: 'impressions', num: true },
+      { f: 'clicks', num: true },
+      { f: 'position', num: true, dec: 1 }
+    ]);
+    fillTable('tblGscP', gsc.pages || [], [
+      { f: 'page', link: 'url' },
+      { f: 'impressions', num: true },
+      { f: 'clicks', num: true },
+      { f: 'position', num: true, dec: 1 }
+    ]);
+
+    // YouTube
+    if (Array.isArray(yt.window) && yt.window.length === 2) {
+      $('ytWhen').textContent = `${fmtShortDate(yt.window[0])} – ${fmtShortDate(yt.window[1])} · YouTube API`;
+    }
+    $('yTotal').textContent = fmt(yTot);
+    $('y28').textContent = fmt(findMetric(yt.summary, 'views_28d'));
+    $('yHours').textContent = fmt(findMetric(yt.summary, 'watch_hours_28d'), 1);
+    $('ySubs').textContent = fmt(findMetric(yt.summary, 'subs_total'));
+    $('yVids').textContent = fmt(findMetric(yt.summary, 'videos_total'));
+    fillTable('tblYt', yt.top || [], [
+      { f: 'video' },
+      { f: 'views', num: true }
+    ], 'Το YouTube Analytics δεν έχει επιστρέψει ακόμη δεδομένα 28 ημερών (καθυστέρηση 2–3 ημερών).');
+
+    // System Health
+    const items = [
+      {
+        label: 'Google Drive Backup (02:00)',
+        sub: sys.last_backup_at ? `${fmtDateTime(sys.last_backup_at)} · ${fmt(sys.zip_mb, 0)} MB` : 'Χωρίς καταγραφή',
+        status: sys.drive_status
+      },
+      {
+        label: 'WordPress Snapshot',
+        sub: blog.status === 'ok' ? `${fmt(blog.published_count)} δημ. / ${fmt(blog.scheduled_count)} προγρ.` : 'Σφάλμα',
+        status: sys.wp_export_status || blog.status
+      },
+      {
+        label: 'Search Console API',
+        sub: gsc.fetched_at ? fmtDateTime(gsc.fetched_at) : '—',
+        status: sys.gsc_status
+      },
+      {
+        label: 'YouTube API (Atlas Choir)',
+        sub: yt.fetched_at ? fmtDateTime(yt.fetched_at) : '—',
+        status: sys.youtube_status
+      }
+    ];
+    const hg = $('healthGrid');
+    hg.replaceChildren();
+    items.forEach((it) => {
+      const ok = it.status === 'ok';
+      const cls = ok ? 'pill-ok' : it.status ? 'pill-bad' : 'pill-warn';
+      const txt = ok ? 'OK' : (it.status || '—').toUpperCase();
+      const div = document.createElement('div');
+      div.className = 'health-item';
+      div.innerHTML = `<div><div class="health-label">${escapeHtml(it.label)}</div><div class="health-sub">${escapeHtml(it.sub)}</div></div><span class="pill ${cls}">${escapeHtml(txt)}</span>`;
+      hg.appendChild(div);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  let cachedEnc = null;
+  async function loadEncrypted(forceNetwork) {
+    const url = forceNetwork ? `./data.enc.json?t=${Date.now()}` : './data.enc.json';
+    const resp = await fetch(url, { cache: forceNetwork ? 'no-store' : 'default' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    cachedEnc = await resp.json();
+    return cachedEnc;
+  }
+
+  async function tryUnlock(pin, forceNetwork) {
+    const enc = (forceNetwork || !cachedEnc) ? await loadEncrypted(forceNetwork) : cachedEnc;
+    const data = await decryptPayload(enc, pin);
+    localStorage.setItem(PIN_KEY, pin);
+    $('lockScreen').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    render(data);
+  }
+
+  $('lockForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pin = $('pinInput').value.trim();
+    if (!pin) return;
+    $('lockErr').textContent = 'Επαλήθευση…';
+    try {
+      await tryUnlock(pin, false);
+      $('lockErr').textContent = '';
+    } catch (err) {
+      $('lockErr').textContent = 'Λάθος κωδικός πρόσβασης.';
+    }
+  });
+
+  $('refreshBtn').addEventListener('click', async () => {
+    const pin = localStorage.getItem(PIN_KEY);
+    if (!pin) return;
+    const btn = $('refreshBtn');
+    btn.textContent = 'Ανανέωση…';
+    btn.disabled = true;
+    try {
+      await tryUnlock(pin, true);
+    } catch (e) {
+      alert('Δεν ήταν δυνατή η ανανέωση (έλεγξε τη σύνδεση).');
+    } finally {
+      btn.textContent = 'Ανανέωση';
+      btn.disabled = false;
+    }
+  });
+
+  $('lockBtn').addEventListener('click', () => {
+    localStorage.removeItem(PIN_KEY);
+    $('pinInput').value = '';
+    $('lockErr').textContent = '';
+    $('app').classList.add('hidden');
+    $('lockScreen').classList.remove('hidden');
+  });
+
+  // Boot
+  (async function boot() {
+    const savedPin = localStorage.getItem(PIN_KEY);
+    if (savedPin) {
+      try {
+        await tryUnlock(savedPin, true);
+        return;
+      } catch (e) {
+        // Fallback to cached or ask PIN again
+        try {
+          await tryUnlock(savedPin, false);
+          return;
+        } catch (e2) {
+          localStorage.removeItem(PIN_KEY);
+        }
+      }
+    }
+    $('lockScreen').classList.remove('hidden');
+  })();
+})();
+</script>
+</body>
+</html>

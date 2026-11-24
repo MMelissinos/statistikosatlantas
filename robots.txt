@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /pinakas/
 
 Sitemap: https://tools.statistikosatlantas.com/sitemap.xml
