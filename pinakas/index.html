@@ -503,7 +503,15 @@ footer {
 
   // PWA Service Worker & Install prompt
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+      .then((reg) => reg.update()).catch(() => {});
+    // Όταν ενεργοποιηθεί νέα έκδοση, ξαναφόρτωσε μία φορά ώστε να φανεί αμέσως.
+    let swReloaded = !navigator.serviceWorker.controller; // 1η επίσκεψη: δεν χρειάζεται reload
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (swReloaded) return;
+      swReloaded = true;
+      location.reload();
+    });
   }
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => {

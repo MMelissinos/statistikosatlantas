@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pinakas-atlanta-v4';
+const CACHE_NAME = 'pinakas-atlanta-v5';
 const SHELL_ASSETS = [
   './',
   './index.html',
@@ -47,7 +47,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate for app shell
+  // Network-first for the page itself, so a new version shows on the very next open (cache only offline)
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('/index.html')) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .then((resp) => {
+          if (resp.ok) {
+            const copy = resp.clone();
+            caches.open(CACHE_NAME).then((c) => c.put('./index.html', copy));
+          }
+          return resp;
+        })
+        .catch(() => caches.match('./index.html').then((r) => r || caches.match('./')))
+    );
+    return;
+  }
+
+  // Stale-while-revalidate for the rest of the app shell (icons, manifest)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request)
