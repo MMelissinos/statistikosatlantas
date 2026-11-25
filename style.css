@@ -12,3 +12,6 @@ table{width:100%;border-collapse:collapse;margin-top:18px}td,th{padding:10px 6px
 tr.best td{font-weight:700;color:var(--blue)}.bar{height:8px;background:var(--blue);border-radius:4px;opacity:.75}
 .note{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);margin-top:28px;padding-top:12px}
 footer{border-top:1px solid var(--line);padding:16px;font-size:.85rem;color:var(--muted);text-align:center}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}.cats a{font-size:.9rem;padding:6px 12px;border:1px solid #c9d3e0;border-radius:999px;text-decoration:none;background:#fff}.cats a:hover{background:var(--pale)}
+.card.feature{background:var(--blue);color:#fff;border-color:var(--blue)}.card.feature b{font-size:1.25rem}
+.cat{scroll-margin-top:12px}.cat h2{font-size:1.25rem;margin:34px 0 2px;padding-top:14px;border-top:1px solid var(--line)}.cat h2+p.muted{margin:0 0 4px;font-size:.92rem}
