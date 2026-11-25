@@ -441,11 +441,23 @@ footer {
       <span class="when" id="ytWhen">28 ημέρες · YouTube API</span>
     </div>
     <div class="tiles">
+      <div class="tile"><span class="k">Προβολές · 24 ώρες</span><span class="v" id="y24">—</span></div>
+      <div class="tile"><span class="k">Προβολές · 7 ημέρες</span><span class="v" id="y7">—</span></div>
       <div class="tile"><span class="k">Προβολές · συνολικά</span><span class="v" id="yTotal">—</span></div>
       <div class="tile"><span class="k">Προβολές · 28 ημ.</span><span class="v" id="y28">—</span></div>
       <div class="tile"><span class="k">Ώρες θέασης · 28 ημ.</span><span class="v" id="yHours">—</span></div>
       <div class="tile"><span class="k">Συνδρομητές</span><span class="v" id="ySubs">—</span></div>
       <div class="tile"><span class="k">Βίντεο</span><span class="v" id="yVids">—</span></div>
+    </div>
+    <div class="card">
+      <h3>Βίντεο τώρα · ζωντανοί μετρητές</h3>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Βίντεο</th><th class="n">24 ώρες</th><th class="n">Συνολικά</th></tr></thead>
+          <tbody id="tblYtLive"></tbody>
+        </table>
+      </div>
+      <p class="note" id="ytLiveNote">Ζωντανοί μετρητές από το YouTube Data API, σε κάθε συγχρονισμό (κάθε 4 ώρες).</p>
     </div>
     <div class="card">
       <h3>Κορυφαία βίντεο · 28 ημέρες</h3>
@@ -706,7 +718,8 @@ footer {
     const chg = jp.week_change_pct;
     const chgText = chg === null || chg === undefined ? '—' : `${chg > 0 ? '+' : ''}${fmt(chg, 1)}%`;
     const gImpr = findMetric(gsc.summary, 'impressions');
-    const yTot = findMetric(yt.summary, 'views_total');
+    const ytLive = yt.live || {};
+    const yTot = ytLive.views_total ?? findMetric(yt.summary, 'views_total');
 
     $('lede').innerHTML =
       `Το blog είχε <b>${fmt(jp.views_7d)}</b> προβολές τις τελευταίες 7 ημέρες ` +
@@ -764,6 +777,17 @@ footer {
       $('ytWhen').textContent = `${fmtShortDate(yt.window[0])} – ${fmtShortDate(yt.window[1])} · YouTube API`;
     }
     $('yTotal').textContent = fmt(yTot);
+    $('y24').textContent = fmt(ytLive.views_24h);
+    $('y7').textContent = fmt(ytLive.views_7d);
+    fillTable('tblYtLive', ytLive.top || [], [
+      { f: 'video' },
+      { f: 'views_24h', num: true },
+      { f: 'views_total', num: true }
+    ], 'Δεν υπάρχουν ακόμη ζωντανοί μετρητές.');
+    if (ytLive.as_of) {
+      const since = ytLive.since_24h ? ` · «24 ώρες» = από ${fmtDateTime(ytLive.since_24h)}` : ' · οι στήλες «24 ώρες» γεμίζουν από τον επόμενο συγχρονισμό';
+      $('ytLiveNote').textContent = `Ζωντανοί μετρητές YouTube Data API, ${fmtDateTime(ytLive.as_of)}${since}`;
+    }
     $('y28').textContent = fmt(findMetric(yt.summary, 'views_28d'));
     $('yHours').textContent = fmt(findMetric(yt.summary, 'watch_hours_28d'), 1);
     $('ySubs').textContent = fmt(findMetric(yt.summary, 'subs_total'));
