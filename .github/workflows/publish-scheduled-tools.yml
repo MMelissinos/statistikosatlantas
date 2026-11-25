@@ -1,0 +1,44 @@
+name: Δημοσίευση προγραμματισμένων εργαλείων
+
+# Κάθε μέρα στις 07:00 UTC = 09:00 ώρα Ελλάδας τον χειμώνα (10:00 το καλοκαίρι).
+# Δημοσιεύει όσα branches tool/YYYY-MM-DD-slug έχουν φτάσει την ημερομηνία τους.
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Μόνο έλεγχος (χωρίς δημοσίευση)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: publish-scheduled-tools
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Ρύθμιση git
+        run: |
+          git config user.name "statistikosatlantas-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Ουρά εργαλείων
+        run: python scripts/publish_scheduled_tools.py --list
+      - name: Δημοσίευση
+        if: ${{ github.event_name == 'schedule' || inputs.dry_run == false }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish_scheduled_tools.py
