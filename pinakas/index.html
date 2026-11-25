@@ -444,8 +444,8 @@ footer {
       <div class="tile"><span class="k">Προβολές · 24 ώρες</span><span class="v" id="y24">—</span></div>
       <div class="tile"><span class="k">Προβολές · 7 ημέρες</span><span class="v" id="y7">—</span></div>
       <div class="tile"><span class="k">Προβολές · συνολικά</span><span class="v" id="yTotal">—</span></div>
-      <div class="tile"><span class="k">Προβολές · 28 ημ.</span><span class="v" id="y28">—</span></div>
-      <div class="tile"><span class="k">Ώρες θέασης · 28 ημ.</span><span class="v" id="yHours">—</span></div>
+      <div class="tile"><span class="k" id="y28k">Προβολές · 28 ημ.</span><span class="v" id="y28">—</span></div>
+      <div class="tile"><span class="k" id="yHoursK">Ώρες θέασης · 28 ημ.</span><span class="v" id="yHours">—</span></div>
       <div class="tile"><span class="k">Συνδρομητές</span><span class="v" id="ySubs">—</span></div>
       <div class="tile"><span class="k">Βίντεο</span><span class="v" id="yVids">—</span></div>
     </div>
@@ -460,7 +460,7 @@ footer {
       <p class="note" id="ytLiveNote">Ζωντανοί μετρητές από το YouTube Data API, σε κάθε συγχρονισμό (κάθε 4 ώρες).</p>
     </div>
     <div class="card">
-      <h3>Κορυφαία βίντεο · 28 ημέρες</h3>
+      <h3 id="ytTopH">Κορυφαία βίντεο · 28 ημέρες</h3>
       <div class="scroll">
         <table>
           <thead><tr><th>Βίντεο</th><th class="n">Προβολές</th></tr></thead>
@@ -773,8 +773,13 @@ footer {
     ]);
 
     // YouTube
+    // Επικεφαλίδα = ώρα ζωντανών μετρητών. Το παράθυρο του Analytics (καθυστέρηση 2–3 ημ.) πάει μόνο στα «28 ημ.».
+    $('ytWhen').textContent = ytLive.as_of ? `ζωντανά · ${fmtDateTime(ytLive.as_of)}` : 'YouTube API';
     if (Array.isArray(yt.window) && yt.window.length === 2) {
-      $('ytWhen').textContent = `${fmtShortDate(yt.window[0])} – ${fmtShortDate(yt.window[1])} · YouTube API`;
+      const upTo = ` (έως ${fmtShortDate(yt.window[1])})`;
+      $('y28k').textContent = 'Προβολές · 28 ημ.' + upTo;
+      $('yHoursK').textContent = 'Ώρες θέασης · 28 ημ.' + upTo;
+      $('ytTopH').textContent = `Κορυφαία βίντεο · ${fmtShortDate(yt.window[0])} – ${fmtShortDate(yt.window[1])}`;
     }
     $('yTotal').textContent = fmt(yTot);
     $('y24').textContent = fmt(ytLive.views_24h);
