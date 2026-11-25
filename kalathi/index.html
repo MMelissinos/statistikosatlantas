@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ο δικός σου πληθωρισμός: υπολογιστής με το δικό σου καλάθι · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Γράψε πόσα ξοδεύεις τον μήνα σε τρόφιμα, ενοίκιο, ρεύμα, μεταφορές και άλλα, και δες τον δικό σου πληθωρισμό σε σύγκριση με τον επίσημο (Eurostat, εναρμονισμένος δείκτης τιμών).">
+<link rel="stylesheet" href="../style.css">
+<!-- atlas-seo -->
+<link rel="canonical" href="https://tools.statistikosatlantas.com/kalathi/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Στατιστικός Άτλαντας">
+<meta property="og:locale" content="el_GR">
+<meta property="og:url" content="https://tools.statistikosatlantas.com/kalathi/">
+<meta property="og:title" content="Ο επίσημος πληθωρισμός δεν είναι ο δικός σου. Υπολόγισέ τον · Στατιστικός Άτλαντας">
+<meta property="og:description" content="Βάλε τα δικά σου έξοδα ανά κατηγορία και δες πόσο ακρίβυνε το δικό σου καλάθι μέσα σε έναν χρόνο (Eurostat).">
+<meta property="og:image" content="https://tools.statistikosatlantas.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Υπολογιστής προσωπικού πληθωρισμού","description":"Υπολογίζει τον προσωπικό πληθωρισμό ενός νοικοκυριού στην Ελλάδα από τα μηνιαία έξοδά του σε 13 κατηγορίες, με τις ετήσιες μεταβολές τιμών του εναρμονισμένου δείκτη τιμών καταναλωτή (Eurostat, COICOP 2018).","url":"https://tools.statistikosatlantas.com/kalathi/","inLanguage":"el","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Στατιστικός Άτλαντας","url":"https://statistikosatlantas.com/about/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
+<!-- /atlas-seo -->
+</head>
+<body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main>
+<div class="kicker">Εργαλείο · Κόστος ζωής</div>
+<h1>Ο δικός σου πληθωρισμός</h1>
+<p class="muted">Ο επίσημος πληθωρισμός μετράει το καλάθι του «μέσου» καταναλωτή. Αν όμως πληρώνεις ενοίκιο, οδηγάς πολύ ή τρως συχνά έξω, οι δικές σου τιμές ανεβαίνουν αλλιώς. Γράψε πόσα ξοδεύεις τον μήνα ανά κατηγορία και δες τον δικό σου πληθωρισμό.</p>
+
+<div class="presets" aria-label="Γρήγορα παραδείγματα">
+  <button type="button" class="pill" data-preset="avg">Μέσο καλάθι (επίσημα βάρη)</button>
+  <button type="button" class="pill" data-preset="renter">Ενοικιαστής στην πόλη</button>
+  <button type="button" class="pill" data-preset="family">Οικογένεια με αυτοκίνητο</button>
+  <button type="button" class="pill" data-preset="pensioner">Συνταξιούχος</button>
+  <button type="button" class="pill" data-preset="student">Φοιτητής</button>
+</div>
+
+<div class="month-row">
+  <label for="month">Μήνας σύγκρισης</label>
+  <select id="month"></select>
+  <span class="muted month-hint">σε σχέση με τον ίδιο μήνα πριν από έναν χρόνο</span>
+</div>
+
+<fieldset class="spend">
+  <legend>Τα μηνιαία σου έξοδα (€)</legend>
+  <div id="spendGrid" class="spend-grid"></div>
+  <div class="spend-total">Σύνολο: <b id="spendTotal">0 €</b> τον μήνα</div>
+</fieldset>
+
+<section id="result" class="card result" aria-live="polite"></section>
+
+<div class="kpi-row">
+  <div class="kpi"><span class="kpi-lbl">Ο δικός σου πληθωρισμός</span><b id="kpiMine">—</b><small id="kpiMineSub" class="kpi-sub"></small></div>
+  <div class="kpi"><span class="kpi-lbl">Επίσημος πληθωρισμός Ελλάδας</span><b id="kpiOff">—</b><small id="kpiOffSub" class="kpi-sub"></small></div>
+  <div class="kpi"><span class="kpi-lbl">Επιπλέον κόστος από πέρσι</span><b id="kpiEuro">—</b><small id="kpiEuroSub" class="kpi-sub"></small></div>
+</div>
+
+<div class="actions-row">
+  <button id="copyBtn" type="button" class="copy-btn">Αντιγραφή αποτελέσματος</button>
+  <span id="copyStatus" class="copy-status" aria-live="polite"></span>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2 id="barHeading">Πόσο ακρίβυνε κάθε κατηγορία</h2>
+    <span id="barHover" class="chart-hover">Πέρασε τον δείκτη πάνω από μια μπάρα</span>
+  </div>
+  <svg id="barChart" viewBox="0 0 640 380" role="img" aria-labelledby="barTitle barDesc">
+    <title id="barTitle">Ετήσια μεταβολή τιμών ανά κατηγορία δαπάνης στην Ελλάδα</title>
+    <desc id="barDesc">Οριζόντιο ραβδόγραμμα με την ετήσια μεταβολή τιμών σε 13 κατηγορίες, ταξινομημένες κατά τη συνεισφορά τους στον δικό σου πληθωρισμό.</desc>
+    <g id="barBody"></g>
+  </svg>
+  <div class="chart-years"><span>Σειρά: πόσο ανεβάζει κάθε κατηγορία τον δικό σου πληθωρισμό</span></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2 id="lineHeading">Ο δικός σου πληθωρισμός μήνα με τον μήνα</h2>
+    <span id="lineHover" class="chart-hover">Πέρασε τον δείκτη πάνω από το γράφημα</span>
+  </div>
+  <svg id="lineChart" viewBox="0 0 640 195" role="img" aria-labelledby="lineTitle lineDesc">
+    <title id="lineTitle">Προσωπικός και επίσημος πληθωρισμός ανά μήνα</title>
+    <desc id="lineDesc">Γραμμικό διάγραμμα που συγκρίνει τον πληθωρισμό του δικού σου καλαθιού με τον επίσημο της Ελλάδας και της ΕΕ.</desc>
+    <g id="lineBody"></g>
+  </svg>
+  <div class="chart-years"><span id="lineFrom"></span><span id="lineLegend"></span><span id="lineTo"></span></div>
+</div>
+
+<div class="note">
+<p><b>Πώς διαβάζεται:</b> για κάθε κατηγορία παίρνουμε πόσο άλλαξαν οι τιμές της στην Ελλάδα μέσα σε 12 μήνες και τη βαραίνουμε με το ποσοστό που ξοδεύεις εσύ σε αυτήν. Το «επιπλέον κόστος» δείχνει πόσο λιγότερο θα πλήρωνες για τα ίδια ακριβώς πράγματα πριν από έναν χρόνο. Είναι εκτίμηση: οι τιμές μετρώνται πανελλαδικά και όχι στη γειτονιά σου ή στα προϊόντα που διαλέγεις εσύ.</p>
+<p><b>Μεθοδολογία:</b> εναρμονισμένος δείκτης τιμών καταναλωτή (ΕνΔΤΚ) της ΕΛΣΤΑΤ, όπως τον δημοσιεύει η Eurostat με τη νέα ταξινόμηση <b>COICOP 2018</b> (13 κατηγορίες, από το 2026). Ετήσιος ρυθμός μεταβολής ανά μήνα (<code>prc_hicp_minr</code>, <code>RCH_A</code>). Το «μέσο καλάθι» χρησιμοποιεί τα επίσημα βάρη του 2026 για την Ελλάδα (<code>prc_hicp_iw</code>, ‰). Τα βάρη αυτά περιλαμβάνουν και τις δαπάνες των τουριστών στη χώρα, γι' αυτό τα εστιατόρια και τα καταλύματα βγαίνουν τόσο ψηλά. Στη <b>στέγαση</b> μετράει το ενοίκιο, το ρεύμα, το νερό και η θέρμανση, όχι η δόση του στεγαστικού δανείου, την οποία ο δείκτης δεν περιλαμβάνει.</p>
+<p><b>Πηγές:</b>
+<a href="https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table" target="_blank" rel="noopener">Eurostat prc_hicp_minr</a>,
+<a href="https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_iw/default/table" target="_blank" rel="noopener">prc_hicp_iw</a> (ΕνΔΤΚ, ΕΛΣΤΑΤ) ·
+<a href="../plithorismos/">Τι αξίζουν σήμερα τα χρήματά σου;</a>
+<span id="sourceStatus">Στοιχεία Eurostat, τελευταίος μήνας: Οκτώβριος 2026.</span></p>
+<p>Δεν αποθηκεύουμε όσα γράφετε. Ο υπολογισμός γίνεται αποκλειστικά στη συσκευή σας.</p>
+</div>
+</main>
+<footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+
+<style>
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+.pill{font:inherit;font-size:.83rem;padding:6px 11px;border:1px solid #c9d3e0;border-radius:999px;background:#fff;color:var(--ink);cursor:pointer}
+.pill:hover,.pill:focus-visible,.pill.active{border-color:var(--blue);background:var(--pale);color:var(--blue);font-weight:600}
+.month-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 6px}
+.month-row label{margin:0}
+.month-row select{font:inherit;padding:8px 10px;border:1px solid #c9d3e0;border-radius:6px;background:#fff}
+.month-hint{font-size:.85rem}
+.spend{border:1px solid var(--line);border-radius:8px;padding:12px 14px 14px;margin:12px 0 0}
+.spend legend{font-weight:700;padding:0 6px}
+.spend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
+.spend-item{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.spend-item label{margin:0;font-weight:400;font-size:.9rem;line-height:1.25}
+.spend-item label small{display:block;color:var(--muted);font-size:.76rem}
+.spend-item input{width:96px;max-width:96px;font-size:1rem;padding:7px 8px;text-align:right}
+.spend-total{margin-top:10px;font-size:.92rem;color:var(--muted)}
+.result{margin-top:16px}
+.result strong{display:block;font-size:clamp(1.65rem,4.8vw,2.25rem);color:var(--blue);line-height:1.15;margin-bottom:8px}
+.result b{display:inline;font-size:inherit;margin:0}
+.result span{display:block;margin-top:8px;color:var(--muted);font-size:.92rem}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fff}
+.kpi-lbl{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.kpi b{display:block;font-size:1.14rem;color:var(--blue)}
+.kpi-sub{display:block;font-size:.78rem;color:var(--muted);margin-top:3px}
+.actions-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.copy-btn{font:inherit;font-size:.86rem;padding:7px 13px;border:1px solid #c9d3e0;border-radius:6px;background:#fff;color:var(--blue);cursor:pointer;font-weight:600}
+.copy-btn:hover{background:var(--pale);border-color:var(--blue)}
+.copy-status{font-size:.84rem;color:var(--muted)}
+.chart-card{border:1px solid var(--line);border-radius:8px;padding:16px;margin-top:16px;background:#fff}
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.chart-card h2{font-size:1.05rem;margin:0}
+.chart-hover{font-size:.84rem;color:var(--blue);font-weight:600}
+#barChart,#lineChart{display:block;width:100%;height:auto;overflow:visible}
+#lineChart{cursor:crosshair}
+.chart-grid{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.chart-base{stroke:#94a3b8;stroke-width:1}
+.chart-lbl{font-size:11px;fill:var(--muted)}
+.chart-cat{font-size:12px;fill:var(--ink)}
+.bar-row{cursor:default}
+.bar-row:hover rect.bar{opacity:.8}
+.line-main{fill:none;stroke:#e67e22;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.line-off{fill:none;stroke:#1c5cab;stroke-width:2.2;stroke-dasharray:5 4}
+.line-eu{fill:none;stroke:#94a3b8;stroke-width:1.6;stroke-dasharray:2 3}
+.chart-years{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;margin-top:4px;flex-wrap:wrap;gap:6px}
+.legend-swatch{display:inline-block;width:12px;height:3px;vertical-align:middle;margin-right:4px;border-radius:2px}
+@media(max-width:640px){
+  .spend-grid{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:1fr}
+}
+</style>
+
+<script>
+const FALLBACK={"months":["2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07","2026-08","2026-09","2026-10"],"weights":{"CP01":188.81,"CP02":45.47,"CP03":41.01,"CP04":113.26,"CP05":30.26,"CP06":48.93,"CP07":159.03,"CP08":45.43,"CP09":77.65,"CP10":22.95,"CP11":177.45,"CP12":5.42,"CP13":44.34},"el":{"TOTAL":[3.1,3.0,3.1,2.6,3.3,3.6,3.7,3.1,1.8,1.6,2.8,2.9,2.9,3.1,3.4,4.6,4.9,3.9,2.7,3.7,5.1,5.7],"CP01":[-0.1,0.2,2.3,2.1,3.1,2.6,3.7,2.6,1.5,2.6,3.0,3.8,4.7,5.3,4.3,4.4,3.2,2.7,-0.4,0.2,-0.2,1.7],"CP02":[0.7,1.5,1.0,0.2,1.7,1.5,1.7,1.3,1.1,1.6,1.6,1.4,1.7,0.4,1.0,1.4,0.0,0.3,-0.2,-0.3,0.1,0.0],"CP03":[5.7,6.7,3.7,4.6,6.5,4.9,8.6,7.9,5.2,1.9,1.4,1.8,7.4,9.3,1.9,1.9,-0.9,0.4,2.8,4.7,0.2,3.5],"CP04":[5.4,6.0,7.3,5.3,8.0,9.2,8.1,4.8,1.4,2.4,4.7,3.9,3.4,3.7,6.3,13.4,11.5,10.5,8.8,9.5,13.8,14.2],"CP05":[-0.4,-1.0,0.0,-0.8,-0.1,0.3,-0.2,0.3,0.1,0.4,0.2,0.4,-0.5,-0.1,0.1,0.0,-0.2,0.3,0.2,0.0,0.6,0.4],"CP06":[3.4,3.4,1.6,1.7,1.8,2.0,2.0,0.6,0.1,0.6,0.6,0.4,0.4,0.5,1.5,1.2,1.2,1.1,1.2,1.3,1.4,1.0],"CP07":[2.7,0.1,-0.8,0.3,-1.5,-0.4,-0.1,2.2,2.3,1.0,0.7,1.8,1.6,1.9,6.0,6.4,7.7,4.8,4.6,4.3,6.8,8.7],"CP08":[1.7,1.6,1.7,0.9,1.6,1.8,1.3,1.5,0.3,0.6,0.2,0.1,-1.6,-2.5,-2.3,-2.1,-2.7,-2.6,-2.6,-2.4,-0.9,-1.9],"CP09":[3.0,3.0,3.3,3.6,3.4,3.3,2.9,3.0,2.7,2.2,1.8,2.1,2.2,1.1,0.4,1.9,2.9,4.0,1.9,2.0,2.0,4.2],"CP10":[2.6,2.6,2.6,2.6,2.6,2.6,2.6,2.6,2.7,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.9,2.9],"CP11":[7.1,7.5,7.0,5.9,6.7,7.3,6.4,4.4,2.7,1.4,6.3,5.2,3.9,5.2,4.2,4.9,9.1,6.4,4.2,8.1,12.2,10.4],"CP12":[5.3,5.3,5.3,1.9,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.4,1.4,1.4,3.2,3.1,3.1,3.1,3.1,3.1,3.1],"CP13":[1.3,1.3,1.2,-0.5,1.1,1.1,0.6,0.1,-0.7,0.8,0.8,0.6,-0.3,-0.2,0.0,1.3,1.0,1.2,1.1,0.8,1.6,1.0]},"eu":{"TOTAL":[2.8,2.7,2.5,2.4,2.2,2.3,2.4,2.4,2.6,2.5,2.4,2.3,2.0,2.1,2.8,3.2,3.3,2.9,3.0,3.2,3.8,4.0],"CP01":[2.3,2.9,3.3,3.3,3.6,3.6,3.9,3.9,3.5,3.0,2.7,2.8,2.9,2.7,2.4,2.3,1.6,1.0,0.6,0.3,0.6,0.8],"CP02":[5.2,4.9,4.9,4.2,4.7,4.3,4.1,4.1,3.9,3.8,3.8,3.9,3.8,4.0,4.0,4.3,3.8,3.8,3.9,3.6,3.6,3.7],"CP03":[0.1,0.3,0.4,0.3,0.2,-0.1,0.3,0.7,1.1,0.7,0.5,0.3,0.2,0.9,0.6,0.8,0.8,0.5,-0.1,0.3,-0.1,0.0],"CP04":[3.5,3.3,3.4,3.0,3.0,2.7,2.6,2.5,2.5,2.4,2.2,2.0,1.3,1.5,2.1,3.3,3.6,4.0,3.8,4.2,5.2,6.7],"CP05":[0.2,0.4,0.6,0.4,0.6,0.7,0.8,0.7,0.7,0.6,0.4,0.3,0.5,0.5,0.2,0.5,0.5,0.5,0.6,0.7,0.6,0.6],"CP06":[4.4,4.4,4.4,4.1,3.6,3.4,3.4,3.4,3.5,3.5,3.5,3.5,3.0,2.9,2.8,2.8,3.1,3.0,3.7,3.7,3.6,3.5],"CP07":[2.1,1.1,-0.2,-0.2,-1.0,0.1,0.2,0.6,1.6,1.7,1.8,1.3,0.1,0.6,5.0,6.6,7.3,5.2,6.1,7.6,9.7,9.3],"CP08":[-2.2,-2.2,-2.1,-2.4,-2.5,-2.0,-2.0,-1.6,-0.9,-0.5,-0.6,-0.6,-0.4,0.0,0.3,1.2,1.5,1.7,2.5,2.4,2.6,2.9],"CP09":[4.0,3.6,2.7,3.4,2.3,2.3,2.1,2.1,2.2,2.3,2.8,2.1,2.6,2.2,2.4,1.7,2.4,2.1,1.8,1.5,2.2,2.2],"CP10":[4.9,4.9,4.8,4.8,4.7,4.7,4.9,5.0,4.8,4.4,4.5,4.5,4.4,4.4,4.6,4.6,4.7,4.7,4.3,4.5,3.8,3.9],"CP11":[4.4,4.2,4.2,4.4,3.9,4.1,3.7,3.7,4.0,4.0,4.1,4.1,3.9,4.4,3.9,4.0,4.2,4.0,4.0,3.8,4.2,4.1],"CP12":[6.4,6.2,6.7,5.5,5.6,5.2,5.2,5.0,4.9,4.4,4.4,4.2,4.0,3.6,3.3,3.8,3.9,3.2,2.9,3.1,3.1,3.2],"CP13":[2.9,2.8,2.8,2.8,2.9,2.9,3.0,3.0,3.0,3.0,3.0,3.0,2.9,3.1,3.1,3.2,3.2,3.2,3.1,3.1,3.0,3.0]}};
+
+const CATS=[
+  ["CP01","Τρόφιμα & αναψυκτικά","σούπερ μάρκετ, λαϊκή"],
+  ["CP02","Αλκοόλ & καπνός",""],
+  ["CP03","Ένδυση & υπόδηση",""],
+  ["CP04","Στέγαση & λογαριασμοί","ενοίκιο, ρεύμα, νερό, θέρμανση"],
+  ["CP05","Έπιπλα & οικιακά","συσκευές, είδη σπιτιού"],
+  ["CP06","Υγεία","φάρμακα, γιατροί"],
+  ["CP07","Μεταφορές","καύσιμα, αυτοκίνητο, εισιτήρια"],
+  ["CP08","Τηλέφωνο & internet",""],
+  ["CP09","Αναψυχή & πολιτισμός","διακοπές-πακέτα, θέαμα, χόμπι"],
+  ["CP10","Εκπαίδευση","δίδακτρα, φροντιστήρια"],
+  ["CP11","Εστιατόρια & καταλύματα","καφές, φαγητό έξω, ξενοδοχεία"],
+  ["CP12","Ασφάλειες & τράπεζες",""],
+  ["CP13","Προσωπική φροντίδα & λοιπά","κομμωτήριο, καλλυντικά"]
+];
+const PRESETS={
+  renter:   [350,30,50,650,30,40,120,50,80,0,150,20,40],
+  family:   [600,40,120,350,60,80,350,70,120,200,200,60,80],
+  pensioner:[380,30,30,250,30,120,60,40,30,0,60,20,40],
+  student:  [200,20,30,350,10,10,30,30,50,0,120,0,20]
+};
+const MONTHS=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+const MONTHS_SHORT=["Ιαν","Φεβ","Μαρ","Απρ","Μάι","Ιουν","Ιουλ","Αυγ","Σεπ","Οκτ","Νοε","Δεκ"];
+const $=id=>document.getElementById(id);
+let DATA=FALLBACK,lastSummary="",linePts=[];
+
+const fmt=(v,dec=1,sign=false)=>(v==null||!Number.isFinite(v))?"—":(sign&&v>0?"+":"")+v.toLocaleString("el-GR",{minimumFractionDigits:dec,maximumFractionDigits:dec});
+const pc=(v,sign=true)=>fmt(v,1,sign)+"%";
+const eur=v=>fmt(v,0)+" €";
+const monthLabel=m=>{const [y,mm]=m.split("-");return `${MONTHS[+mm-1]} ${y}`;};
+const monthShort=m=>{const [y,mm]=m.split("-");return `${MONTHS_SHORT[+mm-1]} ${y.slice(2)}`;};
+
+function avgPreset(total=1500){
+  const w=DATA.weights,sum=CATS.reduce((s,[c])=>s+w[c],0);
+  return CATS.map(([c])=>Math.round(total*w[c]/sum/5)*5);
+}
+
+function buildInputs(){
+  $("spendGrid").innerHTML=CATS.map(([c,name,hint])=>`<div class="spend-item"><label for="in_${c}">${name}${hint?`<small>${hint}</small>`:""}</label><input type="number" id="in_${c}" min="0" step="10" inputmode="numeric" value="0"></div>`).join("");
+  CATS.forEach(([c])=>$("in_"+c).addEventListener("input",()=>{markPreset(null);calculate();}));
+}
+function setSpend(arr){CATS.forEach(([c],i)=>{$("in_"+c).value=arr[i]||0;});}
+function getSpend(){return CATS.map(([c])=>Math.max(0,parseFloat($("in_"+c).value)||0));}
+function markPreset(key){document.querySelectorAll(".pill").forEach(b=>b.classList.toggle("active",b.dataset.preset===key));}
+
+function buildMonths(){
+  $("month").innerHTML=DATA.months.slice().reverse().map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join("");
+}
+
+function personal(spend,mi){
+  const tot=spend.reduce((a,b)=>a+b,0);
+  if(!tot)return null;
+  let infl=0,extra=0;
+  CATS.forEach(([c],i)=>{const r=DATA.el[c][mi];if(r==null)return;infl+=spend[i]/tot*r;extra+=spend[i]*r/(100+r);});
+  return {infl,extra,tot};
+}
+
+function readQuery(){
+  const p=new URLSearchParams(location.search);
+  const s=(p.get("s")||"").split(",").map(Number);
+  const m=p.get("m");
+  if(s.length===CATS.length&&s.every(Number.isFinite)){setSpend(s);markPreset(null);}
+  else if(PRESETS[p.get("p")]){setSpend(PRESETS[p.get("p")]);markPreset(p.get("p"));}
+  else{setSpend(avgPreset());markPreset("avg");}
+  $("month").value=DATA.months.includes(m)?m:DATA.months.at(-1);
+}
+function syncQuery(spend,m){
+  const u=new URL(location.href);
+  u.searchParams.set("s",spend.join(","));u.searchParams.set("m",m);u.searchParams.delete("p");
+  history.replaceState(null,"",u);
+}
+
+function drawBars(spend,mi){
+  const tot=spend.reduce((a,b)=>a+b,0)||1;
+  const rows=CATS.map(([c,name],i)=>({c,name,r:DATA.el[c][mi],share:spend[i]/tot*100})).map(x=>({...x,contrib:x.share*x.r/100}));
+  rows.sort((a,b)=>b.contrib-a.contrib||b.r-a.r);
+  const x0=200,x1=600,top=14,rowH=26;
+  const rs=rows.map(r=>r.r);
+  const lo=Math.min(0,...rs),hi=Math.max(0.5,...rs);
+  const span=(hi-lo)||1,sx=v=>x0+(v-lo)/span*(x1-x0),zx=sx(0);
+  let svg="";
+  const step=span>12?5:(span>5?2:1);
+  for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step){
+    svg+=`<line class="${v===0?"chart-base":"chart-grid"}" x1="${sx(v).toFixed(1)}" y1="${top-4}" x2="${sx(v).toFixed(1)}" y2="${top+rows.length*rowH}"/><text class="chart-lbl" x="${sx(v).toFixed(1)}" y="${top+rows.length*rowH+14}" text-anchor="middle">${fmt(v,0)}%</text>`;
+  }
+  rows.forEach((r,i)=>{
+    const y=top+i*rowH,bx=Math.min(zx,sx(r.r)),bw=Math.max(1.5,Math.abs(sx(r.r)-zx));
+    const col=r.share<0.05?"#cbd5e1":(r.r>=0?"#e67e22":"#1c5cab");
+    svg+=`<g class="bar-row" data-i="${i}"><rect x="0" y="${y}" width="640" height="${rowH}" fill="transparent"/>
+      <text class="chart-cat" x="${x0-8}" y="${y+16}" text-anchor="end">${r.name} <tspan class="chart-lbl">(${fmt(r.share,0)}%)</tspan></text>
+      <rect class="bar" x="${bx.toFixed(1)}" y="${y+5}" width="${bw.toFixed(1)}" height="${rowH-10}" rx="3" fill="${col}"/>
+      <text class="chart-lbl" x="${(r.r>=0?sx(r.r)+5:sx(r.r)-5).toFixed(1)}" y="${y+16}" text-anchor="${r.r>=0?"start":"end"}">${pc(r.r)}</text></g>`;
+  });
+  $("barChart").setAttribute("viewBox",`0 0 640 ${top+rows.length*rowH+22}`);
+  $("barBody").innerHTML=svg;
+  $("barHeading").textContent=`Πόσο ακρίβυνε κάθε κατηγορία · ${monthLabel(DATA.months[mi])}`;
+  const hov=r=>`${r.name}: ${pc(r.r)} · ${fmt(r.share,0)}% των εξόδων σου · συνεισφορά ${fmt(r.contrib,1,true)} μον.`;
+  $("barHover").textContent=hov(rows[0]);
+  $("barBody").querySelectorAll(".bar-row").forEach(g=>g.addEventListener("mouseenter",()=>{$("barHover").textContent=hov(rows[+g.dataset.i]);}));
+}
+
+function drawLine(spend){
+  const ms=DATA.months;
+  const mine=ms.map((m,i)=>personal(spend,i)?.infl??null),off=DATA.el.TOTAL,eu=DATA.eu.TOTAL;
+  const all=mine.concat(off,eu).filter(Number.isFinite);
+  const lo=Math.min(0,...all),hi=Math.max(...all),pad=(hi-lo)*0.12||1,yMin=lo-(lo<0?pad:0),yMax=hi+pad,span=yMax-yMin||1;
+  const x0=44,x1=622,yTop=14,yBot=165;
+  const px=i=>x0+(ms.length>1?i*(x1-x0)/(ms.length-1):(x1-x0)/2),py=v=>yBot-(v-yMin)/span*(yBot-yTop);
+  let g="";
+  for(let k=0;k<=3;k++){const v=yMin+span*k/3,y=py(v);g+=`<line class="chart-grid" x1="${x0}" y1="${y.toFixed(1)}" x2="${x1}" y2="${y.toFixed(1)}"/><text class="chart-lbl" x="${x0-6}" y="${(y+4).toFixed(1)}" text-anchor="end">${fmt(v,0)}%</text>`;}
+  if(yMin<0)g+=`<line class="chart-base" x1="${x0}" y1="${py(0).toFixed(1)}" x2="${x1}" y2="${py(0).toFixed(1)}"/>`;
+  const pl=(arr,cls)=>`<polyline class="${cls}" points="${arr.map((v,i)=>v==null?"":`${px(i).toFixed(1)},${py(v).toFixed(1)}`).filter(Boolean).join(" ")}"/>`;
+  linePts=ms.map((m,i)=>({m,x:px(i),y:mine[i]!=null?py(mine[i]):null,mine:mine[i],off:off[i],eu:eu[i]}));
+  $("lineBody").innerHTML=g+pl(eu,"line-eu")+pl(off,"line-off")+pl(mine,"line-main")+`<circle id="lineDot" r="5.5" cx="-20" cy="-20" fill="#e67e22" stroke="#fff" stroke-width="2"/>`;
+  $("lineFrom").textContent=monthShort(ms[0]);$("lineTo").textContent=monthShort(ms.at(-1));
+  $("lineLegend").innerHTML=`<i class="legend-swatch" style="background:#e67e22"></i>Εσύ &nbsp; <i class="legend-swatch" style="background:#1c5cab"></i>Ελλάδα &nbsp; <i class="legend-swatch" style="background:#94a3b8"></i>ΕΕ`;
+  const lp=linePts.at(-1);
+  $("lineHover").textContent=`${monthShort(lp.m)}: εσύ ${pc(lp.mine)} · Ελλάδα ${pc(lp.off)} · ΕΕ ${pc(lp.eu)}`;
+}
+
+function calculate(){
+  const spend=getSpend(),m=$("month").value,mi=DATA.months.indexOf(m);
+  syncQuery(spend,m);
+  const tot=spend.reduce((a,b)=>a+b,0);
+  $("spendTotal").textContent=eur(tot);
+  const off=DATA.el.TOTAL[mi],euV=DATA.eu.TOTAL[mi];
+  const res=personal(spend,mi);
+  if(!res){
+    $("result").innerHTML=`<strong>—</strong>Γράψε τουλάχιστον ένα ποσό για να υπολογιστεί ο δικός σου πληθωρισμός.`;
+    ["kpiMine","kpiOff","kpiEuro"].forEach(id=>$(id).textContent="—");
+    return;
+  }
+  const diff=res.infl-off;
+  const cmp=Math.abs(diff)<0.05?"ίδιος με τον επίσημο":(diff>0?`<b>${fmt(diff)} ποσοστιαίες μονάδες πάνω</b> από τον επίσημο`:`<b>${fmt(-diff)} ποσοστιαίες μονάδες κάτω</b> από τον επίσημο`);
+  const top=CATS.map(([c,name],i)=>({name,contrib:spend[i]/tot*DATA.el[c][mi]})).sort((a,b)=>b.contrib-a.contrib)[0];
+  $("result").innerHTML=`<strong>${pc(res.infl)}</strong>Ο δικός σου πληθωρισμός τον ${monthLabel(m).replace(/ος /,"ο ")} είναι ${cmp} (${pc(off)}). Για τα ίδια πράγματα πληρώνεις περίπου <b>${eur(res.extra)} περισσότερα τον μήνα</b> από ό,τι πριν από έναν χρόνο.<span>Το μεγαλύτερο βάρος έρχεται από την κατηγορία «${top.name}».</span>`;
+  $("kpiMine").textContent=pc(res.infl);
+  $("kpiMineSub").textContent=`σε καλάθι ${eur(tot)} τον μήνα`;
+  $("kpiOff").textContent=pc(off);
+  $("kpiOffSub").textContent=`ΕΕ-27: ${pc(euV)}`;
+  $("kpiEuro").textContent=`+${eur(res.extra)} / μήνα`;
+  $("kpiEuroSub").textContent=`≈ ${eur(res.extra*12)} τον χρόνο`;
+  lastSummary=`Ο δικός μου πληθωρισμός (${monthLabel(m)}): ${pc(res.infl)}, έναντι ${pc(off)} επίσημα στην Ελλάδα. Για τα ίδια ψώνια πληρώνω ~${eur(res.extra)} τον μήνα περισσότερα από πέρσι. Υπολόγισε τον δικό σου: ${location.href}`;
+  drawBars(spend,mi);drawLine(spend);
+}
+
+buildInputs();buildMonths();readQuery();calculate();
+$("month").addEventListener("change",calculate);
+document.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{
+  const k=b.dataset.preset;setSpend(k==="avg"?avgPreset():PRESETS[k]);markPreset(k);calculate();
+}));
+$("copyBtn").addEventListener("click",async()=>{
+  try{await navigator.clipboard.writeText(lastSummary);$("copyStatus").textContent="Αντιγράφηκε!";}
+  catch{$("copyStatus").textContent="Δεν ήταν δυνατή η αντιγραφή.";}
+  setTimeout(()=>{$("copyStatus").textContent=""},2500);
+});
+$("lineChart").addEventListener("mousemove",e=>{
+  if(!linePts.length)return;
+  const r=$("lineChart").getBoundingClientRect(),mx=(e.clientX-r.left)/r.width*640;
+  let best=linePts[0];for(const p of linePts)if(Math.abs(p.x-mx)<Math.abs(best.x-mx))best=p;
+  if(best.y!=null){$("lineDot").setAttribute("cx",best.x);$("lineDot").setAttribute("cy",best.y);}
+  $("lineHover").textContent=`${monthShort(best.m)}: εσύ ${pc(best.mine)} · Ελλάδα ${pc(best.off)} · ΕΕ ${pc(best.eu)}`;
+});
+
+/* Live έλεγχος Eurostat για νεότερους μήνες από τους ενσωματωμένους. */
+(function liveRefresh(){
+  const codes=["TOTAL",...CATS.map(c=>c[0])];
+  const last=DATA.months.at(-1);
+  const [y,mm]=last.split("-").map(Number);
+  const next=`${mm===12?y+1:y}-${String(mm===12?1:mm+1).padStart(2,"0")}`;
+  const url=`https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=EL&geo=EU27_2020&unit=RCH_A&${codes.map(c=>"coicop18="+c).join("&")}&sinceTimePeriod=${next}&format=JSON&lang=EN`;
+  fetch(url).then(r=>r.ok?r.json():null).then(d=>{
+    if(!d||!d.value||!d.dimension)return;
+    const ids=d.id,size=d.size,cat=Object.fromEntries(ids.map(k=>[k,d.dimension[k].category.index]));
+    const times=Object.keys(cat.time).sort();
+    const get=(c,g,t)=>{let idx=0;for(let i=0;i<ids.length;i++){const k=ids[i];const v={coicop18:c,geo:g,time:t}[k]??Object.keys(cat[k])[0];if(cat[k][v]==null)return null;idx=idx*size[i]+cat[k][v];}return d.value[String(idx)]??null;};
+    let added=0;
+    for(const t of times){
+      if(DATA.months.includes(t))continue;
+      const el=codes.map(c=>get(c,"EL",t)),eu=get("TOTAL","EU27_2020",t);
+      if(el.some(v=>v==null)||eu==null)continue;
+      DATA.months.push(t);codes.forEach((c,i)=>DATA.el[c].push(el[i]));codes.forEach(c=>DATA.eu[c].push(get(c,"EU27_2020",t)));
+      added++;
+    }
+    if(added){
+      const keep=$("month").value===last;
+      buildMonths();$("month").value=keep?DATA.months.at(-1):last;
+      $("sourceStatus").textContent=`Ενημερωμένα στοιχεία Eurostat, τελευταίος μήνας: ${monthLabel(DATA.months.at(-1))}.`;
+      calculate();
+    }
+  }).catch(()=>{});
+})();
+</script>
+</body>
+</html>
