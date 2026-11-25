@@ -785,7 +785,10 @@ footer {
       { f: 'views_total', num: true }
     ], 'Δεν υπάρχουν ακόμη ζωντανοί μετρητές.');
     if (ytLive.as_of) {
-      const since = ytLive.since_24h ? ` · «24 ώρες» = από ${fmtDateTime(ytLive.since_24h)}` : ' · οι στήλες «24 ώρες» γεμίζουν από τον επόμενο συγχρονισμό';
+      let since = ytLive.since_24h ? ` · «24 ώρες» = από ${fmtDateTime(ytLive.since_24h)}` : ' · οι στήλες «24 ώρες» γεμίζουν από τον επόμενο συγχρονισμό';
+      if (ytLive.since_7d && (new Date(ytLive.as_of) - new Date(ytLive.since_7d)) < 6.5 * 864e5) {
+        since += ` · «7 ημέρες» = από ${fmtDateTime(ytLive.since_7d)} (λιγότερο ιστορικό ακόμη)`;
+      }
       $('ytLiveNote').textContent = `Ζωντανοί μετρητές YouTube Data API, ${fmtDateTime(ytLive.as_of)}${since}`;
     }
     $('y28').textContent = fmt(findMetric(yt.summary, 'views_28d'));
@@ -883,6 +886,19 @@ footer {
       btn.disabled = false;
     }
   });
+
+  // Όταν η εφαρμογή ξαναγίνεται ορατή (π.χ. επιστροφή στο εγκατεστημένο PWA) ή κάθε 15', φέρνει το νεότερο αρχείο.
+  let lastAuto = Date.now();
+  async function autoRefresh() {
+    const pin = localStorage.getItem(PIN_KEY);
+    if (!pin || document.hidden || $('app').classList.contains('hidden')) return;
+    if (Date.now() - lastAuto < 60e3) return;
+    lastAuto = Date.now();
+    try { await tryUnlock(pin, true); } catch (e) { /* offline: κρατάμε ό,τι φαίνεται */ }
+  }
+  document.addEventListener('visibilitychange', autoRefresh);
+  window.addEventListener('focus', autoRefresh);
+  setInterval(autoRefresh, 15 * 60e3);
 
   $('lockBtn').addEventListener('click', () => {
     localStorage.removeItem(PIN_KEY);
