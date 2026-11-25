@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Εκπαίδευση &amp; απασχόληση ανά περιφέρεια: απόφοιτοι ΑΕΙ, NEET · Στατιστικός Άτλαντας</title>
+<meta name="description" content="Σύγκρινε τις 13 περιφέρειες σε απόφοιτους ΑΕΙ, χαμηλή εκπαίδευση, νέους εκτός εργασίας και εκπαίδευσης (NEET) και απασχόληση, με στοιχεία Eurostat 2014–2025.">
+<link rel="stylesheet" href="../style.css">
+<!-- atlas-seo -->
+<link rel="canonical" href="https://tools.statistikosatlantas.com/ekpaidefsi/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Στατιστικός Άτλαντας">
+<meta property="og:locale" content="el_GR">
+<meta property="og:url" content="https://tools.statistikosatlantas.com/ekpaidefsi/">
+<meta property="og:title" content="Πτυχία και δουλειές: πού στέκεται η περιφέρειά σου; · Στατιστικός Άτλαντας">
+<meta property="og:description" content="Διαδραστική σύγκριση των 13 περιφερειών σε απόφοιτους ΑΕΙ, NEET και απασχόληση (Eurostat 2014–2025).">
+<meta property="og:image" content="https://tools.statistikosatlantas.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Εκπαίδευση και απασχόληση ανά περιφέρεια στην Ελλάδα","description":"Διαδραστική σύγκριση των 13 περιφερειών της Ελλάδας σε απόφοιτους τριτοβάθμιας εκπαίδευσης, χαμηλό επίπεδο εκπαίδευσης, νέους εκτός απασχόλησης και εκπαίδευσης (NEET) και ποσοστό απασχόλησης, με επίσημα στοιχεία Eurostat (Έρευνα Εργατικού Δυναμικού ΕΛΣΤΑΤ).","url":"https://tools.statistikosatlantas.com/ekpaidefsi/","inLanguage":"el","applicationCategory":"EducationalApplication","operatingSystem":"Any","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Στατιστικός Άτλαντας","url":"https://statistikosatlantas.com/about/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
+<!-- /atlas-seo -->
+</head>
+<body>
+<header><a href="https://statistikosatlantas.com/">Στατιστικός <span>Άτλαντας</span></a></header>
+<main>
+<div class="kicker">Εργαλείο · Εκπαίδευση &amp; Περιφέρειες</div>
+<h1>Εκπαίδευση &amp; απασχόληση ανά περιφέρεια</h1>
+<p class="muted">Πόσοι έχουν πτυχίο, πόσοι σταμάτησαν στο γυμνάσιο, πόσοι νέοι δεν δουλεύουν ούτε σπουδάζουν και πόσοι εργάζονται. Σύγκρινε την περιφέρειά σου με την υπόλοιπη Ελλάδα σε πέντε επίσημους δείκτες (Eurostat, 2014–2025).</p>
+
+<div class="presets" aria-label="Γρήγορα παραδείγματα">
+  <button type="button" class="pill" data-preset="EL30,tertiary,EL">Αττική (44,6% με πτυχίο, 1η)</button>
+  <button type="button" class="pill" data-preset="EL41,tertiary_young,EL">Βόρειο Αιγαίο (19,1% νέοι με πτυχίο)</button>
+  <button type="button" class="pill" data-preset="EL62,neet,EL">Ιόνια Νησιά (24% NEET)</button>
+  <button type="button" class="pill" data-preset="EL43,employment,EL">Κρήτη (75,4% απασχόληση, 1η)</button>
+  <button type="button" class="pill" data-preset="EL53,employment,EL43">Δυτική Μακεδονία vs Κρήτη</button>
+  <button type="button" class="pill" data-preset="EL63,low_edu,EL">Δυτική Ελλάδα (30,1% έως γυμνάσιο)</button>
+  <button type="button" class="pill" data-preset="EL,tertiary,EL">Όλη η Ελλάδα</button>
+</div>
+
+<div class="calc-grid">
+  <div>
+    <label for="region">Περιφέρεια</label>
+    <select id="region"></select>
+  </div>
+  <div>
+    <label for="metric">Δείκτης</label>
+    <select id="metric">
+      <option value="tertiary">Απόφοιτοι ΑΕΙ, 25–64 ετών (%)</option>
+      <option value="tertiary_young">Απόφοιτοι ΑΕΙ, 25–34 ετών (%)</option>
+      <option value="low_edu">Έως γυμνάσιο, 25–64 ετών (%)</option>
+      <option value="neet">Νέοι εκτός εργασίας &amp; εκπαίδευσης (NEET 15–29, %)</option>
+      <option value="employment">Ποσοστό απασχόλησης 20–64 ετών (%)</option>
+    </select>
+  </div>
+  <div>
+    <label for="compare">Σύγκριση με</label>
+    <select id="compare"></select>
+  </div>
+</div>
+
+<section id="result" class="card result" aria-live="polite"></section>
+
+<div id="kpiRow" class="kpi-row">
+  <div class="kpi"><span class="kpi-lbl" id="kpi1Lbl">Τιμή</span><b id="kpiVal">—</b><small id="kpiValSub" class="kpi-sub"></small></div>
+  <div class="kpi"><span class="kpi-lbl" id="kpi2Lbl">Μεταβολή στην περίοδο</span><b id="kpiDiff">—</b><small id="kpiDiffSub" class="kpi-sub"></small></div>
+  <div class="kpi"><span class="kpi-lbl" id="kpi3Lbl">Θέση στις 13 περιφέρειες</span><b id="kpiRank">—</b><small id="kpiRankSub" class="kpi-sub"></small></div>
+</div>
+
+<div class="actions-row">
+  <button id="copyBtn" type="button" class="copy-btn">Αντιγραφή αποτελέσματος</button>
+  <span id="copyStatus" class="copy-status" aria-live="polite"></span>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2 id="barHeading">Οι 13 περιφέρειες</h2>
+    <span id="barHover" class="chart-hover">Πέρασε τον δείκτη ή πάτησε σε μια μπάρα</span>
+  </div>
+  <svg id="barChart" viewBox="0 0 640 230" role="img" aria-labelledby="barTitle barDesc">
+    <title id="barTitle">Σύγκριση των 13 περιφερειών στον επιλεγμένο δείκτη εκπαίδευσης ή απασχόλησης</title>
+    <desc id="barDesc">Ραβδόγραμμα που κατατάσσει τις 13 περιφέρειες της Ελλάδας, με διακεκομμένη γραμμή για τον μέσο όρο της χώρας.</desc>
+    <g id="barBody"></g>
+  </svg>
+  <div class="chart-years"><span id="barLeft">1η</span><span id="barMid">Γραμμή Ελλάδας</span><span id="barRight">13η</span></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2 id="lineHeading">Πορεία στον χρόνο</h2>
+    <span id="lineHover" class="chart-hover">Πέρασε τον δείκτη πάνω από το γράφημα</span>
+  </div>
+  <svg id="lineChart" viewBox="0 0 640 195" role="img" aria-labelledby="lineTitle lineDesc">
+    <title id="lineTitle">Διαχρονική εξέλιξη του δείκτη</title>
+    <desc id="lineDesc">Γραμμικό διάγραμμα με την εξέλιξη του δείκτη για την επιλεγμένη περιφέρεια και το σημείο σύγκρισης από το 2014.</desc>
+    <g id="lineBody"></g>
+  </svg>
+  <div class="chart-years"><span id="lineFrom"></span><span id="lineLegend"></span><span id="lineTo"></span></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-head">
+    <h2 id="tableHeading">Όλοι οι δείκτες της περιφέρειας</h2>
+    <span class="muted" style="font-size:.82rem">Πάτησε σε έναν δείκτη για να τον δεις</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Δείκτης</th><th class="n" id="thSel">Περιφέρεια</th><th class="n" id="thCmp">Ελλάδα</th><th class="n">ΕΕ-27</th><th class="n">Θέση (13)</th></tr>
+    </thead>
+    <tbody id="profileBody"></tbody>
+  </table>
+</div>
+
+<div class="note">
+<p><b>Πώς διαβάζεται:</b> οι δείκτες μετρώνται στον <b>τόπο κατοικίας</b>, όχι εκεί όπου σπούδασε κανείς. Αν πολλοί πτυχιούχοι φεύγουν για την Αθήνα ή τη Θεσσαλονίκη, η περιφέρεια καταγωγής τους εμφανίζει λιγότερους απόφοιτους ΑΕΙ. Στους δείκτες «έως γυμνάσιο» και «NEET» η χαμηλότερη τιμή είναι η καλύτερη, οπότε εκεί 1η είναι η περιφέρεια με τη χαμηλότερη τιμή.</p>
+<p><b>Μεθοδολογία:</b> όλα τα στοιχεία προέρχονται από την Έρευνα Εργατικού Δυναμικού της ΕΛΣΤΑΤ, όπως τα δημοσιεύει η Eurostat ανά περιφέρεια (NUTS 2), ετήσιοι μέσοι όροι.
+(1) <b>Απόφοιτοι ΑΕΙ (<code>edat_lfse_04</code>, ISCED 5–8):</b> ποσοστό του πληθυσμού 25–64 ή 25–34 ετών με πτυχίο τριτοβάθμιας εκπαίδευσης (ΑΕΙ, μεταπτυχιακό, διδακτορικό).
+(2) <b>Έως γυμνάσιο (<code>edat_lfse_04</code>, ISCED 0–2):</b> ποσοστό 25–64 ετών χωρίς απολυτήριο λυκείου.
+(3) <b>NEET (<code>edat_lfse_22</code>):</b> νέοι 15–29 ετών που δεν εργάζονται και δεν συμμετέχουν σε καμία εκπαίδευση ή κατάρτιση.
+(4) <b>Απασχόληση (<code>lfst_r_lfe2emprt</code>):</b> εργαζόμενοι ως ποσοστό του πληθυσμού 20–64 ετών.
+Το 2021 άλλαξε η μεθοδολογία της έρευνας σε όλη την ΕΕ (και για τα NEET ξανά το 2024), οπότε οι μεταβολές γύρω από αυτά τα έτη να διαβάζονται με προσοχή. Ο δείκτης «πρόωρη εγκατάλειψη σχολείου» δεν περιλαμβάνεται, γιατί η Eurostat δεν δημοσιεύει τιμή για 7 από τις 13 περιφέρειες λόγω μικρού δείγματος.</p>
+<p><b>Πηγές:</b>
+<a href="https://ec.europa.eu/eurostat/databrowser/view/edat_lfse_04/default/table" target="_blank" rel="noopener">Eurostat edat_lfse_04</a>,
+<a href="https://ec.europa.eu/eurostat/databrowser/view/edat_lfse_22/default/table" target="_blank" rel="noopener">edat_lfse_22</a>,
+<a href="https://ec.europa.eu/eurostat/databrowser/view/lfst_r_lfe2emprt/default/table" target="_blank" rel="noopener">lfst_r_lfe2emprt</a> (Έρευνα Εργατικού Δυναμικού ΕΛΣΤΑΤ) ·
+<a href="https://tools.statistikosatlantas.com/xartis/#atlas/tertiary_lfs" target="_blank" rel="noopener">Χάρτης του Στατιστικού Άτλαντα</a>.
+<span id="sourceStatus">Επίσημα στοιχεία Eurostat (2014–2025).</span></p>
+<p>Δεν αποθηκεύουμε τις επιλογές σας. Ο υπολογισμός γίνεται αποκλειστικά στη συσκευή σας.</p>
+</div>
+</main>
+<footer>Στατιστικός Άτλαντας · <a href="../">Όλα τα εργαλεία</a></footer>
+
+<style>
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+.pill{font:inherit;font-size:.83rem;padding:6px 11px;border:1px solid #c9d3e0;border-radius:999px;background:#fff;color:var(--ink,#1e293b);cursor:pointer;transition:border-color .15s,background .15s}
+.pill:hover,.pill:focus-visible,.pill.active{border-color:var(--blue);background:var(--pale);color:var(--blue);font-weight:600}
+.calc-grid{display:grid;grid-template-columns:1.15fr 1.45fr 1.15fr;gap:12px;align-items:start;margin:16px 0 20px}
+.calc-grid label{margin-top:0;display:block}
+.calc-grid select{width:100%;max-width:none;font:inherit;font-size:1rem;padding:10px 12px;border:1px solid #c9d3e0;border-radius:6px;background:#fff;color:var(--ink)}
+.result{margin-top:16px}
+.result strong{display:block;font-size:clamp(1.65rem,4.8vw,2.25rem);color:var(--blue);line-height:1.15;margin-bottom:8px}
+.result b{display:inline;font-size:inherit;margin:0}
+.result span{display:block;margin-top:8px;color:var(--muted);font-size:.92rem}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fff}
+.kpi-lbl{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.kpi b{display:block;font-size:1.14rem;color:var(--blue)}
+.kpi-sub{display:block;font-size:.78rem;color:var(--muted);margin-top:3px}
+.actions-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.copy-btn{font:inherit;font-size:.86rem;padding:7px 13px;border:1px solid #c9d3e0;border-radius:6px;background:#fff;color:var(--blue);cursor:pointer;font-weight:600}
+.copy-btn:hover{background:var(--pale);border-color:var(--blue)}
+.copy-status{font-size:.84rem;color:var(--muted)}
+.chart-card{border:1px solid var(--line);border-radius:8px;padding:16px;margin-top:16px;background:#fff}
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.chart-card h2{font-size:1.05rem;margin:0}
+.chart-hover{font-size:.84rem;color:var(--blue);font-weight:600}
+#barChart,#lineChart{display:block;width:100%;height:auto;overflow:visible}
+#lineChart{cursor:crosshair}
+.chart-grid{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.chart-base{stroke:var(--line);stroke-width:1}
+.chart-nat-line{stroke:#d97706;stroke-width:1.6;stroke-dasharray:4 3}
+.chart-break{stroke:#cbd5e1;stroke-width:1;stroke-dasharray:2 3}
+.chart-lbl{font-size:11px;fill:var(--muted)}
+.bar-rect{cursor:pointer;transition:opacity .12s}
+.bar-rect:hover{opacity:.85}
+.line-main{fill:none;stroke:#e67e22;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.line-cmp{fill:none;stroke:#1c5cab;stroke-width:2.2;stroke-dasharray:5 4;stroke-linecap:round;stroke-linejoin:round}
+.chart-years{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;margin-top:4px;flex-wrap:wrap;gap:6px}
+.prof-row{cursor:pointer;transition:background .12s}
+.prof-row:hover{background:#f8fafc}
+.prof-row.active-row{background:var(--pale);font-weight:600}
+.legend-swatch{display:inline-block;width:12px;height:3px;vertical-align:middle;margin-right:4px;border-radius:2px}
+@media(max-width:640px){
+  .calc-grid{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:1fr}
+  td,th{padding:8px 4px;font-size:.88rem}
+}
+</style>
+
+<script>
+const FALLBACK={"regions":{"EL30":"Αττική","EL41":"Βόρειο Αιγαίο","EL42":"Νότιο Αιγαίο","EL43":"Κρήτη","EL51":"Ανατολική Μακεδονία & Θράκη","EL52":"Κεντρική Μακεδονία","EL53":"Δυτική Μακεδονία","EL54":"Ήπειρος","EL61":"Θεσσαλία","EL62":"Ιόνια Νησιά","EL63":"Δυτική Ελλάδα","EL64":"Στερεά Ελλάδα","EL65":"Πελοπόννησος"},"eu":{"year":2025,"tertiary":36.9,"tertiary_young":44.8,"low_edu":18.8,"neet":11.0,"employment":76.1},"metrics":{"tertiary":{"years":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],"nat":{"2014":28.1,"2015":29.1,"2016":30.2,"2017":31.0,"2018":31.7,"2019":31.9,"2020":32.7,"2021":34.6,"2022":35.1,"2023":34.3,"2024":35.2,"2025":34.9},"reg":{"EL30":{"2014":36.3,"2015":37.0,"2016":38.0,"2017":38.4,"2018":39.3,"2019":40.2,"2020":41.0,"2021":45.0,"2022":45.6,"2023":43.7,"2024":44.6,"2025":44.6},"EL41":{"2014":25.3,"2015":22.9,"2016":25.6,"2017":24.2,"2018":24.5,"2019":26.9,"2020":29.3,"2021":27.9,"2022":26.7,"2023":26.7,"2024":26.5,"2025":21.3},"EL42":{"2014":17.8,"2015":19.1,"2016":17.4,"2017":20.4,"2018":20.8,"2019":22.2,"2020":22.5,"2021":24.1,"2022":28.6,"2023":20.1,"2024":22.2,"2025":22.5},"EL43":{"2014":22.0,"2015":24.1,"2016":26.8,"2017":27.9,"2018":26.6,"2019":26.3,"2020":28.0,"2021":27.6,"2022":28.9,"2023":28.4,"2024":28.5,"2025":28.5},"EL51":{"2014":20.5,"2015":22.6,"2016":24.6,"2017":25.0,"2018":25.1,"2019":23.8,"2020":24.4,"2021":24.9,"2022":27.6,"2023":24.5,"2024":23.7,"2025":28.0},"EL52":{"2014":27.3,"2015":29.1,"2016":31.3,"2017":31.1,"2018":31.7,"2019":31.4,"2020":32.2,"2021":33.3,"2022":33.1,"2023":34.2,"2024":37.1,"2025":36.4},"EL53":{"2014":22.3,"2015":21.9,"2016":21.8,"2017":24.5,"2018":26.0,"2019":27.1,"2020":26.6,"2021":27.7,"2022":27.6,"2023":28.5,"2024":28.3,"2025":28.3},"EL54":{"2014":24.6,"2015":25.8,"2016":28.2,"2017":30.0,"2018":33.8,"2019":31.8,"2020":31.6,"2021":30.0,"2022":30.9,"2023":36.3,"2024":38.4,"2025":35.4},"EL61":{"2014":26.3,"2015":26.1,"2016":25.6,"2017":28.6,"2018":32.1,"2019":31.8,"2020":30.3,"2021":32.8,"2022":33.5,"2023":33.1,"2024":34.3,"2025":31.4},"EL62":{"2014":17.7,"2015":19.5,"2016":20.8,"2017":20.1,"2018":22.8,"2019":24.6,"2020":23.7,"2021":18.8,"2022":18.5,"2023":22.3,"2024":19.6,"2025":21.6},"EL63":{"2014":22.6,"2015":22.9,"2016":22.7,"2017":23.8,"2018":21.9,"2019":20.6,"2020":25.0,"2021":26.0,"2022":25.4,"2023":27.8,"2024":25.6,"2025":21.7},"EL64":{"2014":17.9,"2015":19.0,"2016":21.1,"2017":23.3,"2018":23.6,"2019":23.2,"2020":25.2,"2021":24.7,"2022":22.7,"2023":20.0,"2024":21.1,"2025":24.7},"EL65":{"2014":19.3,"2015":20.8,"2016":21.4,"2017":23.0,"2018":23.8,"2019":23.8,"2020":23.9,"2021":24.7,"2022":26.5,"2023":26.2,"2024":26.1,"2025":25.8}}},"tertiary_young":{"years":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],"nat":{"2014":38.7,"2015":40.1,"2016":41.0,"2017":42.5,"2018":42.8,"2019":42.4,"2020":43.7,"2021":44.2,"2022":45.2,"2023":44.5,"2024":44.5,"2025":42.8},"reg":{"EL30":{"2014":44.9,"2015":47.2,"2016":47.3,"2017":47.8,"2018":49.7,"2019":50.1,"2020":50.6,"2021":52.6,"2022":56.0,"2023":52.9,"2024":51.7,"2025":51.1},"EL41":{"2014":36.6,"2015":35.8,"2016":41.4,"2017":37.0,"2018":31.4,"2019":38.8,"2020":41.2,"2021":36.0,"2022":31.6,"2023":29.6,"2024":31.4,"2025":19.1},"EL42":{"2014":26.0,"2015":34.5,"2016":21.3,"2017":28.0,"2018":25.8,"2019":29.7,"2020":29.2,"2021":27.9,"2022":31.9,"2023":19.8,"2024":26.7,"2025":26.6},"EL43":{"2014":30.2,"2015":34.7,"2016":38.4,"2017":38.8,"2018":35.3,"2019":32.4,"2020":37.5,"2021":35.0,"2022":35.7,"2023":33.3,"2024":38.1,"2025":36.5},"EL51":{"2014":27.2,"2015":31.0,"2016":35.2,"2017":39.0,"2018":36.2,"2019":33.3,"2020":35.6,"2021":38.9,"2022":37.9,"2023":33.3,"2024":35.2,"2025":42.5},"EL52":{"2014":39.7,"2015":39.3,"2016":43.7,"2017":45.2,"2018":46.1,"2019":42.4,"2020":43.1,"2021":46.4,"2022":44.0,"2023":43.9,"2024":49.1,"2025":44.3},"EL53":{"2014":37.2,"2015":32.2,"2016":33.0,"2017":44.3,"2018":42.5,"2019":42.5,"2020":41.1,"2021":41.0,"2022":45.3,"2023":49.8,"2024":51.2,"2025":47.0},"EL54":{"2014":37.8,"2015":39.2,"2016":41.0,"2017":43.9,"2018":44.8,"2019":45.3,"2020":39.7,"2021":37.0,"2022":42.4,"2023":55.2,"2024":51.7,"2025":47.0},"EL61":{"2014":40.3,"2015":37.7,"2016":37.5,"2017":39.5,"2018":43.6,"2019":44.7,"2020":40.3,"2021":37.8,"2022":39.3,"2023":53.0,"2024":41.0,"2025":37.9},"EL62":{"2014":28.7,"2015":37.1,"2016":33.9,"2017":29.8,"2018":30.3,"2019":38.0,"2020":40.2,"2021":33.3,"2022":35.2,"2023":32.4,"2024":26.6,"2025":32.0},"EL63":{"2014":35.5,"2015":32.4,"2016":35.5,"2017":36.7,"2018":34.5,"2019":32.0,"2020":38.3,"2021":38.3,"2022":34.4,"2023":39.3,"2024":36.0,"2025":26.7},"EL64":{"2014":28.1,"2015":29.0,"2016":32.4,"2017":34.3,"2018":34.5,"2019":37.6,"2020":45.2,"2021":36.6,"2022":32.5,"2023":26.2,"2024":26.4,"2025":33.2},"EL65":{"2014":35.2,"2015":37.7,"2016":33.0,"2017":36.2,"2018":36.0,"2019":34.0,"2020":36.3,"2021":39.3,"2022":44.0,"2023":45.5,"2024":45.6,"2025":41.7}}},"low_edu":{"years":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],"nat":{"2014":31.6,"2015":29.6,"2016":28.2,"2017":27.1,"2018":26.4,"2019":23.2,"2020":21.2,"2021":20.2,"2022":19.2,"2023":18.9,"2024":17.9,"2025":18.0},"reg":{"EL30":{"2014":20.0,"2015":18.0,"2016":18.0,"2017":17.2,"2018":17.2,"2019":15.0,"2020":13.3,"2021":11.2,"2022":10.1,"2023":10.6,"2024":10.6,"2025":9.7},"EL41":{"2014":37.1,"2015":37.8,"2016":30.5,"2017":31.7,"2018":28.2,"2019":23.1,"2020":22.2,"2021":24.1,"2022":19.9,"2023":23.4,"2024":26.2,"2025":18.1},"EL42":{"2014":40.5,"2015":35.8,"2016":37.0,"2017":37.5,"2018":31.8,"2019":28.4,"2020":29.2,"2021":25.6,"2022":27.1,"2023":31.4,"2024":30.8,"2025":28.9},"EL43":{"2014":38.6,"2015":36.5,"2016":32.4,"2017":31.7,"2018":33.2,"2019":27.8,"2020":24.3,"2021":27.1,"2022":27.0,"2023":25.7,"2024":23.6,"2025":24.0},"EL51":{"2014":49.7,"2015":45.6,"2016":40.4,"2017":39.9,"2018":39.3,"2019":34.8,"2020":32.1,"2021":32.9,"2022":31.6,"2023":35.6,"2024":32.2,"2025":28.4},"EL52":{"2014":33.7,"2015":31.8,"2016":29.2,"2017":27.7,"2018":27.6,"2019":22.2,"2020":20.1,"2021":19.6,"2022":19.5,"2023":18.2,"2024":17.0,"2025":17.1},"EL53":{"2014":42.6,"2015":41.1,"2016":38.8,"2017":34.9,"2018":32.6,"2019":26.0,"2020":26.0,"2021":23.9,"2022":21.7,"2023":20.2,"2024":19.0,"2025":19.1},"EL54":{"2014":39.2,"2015":36.6,"2016":35.0,"2017":34.1,"2018":29.4,"2019":28.6,"2020":25.0,"2021":25.7,"2022":25.2,"2023":20.2,"2024":17.5,"2025":22.2},"EL61":{"2014":34.1,"2015":33.1,"2016":32.2,"2017":29.8,"2018":26.5,"2019":26.3,"2020":24.8,"2021":21.9,"2022":19.4,"2023":21.8,"2024":18.0,"2025":20.0},"EL62":{"2014":39.6,"2015":35.7,"2016":37.9,"2017":37.3,"2018":30.9,"2019":32.3,"2020":29.7,"2021":30.8,"2022":26.0,"2023":25.7,"2024":21.0,"2025":25.5},"EL63":{"2014":40.7,"2015":39.6,"2016":38.8,"2017":38.6,"2018":38.7,"2019":37.3,"2020":33.6,"2021":32.7,"2022":31.4,"2023":23.3,"2024":23.1,"2025":30.1},"EL64":{"2014":41.2,"2015":40.5,"2016":38.6,"2017":36.8,"2018":36.3,"2019":30.8,"2020":27.8,"2021":29.0,"2022":27.0,"2023":24.9,"2024":28.2,"2025":24.8},"EL65":{"2014":39.8,"2015":37.9,"2016":34.9,"2017":32.5,"2018":33.5,"2019":29.5,"2020":27.6,"2021":26.9,"2022":26.2,"2023":27.5,"2024":22.7,"2025":25.5}}},"neet":{"years":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],"nat":{"2014":26.7,"2015":24.1,"2016":22.2,"2017":21.3,"2018":19.5,"2019":17.7,"2020":18.7,"2021":17.3,"2022":15.4,"2023":16.0,"2024":14.2,"2025":13.6},"reg":{"EL30":{"2014":24.2,"2015":20.3,"2016":17.6,"2017":17.6,"2018":17.0,"2019":15.0,"2020":14.7,"2021":13.1,"2022":10.8,"2023":14.0,"2024":11.8,"2025":10.8},"EL41":{"2014":26.6,"2015":25.6,"2016":24.3,"2017":27.2,"2018":26.6,"2019":25.7,"2020":27.4,"2021":23.1,"2022":17.8,"2023":17.2,"2024":19.4,"2025":18.7},"EL42":{"2014":22.0,"2015":22.1,"2016":27.3,"2017":25.5,"2018":22.3,"2019":19.6,"2020":29.8,"2021":20.5,"2022":16.8,"2023":17.4,"2024":20.0,"2025":16.3},"EL43":{"2014":26.3,"2015":24.6,"2016":20.9,"2017":19.1,"2018":16.7,"2019":17.0,"2020":17.8,"2021":16.7,"2022":14.1,"2023":15.3,"2024":14.7,"2025":12.1},"EL51":{"2014":29.8,"2015":28.8,"2016":27.0,"2017":24.1,"2018":21.9,"2019":20.5,"2020":25.5,"2021":26.3,"2022":19.4,"2023":19.6,"2024":17.8,"2025":15.9},"EL52":{"2014":25.6,"2015":23.9,"2016":22.1,"2017":20.0,"2018":18.1,"2019":16.5,"2020":16.6,"2021":17.6,"2022":15.7,"2023":15.7,"2024":15.5,"2025":15.2},"EL53":{"2014":26.8,"2015":27.9,"2016":26.4,"2017":28.0,"2018":29.1,"2019":26.6,"2020":22.7,"2021":17.6,"2022":19.8,"2023":20.1,"2024":13.0,"2025":15.0},"EL54":{"2014":29.7,"2015":26.7,"2016":20.5,"2017":26.2,"2018":23.6,"2019":22.5,"2020":22.8,"2021":15.0,"2022":19.1,"2023":23.0,"2024":19.1,"2025":19.7},"EL61":{"2014":29.2,"2015":28.1,"2016":25.7,"2017":24.8,"2018":22.4,"2019":17.2,"2020":18.2,"2021":18.1,"2022":19.5,"2023":19.2,"2024":13.3,"2025":14.3},"EL62":{"2014":25.2,"2015":25.8,"2016":23.6,"2017":26.3,"2018":24.1,"2019":21.8,"2020":24.8,"2021":22.0,"2022":21.2,"2023":22.2,"2024":23.5,"2025":24.0},"EL63":{"2014":28.2,"2015":25.4,"2016":25.1,"2017":22.5,"2018":18.2,"2019":17.8,"2020":20.7,"2021":21.4,"2022":20.6,"2023":12.5,"2024":11.9,"2025":14.1},"EL64":{"2014":36.3,"2015":30.2,"2016":31.1,"2017":27.3,"2018":25.7,"2019":26.4,"2020":29.8,"2021":24.6,"2022":23.1,"2023":17.4,"2024":18.0,"2025":13.5},"EL65":{"2014":33.2,"2015":31.7,"2016":30.3,"2017":29.0,"2018":23.3,"2019":19.4,"2020":19.5,"2021":18.1,"2022":15.0,"2023":18.8,"2024":13.0,"2025":14.6}}},"employment":{"years":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],"nat":{"2014":53.3,"2015":54.9,"2016":56.2,"2017":57.8,"2018":59.5,"2019":61.2,"2020":61.1,"2021":62.6,"2022":66.3,"2023":67.4,"2024":69.3,"2025":71.0},"reg":{"EL30":{"2014":53.5,"2015":54.9,"2016":56.4,"2017":57.5,"2018":58.9,"2019":61.9,"2020":63.3,"2021":65.7,"2022":69.3,"2023":69.0,"2024":71.0,"2025":73.1},"EL41":{"2014":53.0,"2015":55.5,"2016":59.0,"2017":61.1,"2018":60.8,"2019":65.1,"2020":65.2,"2021":64.0,"2022":67.3,"2023":69.2,"2024":70.7,"2025":70.0},"EL42":{"2014":59.3,"2015":62.8,"2016":62.2,"2017":62.7,"2018":64.0,"2019":66.0,"2020":58.7,"2021":58.6,"2022":64.4,"2023":66.6,"2024":69.1,"2025":69.4},"EL43":{"2014":57.0,"2015":56.1,"2016":58.2,"2017":61.8,"2018":65.2,"2019":67.0,"2020":61.9,"2021":63.1,"2022":68.8,"2023":69.4,"2024":71.4,"2025":75.4},"EL51":{"2014":54.2,"2015":55.4,"2016":56.9,"2017":58.5,"2018":61.1,"2019":62.1,"2020":59.4,"2021":59.5,"2022":62.8,"2023":66.0,"2024":67.5,"2025":67.6},"EL52":{"2014":50.2,"2015":53.8,"2016":55.4,"2017":55.9,"2018":57.8,"2019":58.4,"2020":58.9,"2021":59.4,"2022":63.6,"2023":65.6,"2024":68.0,"2025":69.1},"EL53":{"2014":51.2,"2015":49.4,"2016":50.4,"2017":52.7,"2018":54.6,"2019":56.0,"2020":56.4,"2021":58.2,"2022":58.8,"2023":62.3,"2024":64.8,"2025":61.6},"EL54":{"2014":52.3,"2015":53.2,"2016":54.5,"2017":54.1,"2018":58.0,"2019":60.8,"2020":58.0,"2021":55.8,"2022":63.5,"2023":65.3,"2024":67.8,"2025":69.0},"EL61":{"2014":53.7,"2015":53.3,"2016":54.8,"2017":58.7,"2018":59.8,"2019":59.7,"2020":60.4,"2021":62.0,"2022":64.8,"2023":63.7,"2024":64.6,"2025":69.4},"EL62":{"2014":58.8,"2015":61.1,"2016":62.0,"2017":59.2,"2018":64.5,"2019":64.7,"2020":60.1,"2021":61.5,"2022":64.0,"2023":65.3,"2024":67.2,"2025":68.7},"EL63":{"2014":49.7,"2015":51.4,"2016":51.0,"2017":53.6,"2018":53.7,"2019":53.2,"2020":55.3,"2021":59.7,"2022":62.4,"2023":65.9,"2024":66.8,"2025":66.6},"EL64":{"2014":52.9,"2015":55.6,"2016":55.2,"2017":58.6,"2018":60.6,"2019":61.2,"2020":59.8,"2021":61.2,"2022":66.6,"2023":69.8,"2024":69.7,"2025":73.0},"EL65":{"2014":57.8,"2015":58.9,"2016":60.6,"2017":63.3,"2018":65.0,"2019":67.0,"2020":68.3,"2021":67.1,"2022":68.3,"2023":70.5,"2024":73.4,"2025":74.1}}}}};
+
+const KEYS=["tertiary","tertiary_young","low_edu","neet","employment"];
+const META={
+  tertiary:{label:"Απόφοιτοι ΑΕΙ, 25–64 ετών",short:"Απόφοιτοι ΑΕΙ (25–64)",lowerBetter:false,breaks:[2021],
+    explain:"Ποσοστό του πληθυσμού 25–64 ετών με πτυχίο ΑΕΙ, μεταπτυχιακό ή διδακτορικό."},
+  tertiary_young:{label:"Απόφοιτοι ΑΕΙ, 25–34 ετών",short:"Απόφοιτοι ΑΕΙ (25–34)",lowerBetter:false,breaks:[2021],
+    explain:"Ποσοστό των νέων 25–34 ετών με πτυχίο ΑΕΙ. Επηρεάζεται έντονα από το πού μένουν οι νέοι πτυχιούχοι."},
+  low_edu:{label:"Έως γυμνάσιο, 25–64 ετών",short:"Έως γυμνάσιο (25–64)",lowerBetter:true,breaks:[2021],
+    explain:"Ποσοστό 25–64 ετών χωρίς απολυτήριο λυκείου (χαμηλότερο = καλύτερο)."},
+  neet:{label:"Νέοι εκτός εργασίας & εκπαίδευσης (NEET 15–29)",short:"NEET (15–29)",lowerBetter:true,breaks:[2021,2024],
+    explain:"Νέοι 15–29 ετών που ούτε δουλεύουν ούτε σπουδάζουν ούτε εκπαιδεύονται (χαμηλότερο = καλύτερο)."},
+  employment:{label:"Ποσοστό απασχόλησης 20–64 ετών",short:"Απασχόληση (20–64)",lowerBetter:false,breaks:[2021],
+    explain:"Εργαζόμενοι ως ποσοστό του πληθυσμού 20–64 ετών."}
+};
+
+const $=id=>document.getElementById(id);
+let DATA=FALLBACK,lastSummary="",barItems=[],linePoints=[];
+
+function fmt(v,dec=1,sign=false){
+  if(v==null||!Number.isFinite(v))return "—";
+  const prefix=sign&&v>0?"+":"";
+  return prefix+v.toLocaleString("el-GR",{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+const pc=v=>fmt(v)+"%";
+const pp=v=>`${fmt(v,1,true)} μον.`;
+function areaName(c){return c==="EL"?"Σύνολο Ελλάδας":(DATA.regions[c]||c);}
+function getValue(k,c,y){const m=DATA.metrics[k];const s=String(y);return c==="EL"?m.nat[s]:m.reg[c]?.[s];}
+function lastYear(k){return DATA.metrics[k].years.at(-1);}
+function euVal(k){return DATA.eu&&DATA.eu.year===lastYear(k)?DATA.eu[k]:null;}
+
+function getRanked(k,y){
+  const m=DATA.metrics[k],meta=META[k],s=String(y);
+  const list=Object.keys(DATA.regions).map(code=>({code,name:DATA.regions[code],val:m.reg[code][s]}));
+  list.sort((a,b)=>meta.lowerBetter?(a.val-b.val):(b.val-a.val));
+  list.forEach((it,i)=>{it.rank=i+1;});
+  return list;
+}
+
+function populateSelects(){
+  const opts=first=>`<option value="EL">${first}</option>`+Object.entries(DATA.regions).map(([c,n])=>`<option value="${c}">${n}</option>`).join("");
+  $("region").innerHTML=opts("Σύνολο Ελλάδας");
+  $("compare").innerHTML=opts("Μέσος όρος Ελλάδας");
+}
+
+function readQuery(){
+  const p=new URLSearchParams(location.search);
+  const r=p.get("region"),m=p.get("metric"),c=p.get("compare");
+  $("region").value=(r==="EL"||DATA.regions[r])?r:"EL30";
+  $("metric").value=META[m]?m:"tertiary";
+  $("compare").value=(c==="EL"||DATA.regions[c])?c:"EL";
+}
+function syncQuery(r,m,c){
+  const u=new URL(location.href);
+  u.searchParams.set("region",r);u.searchParams.set("metric",m);u.searchParams.set("compare",c);
+  history.replaceState(null,"",u);
+}
+
+function hoverText(it,k){return `${it.rank}η/13 · ${it.name}: ${pc(it.val)}`;}
+
+function drawBarChart(k,sel,cmp){
+  const m=DATA.metrics[k],meta=META[k],ly=lastYear(k);
+  const list=getRanked(k,ly),natVal=m.nat[String(ly)];
+  $("barHeading").textContent=`Οι 13 περιφέρειες · ${meta.short} (${ly})`;
+  $("barMid").textContent=`Ελλάδα: ${pc(natVal)}`;
+  const x0=40,x1=628,yTop=18,yBot=195;
+  const rawMax=Math.max(...list.map(x=>x.val),natVal);
+  const yMax=Math.ceil(rawMax*1.12/10)*10||10,span=yMax;
+  const slot=(x1-x0)/list.length,bw=slot*0.66;
+  barItems=list.map((it,i)=>{const h=(it.val/span)*(yBot-yTop);return {...it,x:x0+i*slot+(slot-bw)/2,w:bw,y:yBot-h,h:Math.max(2,h)};});
+  let grid="";
+  for(let i=0;i<=4;i++){
+    const v=span*i/4,py=yBot-(v/span)*(yBot-yTop);
+    grid+=`<line class="${i===0?"chart-base":"chart-grid"}" x1="${x0}" y1="${py.toFixed(1)}" x2="${x1}" y2="${py.toFixed(1)}"/><text class="chart-lbl" x="${x0-6}" y="${(py+4).toFixed(1)}" text-anchor="end">${fmt(v,0)}%</text>`;
+  }
+  const yNat=yBot-(natVal/span)*(yBot-yTop);
+  const bars=barItems.map(b=>{
+    const isSel=b.code===sel,isCmp=b.code===cmp&&cmp!=="EL"&&cmp!==sel;
+    const fill=isSel?"#e67e22":(isCmp?"#1c5cab":(sel==="EL"?"#1c5cab":"#94a3b8"));
+    const op=isSel||isCmp?"1":(sel==="EL"?"0.82":"0.55");
+    return `<rect class="bar-rect" data-code="${b.code}" x="${b.x.toFixed(1)}" y="${b.y.toFixed(1)}" width="${b.w.toFixed(1)}" height="${b.h.toFixed(1)}" rx="3" fill="${fill}" opacity="${op}"><title>${b.name}: ${pc(b.val)}</title></rect>`;
+  }).join("");
+  const sb=barItems.find(b=>b.code===sel);
+  const callout=sb?`<circle cx="${(sb.x+sb.w/2).toFixed(1)}" cy="${Math.max(10,sb.y-7).toFixed(1)}" r="4.5" fill="#e67e22"/>`:"";
+  $("barBody").innerHTML=`${grid}${bars}<line class="chart-nat-line" x1="${x0}" y1="${yNat.toFixed(1)}" x2="${x1}" y2="${yNat.toFixed(1)}"/>${callout}`;
+  const firstLbl=meta.lowerBetter?"1η (χαμηλότερο)":"1η (υψηλότερο)",lastLbl=meta.lowerBetter?"13η (υψηλότερο)":"13η (χαμηλότερο)";
+  $("barLeft").textContent=`${firstLbl}: ${list[0].name} (${pc(list[0].val)})`;
+  $("barRight").textContent=`${lastLbl}: ${list.at(-1).name} (${pc(list.at(-1).val)})`;
+  $("barHover").textContent=sb?hoverText(sb,k):`Ελλάδα (${ly}): ${pc(natVal)}`;
+  $("barBody").querySelectorAll(".bar-rect").forEach(rect=>{
+    rect.addEventListener("mouseenter",()=>{const it=barItems.find(x=>x.code===rect.dataset.code);if(it)$("barHover").textContent=hoverText(it,k);});
+    rect.addEventListener("click",()=>{$("region").value=rect.dataset.code;calculate();});
+  });
+}
+
+function drawLineChart(k,sel,cmp){
+  const m=DATA.metrics[k],meta=META[k],ys=m.years;
+  const sv=ys.map(y=>getValue(k,sel,y)),show=cmp!==sel,cv=show?ys.map(y=>getValue(k,cmp,y)):[];
+  const all=sv.concat(cv).filter(Number.isFinite);
+  const rmin=Math.min(...all),rmax=Math.max(...all),pad=(rmax-rmin)*0.18||1;
+  const yMin=Math.max(0,rmin-pad),yMax=rmax+pad,span=yMax-yMin||1;
+  const x0=48,x1=622,yTop=18,yBot=165;
+  const px=i=>x0+(ys.length>1?i*((x1-x0)/(ys.length-1)):(x1-x0)/2);
+  const py=v=>yBot-((v-yMin)/span)*(yBot-yTop);
+  linePoints=ys.map((y,i)=>({y,sel:sv[i],cmp:show?cv[i]:null,x:px(i),pySel:py(sv[i]),pyCmp:show?py(cv[i]):null}));
+  const mid=(yMin+yMax)/2;
+  let grid=`<line class="chart-grid" x1="${x0}" y1="${yTop}" x2="${x1}" y2="${yTop}"/><text class="chart-lbl" x="${x0-6}" y="${yTop+4}" text-anchor="end">${fmt(yMax,0)}%</text>
+    <line class="chart-grid" x1="${x0}" y1="${(yTop+yBot)/2}" x2="${x1}" y2="${(yTop+yBot)/2}"/><text class="chart-lbl" x="${x0-6}" y="${(yTop+yBot)/2+4}" text-anchor="end">${fmt(mid,0)}%</text>
+    <line class="chart-base" x1="${x0}" y1="${yBot}" x2="${x1}" y2="${yBot}"/><text class="chart-lbl" x="${x0-6}" y="${yBot+4}" text-anchor="end">${fmt(yMin,0)}%</text>`;
+  for(const b of meta.breaks){
+    const i=ys.indexOf(b);if(i<=0)continue;
+    const bx=(px(i-1)+px(i))/2;
+    grid+=`<line class="chart-break" x1="${bx.toFixed(1)}" y1="${yTop}" x2="${bx.toFixed(1)}" y2="${yBot}"/><text class="chart-lbl" x="${(bx+3).toFixed(1)}" y="${yTop+10}">αλλαγή μεθόδου</text>`;
+  }
+  const cPath=show?`<polyline class="line-cmp" points="${linePoints.map(p=>`${p.x.toFixed(1)},${p.pyCmp.toFixed(1)}`).join(" ")}"/>`:"";
+  const sPath=`<polyline class="line-main" points="${linePoints.map(p=>`${p.x.toFixed(1)},${p.pySel.toFixed(1)}`).join(" ")}"/>`;
+  const dots=linePoints.map((p,i)=>`<circle cx="${p.x.toFixed(1)}" cy="${p.pySel.toFixed(1)}" r="${i===0||i===linePoints.length-1?4.5:3}" fill="#e67e22"/>`).join("");
+  $("lineBody").innerHTML=`${grid}${cPath}${sPath}${dots}<circle id="lineHoverDot" cx="-20" cy="-20" r="6" fill="#e67e22" stroke="#fff" stroke-width="2" style="display:none"/>`;
+  $("lineHeading").textContent=`Πορεία στον χρόνο · ${meta.short} (${ys[0]} → ${ys.at(-1)})`;
+  $("lineFrom").textContent=ys[0];$("lineTo").textContent=ys.at(-1);
+  $("lineLegend").innerHTML=`<i class="legend-swatch" style="background:#e67e22"></i>${areaName(sel)}`+(show?` &nbsp; <i class="legend-swatch" style="background:#1c5cab"></i>${areaName(cmp)}`:"");
+  const lp=linePoints.at(-1);
+  $("lineHover").textContent=`${lp.y}: ${pc(lp.sel)}`+(show?` (${areaName(cmp)}: ${pc(lp.cmp)})`:"");
+}
+
+function renderTable(sel,cmp,active){
+  const ly=lastYear(active);
+  $("tableHeading").textContent=`Όλοι οι δείκτες · ${areaName(sel)} (${ly})`;
+  $("thSel").textContent=areaName(sel);$("thCmp").textContent=areaName(cmp);
+  $("profileBody").innerHTML=KEYS.map(k=>{
+    const meta=META[k],y=lastYear(k);
+    let rank="—";
+    if(sel!=="EL"){const f=getRanked(k,y).find(x=>x.code===sel);if(f)rank=`${f.rank}η`;}
+    return `<tr class="prof-row${k===active?" active-row":""}" data-metric="${k}"><td>${meta.short}</td><td class="n"><b>${pc(getValue(k,sel,y))}</b></td><td class="n">${pc(getValue(k,cmp,y))}</td><td class="n">${euVal(k)!=null?pc(euVal(k)):"—"}</td><td class="n">${rank}</td></tr>`;
+  }).join("");
+  $("profileBody").querySelectorAll(".prof-row").forEach(tr=>tr.addEventListener("click",()=>{$("metric").value=tr.dataset.metric;calculate();}));
+}
+
+function calculate(){
+  const sel=$("region").value,k=$("metric").value,cmp=$("compare").value;
+  syncQuery(sel,k,cmp);
+  const m=DATA.metrics[k],meta=META[k],fy=m.years[0],ly=lastYear(k);
+  const now=getValue(k,sel,ly),first=getValue(k,sel,fy),vc=getValue(k,cmp,ly),eu=euVal(k);
+  const dT=now-first,dC=now-vc;
+  let cmpS;
+  if(sel===cmp){
+    cmpS=`Διάλεξε μια δεύτερη περιφέρεια στο «Σύγκριση με» για άμεση αντιπαραβολή.`;
+  }else{
+    const diffS=Math.abs(dC)<0.05?"ίδιο επίπεδο":`${fmt(dC,1,true)} ποσοστιαίες μονάδες`;
+    cmpS=`Σύγκριση με ${cmp==="EL"?"τον μέσο όρο της Ελλάδας":"την περιοχή «"+areaName(cmp)+"»"} (${pc(vc)}): <b>${diffS}</b>.`;
+  }
+  const euS=eu!=null?` Μέσος όρος ΕΕ-27: ${pc(eu)}.`:"";
+  $("result").innerHTML=`<strong>${pc(now)}</strong><b>${areaName(sel)}</b> · ${meta.label} (${ly}). ${cmpS}${euS}<span>${meta.explain}</span>`;
+
+  $("kpi1Lbl").textContent=`${meta.short} (${ly})`;
+  $("kpiVal").textContent=pc(now);
+  $("kpiValSub").textContent=sel===cmp?(eu!=null?`ΕΕ-27: ${pc(eu)}`:""):`vs ${areaName(cmp)}: ${pp(dC)}`;
+  $("kpi2Lbl").textContent=`Μεταβολή (${fy} → ${ly})`;
+  $("kpiDiff").textContent=pp(dT);
+  $("kpiDiffSub").textContent=`${pc(first)} → ${pc(now)}`;
+  const list=getRanked(k,ly);
+  if(sel==="EL"){
+    $("kpi3Lbl").textContent="Εύρος 13 περιφερειών";
+    $("kpiRank").textContent=`${pc(Math.min(list[0].val,list.at(-1).val))} – ${pc(Math.max(list[0].val,list.at(-1).val))}`;
+    $("kpiRankSub").textContent=`1η: ${list[0].name} · 13η: ${list.at(-1).name}`;
+  }else{
+    const f=list.find(x=>x.code===sel);
+    $("kpi3Lbl").textContent=meta.lowerBetter?"Θέση (1η = χαμηλότερο)":"Θέση (1η = υψηλότερο)";
+    $("kpiRank").textContent=f?`${f.rank}η από 13`:"—";
+    $("kpiRankSub").textContent=`1η: ${list[0].name} (${pc(list[0].val)})`;
+  }
+  lastSummary=`${areaName(sel)} (${ly}): ${meta.label} = ${pc(now)} (Ελλάδα: ${pc(m.nat[String(ly)])}${eu!=null?`, ΕΕ-27: ${pc(eu)}`:""}, μεταβολή από ${fy}: ${pp(dT)}). Πηγή: Eurostat · https://tools.statistikosatlantas.com/ekpaidefsi/?region=${sel}&metric=${k}&compare=${cmp}`;
+  document.querySelectorAll(".pill").forEach(b=>b.classList.toggle("active",b.dataset.preset===`${sel},${k},${cmp}`));
+  drawBarChart(k,sel,cmp);drawLineChart(k,sel,cmp);renderTable(sel,cmp,k);
+}
+
+populateSelects();readQuery();calculate();
+["region","metric","compare"].forEach(id=>$(id).addEventListener("change",calculate));
+document.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{
+  const [r,m,c]=b.dataset.preset.split(",");$("region").value=r;$("metric").value=m;$("compare").value=c;calculate();
+}));
+$("copyBtn").addEventListener("click",async()=>{
+  try{await navigator.clipboard.writeText(lastSummary);$("copyStatus").textContent="Αντιγράφηκε!";}
+  catch{$("copyStatus").textContent="Δεν ήταν δυνατή η αντιγραφή.";}
+  setTimeout(()=>{$("copyStatus").textContent=""},2500);
+});
+$("lineChart").addEventListener("mousemove",e=>{
+  if(!linePoints.length)return;
+  const r=$("lineChart").getBoundingClientRect(),mx=(e.clientX-r.left)/r.width*640;
+  let best=linePoints[0],bd=Infinity;
+  for(const p of linePoints){const d=Math.abs(p.x-mx);if(d<bd){bd=d;best=p;}}
+  const dot=$("lineHoverDot");if(dot){dot.setAttribute("cx",best.x);dot.setAttribute("cy",best.pySel);dot.style.display="block";}
+  $("lineHover").textContent=`${best.y}: ${pc(best.sel)}`+(best.cmp!=null?` (${areaName($("compare").value)}: ${pc(best.cmp)})`:"");
+});
+$("lineChart").addEventListener("mouseleave",()=>{const d=$("lineHoverDot");if(d)d.style.display="none";});
+
+/* Live έλεγχος Eurostat: αν έχει βγει νεότερο έτος από το ενσωματωμένο, ενημερώνει τα στοιχεία. */
+(function liveRefresh(){
+  const API="https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/";
+  const geos=["EL",...Object.keys(DATA.regions)].map(g=>"geo="+g).join("&");
+  const Q={tertiary:"edat_lfse_04?sex=T&isced11=ED5-8&age=Y25-64",tertiary_young:"edat_lfse_04?sex=T&isced11=ED5-8&age=Y25-34",
+    low_edu:"edat_lfse_04?sex=T&isced11=ED0-2&age=Y25-64",neet:"edat_lfse_22?sex=T&age=Y15-29",employment:"lfst_r_lfe2emprt?sex=T&age=Y20-64"};
+  const since=lastYear("tertiary")+1;
+  Promise.all(KEYS.map(k=>fetch(`${API}${Q[k]}&${geos}&sinceTimePeriod=${since}&format=JSON&lang=EN`).then(r=>r.ok?r.json():null).then(d=>[k,d]).catch(()=>[k,null])))
+  .then(entries=>{
+    let updated=false;
+    for(const [k,d] of entries){
+      if(!d||!d.value||!d.dimension)continue;
+      const geoIdx=d.dimension.geo.category.index,timeIdx=d.dimension.time.category.index;
+      const nT=Object.keys(timeIdx).length;
+      for(const [t,ti] of Object.entries(timeIdx)){
+        const y=+t;if(y<since)continue;
+        const row={};let ok=true;
+        for(const [g,gi] of Object.entries(geoIdx)){const v=d.value[String(gi*nT+ti)];if(v==null){ok=false;break;}row[g]=v;}
+        if(!ok||Object.keys(row).length<14)continue;
+        const m=DATA.metrics[k];
+        if(!m.years.includes(y))m.years.push(y);
+        m.nat[t]=row.EL;for(const c of Object.keys(DATA.regions))m.reg[c][t]=row[c];
+        updated=true;
+      }
+    }
+    if(updated){$("sourceStatus").textContent=`Ενημερωμένα στοιχεία Eurostat (έως ${lastYear("tertiary")}).`;calculate();}
+  });
+})();
+</script>
+</body>
+</html>
