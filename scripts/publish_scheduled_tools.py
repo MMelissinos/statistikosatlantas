@@ -49,7 +49,10 @@ def git(*args: str, check: bool = True) -> str:
 
 
 def athens_today() -> dt.date:
-    return dt.datetime.now(ZoneInfo("Europe/Athens")).date()
+    try:
+        return dt.datetime.now(ZoneInfo("Europe/Athens")).date()
+    except Exception:  # Windows χωρίς tzdata: η τοπική ώρα του υπολογιστή είναι ώρα Ελλάδας
+        return dt.date.today()
 
 
 def queued_branches() -> list[tuple[dt.date, str, str]]:
