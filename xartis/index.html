@@ -1,6 +1,14 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0E2746">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Χάρτης">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Χάρτης της Ελλάδας με στατιστικά ανά περιφέρεια · Στατιστικός Άτλαντας</title>
 <meta name="description" content="Διαδραστικός χάρτης της Ελλάδας: πληθυσμός, γεννήσεις, ανεργία, εισόδημα, υγεία και άλλοι δείκτες ανά περιφέρεια και νομό, από ΕΛΣΤΑΤ και Eurostat.">
 <!-- atlas-seo -->
@@ -360,6 +368,16 @@ select {
 @media (prefers-reduced-motion: reduce) {
   #map .block, #map .bubble { transition: none; }
 }
+.pwa-install-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border-radius: 999px;
+  border: 1px solid var(--bubble-edge); background: transparent;
+  color: var(--bubble-edge); font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: background .15s ease, color .15s ease;
+  white-space: nowrap;
+}
+.pwa-install-btn:hover { background: var(--bubble-edge); color: #fff; }
+.pwa-install-btn[hidden] { display: none; }
 </style>
 
 <header class="atlas-site-header">
@@ -376,6 +394,7 @@ select {
       <a href="https://statistikosatlantas.com/category/odigoi/">Οδηγοί</a>
       <a href="https://statistikosatlantas.com/category/akouste/">Ακούστε</a>
       <a href="https://statistikosatlantas.com/about/">Σχετικά</a>
+      <button type="button" class="pwa-install-btn" id="pwaInstallBtn" hidden aria-label="Εγκατάσταση ως εφαρμογή">Εγκατάσταση app</button>
     </nav>
     <details class="atlas-mobile-nav">
       <summary aria-label="Άνοιγμα μενού">☰</summary>
@@ -1689,4 +1708,32 @@ async function start(saved = {}) {
 
 window.claude?.hot?.snapshot?.(() => ({ ...state }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+
+// --- PWA Service Worker & κουμπί εγκατάστασης ---
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+  });
+}
+(() => {
+  const btn = document.getElementById('pwaInstallBtn');
+  if (!btn) return;
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    btn.hidden = false;
+  });
+  btn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch {}
+    deferredPrompt = null;
+    btn.hidden = true;
+  });
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    btn.hidden = true;
+  });
+})();
 </script>

@@ -1,0 +1,34 @@
+{
+  "id": "/xartis/",
+  "name": "Στατιστικός Χάρτης Ελλάδας",
+  "short_name": "Χάρτης",
+  "description": "Διαδραστικός στατιστικός χάρτης της Ελλάδας ανά περιφέρεια και περιφερειακή ενότητα, από ΕΛΣΤΑΤ και Eurostat.",
+  "start_url": "/xartis/",
+  "scope": "/xartis/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0E2746",
+  "theme_color": "#0E2746",
+  "lang": "el",
+  "categories": ["education", "news", "reference"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

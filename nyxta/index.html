@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08111F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Νυχτερινή Γλαύκα">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Νυχτερινή Γλαύκα · Focus &amp; Ambient Studio</title>
+<meta name="description" content="Ήσυχο στούντιο συγκέντρωσης με χρονόμετρο Pomodoro, ατμοσφαιρικούς ήχους (βροχή, θάλασσα, τζάκι, βιβλιοθήκη) και ημερολόγιο μελέτης, χωρίς διαφημίσεις.">
+<link rel="canonical" href="https://tools.statistikosatlantas.com/nyxta/">
+<style>
+  :root {
+    --bg: #08111F;
+    --bg-2: #0D1B30;
+    --card: rgba(16, 30, 54, 0.78);
+    --card-border: rgba(140, 178, 230, 0.14);
+    --ink: #E8EEF7;
+    --ink-2: #A6B8D0;
+    --muted: #6E829E;
+    --gold: #F2B450;
+    --gold-soft: rgba(242, 180, 80, 0.16);
+    --blue: #5DA3F0;
+    --ok: #5EC997;
+    --radius: 18px;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--ink);
+    background:
+      radial-gradient(900px 520px at 80% -10%, rgba(242, 180, 80, 0.08), transparent 60%),
+      radial-gradient(700px 500px at 12% 18%, rgba(93, 163, 240, 0.10), transparent 60%),
+      linear-gradient(180deg, #070F1C 0%, #0B172B 55%, #08111F 100%);
+    background-attachment: fixed;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: max(18px, env(safe-area-inset-top)) 18px max(34px, env(safe-area-inset-bottom));
+    display: grid;
+    gap: 20px;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .brand img {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+  .brand-title {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+  .brand-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ink-2);
+    font-size: 0.84rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .pill-btn:hover { border-color: rgba(242, 180, 80, 0.5); color: var(--ink); background: rgba(242, 180, 80, 0.09); }
+  .pill-btn.accent { border-color: rgba(242, 180, 80, 0.55); color: var(--gold); background: var(--gold-soft); }
+  .pill-btn[hidden] { display: none; }
+
+  /* Grid layout */
+  .grid {
+    display: grid;
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 840px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 22px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    margin: 0;
+    font-size: 0.96rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  .card-hint { font-size: 0.8rem; color: var(--muted); }
+
+  /* Timer card */
+  .timer-card {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    text-align: center;
+    padding: 26px 22px;
+  }
+  .mode-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(5, 11, 22, 0.55);
+    border: 1px solid var(--card-border);
+  }
+  .mode-tab {
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .mode-tab[aria-pressed="true"] {
+    background: var(--gold);
+    color: #08111F;
+    font-weight: 700;
+  }
+
+  .dial-wrap {
+    position: relative;
+    width: min(260px, 72vw);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+  }
+  .dial-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .dial-track { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 7; }
+  .dial-progress {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 7;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.35s linear;
+    filter: drop-shadow(0 0 8px rgba(242, 180, 80, 0.35));
+  }
+  .dial-center { display: grid; gap: 4px; }
+  .time-readout {
+    font-size: clamp(2.8rem, 7vw, 3.6rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .time-state {
+    font-size: 0.84rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .timer-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn-primary {
+    border: 0;
+    background: var(--gold);
+    color: #08111F;
+    padding: 11px 28px;
+    border-radius: 999px;
+    font-size: 0.96rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(242, 180, 80, 0.25);
+    transition: transform .12s ease, filter .15s ease;
+  }
+  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost {
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ink-2);
+    padding: 10px 15px;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-ghost:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--ink); }
+
+  .chime-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .chime-toggle input { accent-color: var(--gold); }
+
+  /* Ambient mixer */
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 16px;
+  }
+  .preset-chip {
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--ink-2);
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .preset-chip:hover, .preset-chip.active {
+    border-color: rgba(242, 180, 80, 0.55);
+    background: var(--gold-soft);
+    color: var(--gold);
+  }
+
+  .sound-list { display: grid; gap: 13px; }
+  .sound-row {
+    display: grid;
+    grid-template-columns: 34px 1fr 40px;
+    align-items: center;
+    gap: 10px;
+  }
+  .sound-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    font-size: 1rem;
+  }
+  .sound-row.playing .sound-icon {
+    background: var(--gold-soft);
+    border-color: rgba(242, 180, 80, 0.45);
+  }
+  .sound-meta { display: grid; gap: 4px; }
+  .sound-name { font-size: 0.88rem; font-weight: 500; color: var(--ink); }
+  .sound-val { font-size: 0.78rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  input[type="range"] {
+    width: 100%;
+    height: 5px;
+    accent-color: var(--gold);
+    cursor: pointer;
+  }
+
+  /* Atlas Choir / Local audio strip */
+  .music-box {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--card-border);
+    display: grid;
+    gap: 10px;
+  }
+  .music-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .music-label { font-size: 0.84rem; color: var(--ink-2); font-weight: 600; }
+  .music-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .music-link {
+    font-size: 0.79rem;
+    color: var(--blue);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(93, 163, 240, 0.28);
+    background: rgba(93, 163, 240, 0.08);
+  }
+  .music-link:hover { border-color: var(--blue); }
+  .local-audio-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px dashed var(--card-border);
+    font-size: 0.8rem;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .file-label:hover { border-color: var(--gold); color: var(--ink); }
+  .file-label input { display: none; }
+  .local-track-name { font-size: 0.8rem; color: var(--gold); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Right column stack */
+  .stack { display: grid; gap: 20px; }
+
+  /* Goals */
+  .goal-form { display: flex; gap: 8px; margin-bottom: 12px; }
+  .goal-input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(5, 11, 22, 0.6);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .goal-input::placeholder { color: var(--muted); }
+  .goal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .goal-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 11px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .goal-item input[type="checkbox"] {
+    width: 17px; height: 17px; accent-color: var(--ok); cursor: pointer; flex-shrink: 0;
+  }
+  .goal-text { flex: 1; font-size: 0.9rem; word-break: break-word; }
+  .goal-item.done .goal-text { text-decoration: line-through; color: var(--muted); }
+  .goal-del {
+    border: 0; background: transparent; color: var(--muted);
+    cursor: pointer; font-size: 1rem; padding: 2px 6px; border-radius: 6px;
+  }
+  .goal-del:hover { color: var(--ink); background: rgba(255, 255, 255, 0.08); }
+  .empty-note { font-size: 0.84rem; color: var(--muted); margin: 4px 0 0; }
+
+  /* Stats log */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .kpi {
+    background: rgba(5, 11, 22, 0.5);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 11px 10px;
+    text-align: center;
+  }
+  .kpi-val { font-size: 1.35rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .kpi-lbl { font-size: 0.74rem; color: var(--muted); margin-top: 3px; }
+  .bars {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    align-items: end;
+    height: 76px;
+    padding-top: 8px;
+  }
+  .bar-col { display: grid; justify-items: center; gap: 5px; height: 100%; align-content: end; }
+  .bar-fill {
+    width: 100%;
+    max-width: 26px;
+    min-height: 4px;
+    border-radius: 6px 6px 2px 2px;
+    background: linear-gradient(180deg, var(--gold) 0%, rgba(242, 180, 80, 0.35) 100%);
+    transition: height .25s ease;
+  }
+  .bar-fill.zero { background: rgba(255, 255, 255, 0.08); }
+  .bar-day { font-size: 0.72rem; color: var(--muted); }
+
+  /* Footer */
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid var(--card-border);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .foot-links { display: flex; gap: 14px; flex-wrap: wrap; }
+  .foot a { color: var(--ink-2); text-decoration: none; }
+  .foot a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="./">
+      <img src="icon-192.png" alt="Νυχτερινή Γλαύκα" width="40" height="40">
+      <div>
+        <div class="brand-title">Νυχτερινή Γλαύκα</div>
+        <div class="brand-sub">Focus &amp; Ambient Studio</div>
+      </div>
+    </a>
+    <div class="top-actions">
+      <button type="button" class="pill-btn" id="muteAllBtn" title="Σίγαση όλων των ήχων">Σίγαση ήχων</button>
+      <button type="button" class="pill-btn accent" id="installBtn" hidden>Εγκατάσταση app</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- Left column: Timer + Ambient Mixer -->
+    <div class="stack">
+      <section class="card timer-card" aria-label="Χρονόμετρο συγκέντρωσης">
+        <div class="mode-tabs" role="group" aria-label="Διάρκεια συνεδρίας">
+          <button type="button" class="mode-tab" data-mode="focus25" aria-pressed="true">25΄ Βαθιά</button>
+          <button type="button" class="mode-tab" data-mode="focus50" aria-pressed="false">50΄ Μελέτη</button>
+          <button type="button" class="mode-tab" data-mode="break5" aria-pressed="false">5΄ Διάλειμμα</button>
+          <button type="button" class="mode-tab" data-mode="free" aria-pressed="false">∞ Ελεύθερα</button>
+        </div>
+
+        <div class="dial-wrap">
+          <svg class="dial-svg" viewBox="0 0 220 220" aria-hidden="true">
+            <circle class="dial-track" cx="110" cy="110" r="98"/>
+            <circle class="dial-progress" id="dialProgress" cx="110" cy="110" r="98" stroke-dasharray="615.75" stroke-dashoffset="0"/>
+          </svg>
+          <div class="dial-center">
+            <div class="time-readout" id="timeReadout">25:00</div>
+            <div class="time-state" id="timeState">Έτοιμο</div>
+          </div>
+        </div>
+
+        <div class="timer-controls">
+          <button type="button" class="btn-primary" id="startPauseBtn">Έναρξη</button>
+          <button type="button" class="btn-ghost" id="resetBtn">Επαναφορά</button>
+          <button type="button" class="btn-ghost" id="plus5Btn">+5΄</button>
+        </div>
+
+        <label class="chime-toggle">
+          <input type="checkbox" id="chimeToggle" checked>
+          Απαλό καμπανάκι στο τέλος της συνεδρίας
+        </label>
+      </section>
+
+      <section class="card" aria-label="Ατμοσφαιρικοί ήχοι">
+        <div class="card-head">
+          <h2 class="card-title">Ατμοσφαιρικό Στούντιο</h2>
+          <span class="card-hint">Παίζει και offline</span>
+        </div>
+
+        <div class="presets">
+          <button type="button" class="preset-chip" data-preset="rainy">Βροχερό βράδυ</button>
+          <button type="button" class="preset-chip" data-preset="aegean">Αιγαίο τη νύχτα</button>
+          <button type="button" class="preset-chip" data-preset="library">Σιωπηλή βιβλιοθήκη</button>
+          <button type="button" class="preset-chip" data-preset="silence">Σιωπή</button>
+        </div>
+
+        <div class="sound-list">
+          <div class="sound-row" data-sound="rain">
+            <div class="sound-icon" aria-hidden="true">🌧️</div>
+            <div class="sound-meta">
+              <label class="sound-name" for="vol-rain">Βροχή στο παράθυρο</label>
+              <input type="range" id="vol-rain" min="0" max="100" value="0">
+            </div>
+            <span class="sound-val" id="val-rain">0%</span>
+          </div>
+
+          <div class="sound-row" data-sound="sea">
+            <div class="sound-icon" aria-hidden="true">🌊</div>
+            <div class="sound-meta">
+              <label class="sound-name" for="vol-sea">Νυχτερινή θάλασσα</label>
+              <input type="range" id="vol-sea" min="0" max="100" value="0">
+            </div>
+            <span class="sound-val" id="val-sea">0%</span>
+          </div>
+
+          <div class="sound-row" data-sound="fire">
+            <div class="sound-icon" aria-hidden="true">🔥</div>
+            <div class="sound-meta">
+              <label class="sound-name" for="vol-fire">Τζάκι</label>
+              <input type="range" id="vol-fire" min="0" max="100" value="0">
+            </div>
+            <span class="sound-val" id="val-fire">0%</span>
+          </div>
+
+          <div class="sound-row" data-sound="brown">
+            <div class="sound-icon" aria-hidden="true">🌬️</div>
+            <div class="sound-meta">
+              <label class="sound-name" for="vol-brown">Βαθύς νυχτερινός θόρυβος</label>
+              <input type="range" id="vol-brown" min="0" max="100" value="0">
+            </div>
+            <span class="sound-val" id="val-brown">0%</span>
+          </div>
+
+          <div class="sound-row" data-sound="clock">
+            <div class="sound-icon" aria-hidden="true">🕰️</div>
+            <div class="sound-meta">
+              <label class="sound-name" for="vol-clock">Ρολόι βιβλιοθήκης</label>
+              <input type="range" id="vol-clock" min="0" max="100" value="0">
+            </div>
+            <span class="sound-val" id="val-clock">0%</span>
+          </div>
+        </div>
+
+        <div class="music-box">
+          <div class="music-head">
+            <span class="music-label">Μουσική υπόκρουση · Atlas Choir</span>
+            <div class="music-links">
+              <a class="music-link" href="https://www.youtube.com/@atlaschoirmusic" target="_blank" rel="noopener">YouTube @atlaschoirmusic ↗</a>
+            </div>
+          </div>
+          <div class="local-audio-row">
+            <label class="file-label">
+              <span>+ Φόρτωσε τοπικό MP3 / WAV</span>
+              <input type="file" id="localAudioInput" accept="audio/*">
+            </label>
+            <button type="button" class="pill-btn" id="localPlayBtn" hidden>Αναπαραγωγή</button>
+            <span class="local-track-name" id="localTrackName"></span>
+          </div>
+          <div class="sound-row" id="localVolRow" hidden>
+            <div class="sound-icon" aria-hidden="true">🎵</div>
+            <div class="sound-meta">
+              <label class="sound-name" for="vol-local">Ένταση μουσικής (loop)</label>
+              <input type="range" id="vol-local" min="0" max="100" value="45">
+            </div>
+            <span class="sound-val" id="val-local">45%</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right column: Goals + Focus Log -->
+    <div class="stack">
+      <section class="card" aria-label="Στόχοι συνεδρίας">
+        <div class="card-head">
+          <h2 class="card-title">Στόχοι της συνεδρίας</h2>
+          <button type="button" class="pill-btn" id="clearDoneBtn" hidden>Καθαρισμός</button>
+        </div>
+        <form class="goal-form" id="goalForm">
+          <input class="goal-input" id="goalInput" type="text" maxlength="90" placeholder="Τι θέλεις να τελειώσεις απόψε;" autocomplete="off">
+          <button type="submit" class="btn-ghost">Προσθήκη</button>
+        </form>
+        <ul class="goal-list" id="goalList"></ul>
+        <p class="empty-note" id="goalEmpty">Γράψε 1–3 ξεκάθαρους στόχους για να μείνεις συγκεντρωμένος.</p>
+      </section>
+
+      <section class="card" aria-label="Ημερολόγιο συγκέντρωσης">
+        <div class="card-head">
+          <h2 class="card-title">Ημερολόγιο συγκέντρωσης</h2>
+          <span class="card-hint">Αποθηκεύεται μόνο στη συσκευή σου</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-val" id="kpiToday">0΄</div>
+            <div class="kpi-lbl">Σήμερα</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" id="kpiSessions">0</div>
+            <div class="kpi-lbl">Συνεδρίες</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" id="kpiStreak">0</div>
+            <div class="kpi-lbl">Σερί ημερών</div>
+          </div>
+        </div>
+        <div class="bars" id="weekBars" aria-label="Λεπτά συγκέντρωσης τελευταίων 7 ημερών"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <span>Μέρος του σύμπαντος της Γλαύκας · 0 διαφημίσεις, 0 cookies παρακολούθησης</span>
+    <nav class="foot-links" aria-label="Σύνδεσμοι Άτλαντα">
+      <a href="https://statistikosatlantas.com/">Στατιστικός Άτλαντας</a>
+      <a href="https://tools.statistikosatlantas.com/xartis/">Χάρτης</a>
+      <a href="https://tools.statistikosatlantas.com/">Εργαλεία</a>
+      <a href="https://www.youtube.com/@atlaschoirmusic" target="_blank" rel="noopener">Atlas Choir</a>
+    </nav>
+  </footer>
+</div>
+
+<audio id="localAudioEl" loop></audio>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  // =========================================================================
+  // 1. ΧΡΟΝΟΜΕΤΡΟ ΣΥΓΚΕΝΤΡΩΣΗΣ
+  // =========================================================================
+  const MODES = {
+    focus25: { label: 'Βαθιά συγκέντρωση', seconds: 25 * 60, countUp: false, loggable: true },
+    focus50: { label: 'Μακρά μελέτη',      seconds: 50 * 60, countUp: false, loggable: true },
+    break5:  { label: 'Σύντομο διάλειμμα', seconds:  5 * 60, countUp: false, loggable: false },
+    free:    { label: 'Ελεύθερη νύχτα',    seconds:       0, countUp: true,  loggable: true }
+  };
+  const CIRC = 2 * Math.PI * 98;
+  let currentMode = 'focus25';
+  let totalSec = MODES.focus25.seconds;
+  let currentSec = totalSec;
+  let running = false;
+  let tickId = null;
+  let sessionElapsed = 0;
+
+  function fmtTime(sec) {
+    const s = Math.max(0, Math.floor(sec));
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const r = s % 60;
+    const mm = String(m).padStart(2, '0');
+    const rr = String(r).padStart(2, '0');
+    return h > 0 ? `${h}:${mm}:${rr}` : `${mm}:${rr}`;
+  }
+
+  function renderTimer() {
+    const mode = MODES[currentMode];
+    $('timeReadout').textContent = fmtTime(currentSec);
+    if (mode.countUp) {
+      const frac = (currentSec % 3600) / 3600;
+      $('dialProgress').style.strokeDashoffset = String(CIRC * (1 - frac));
+    } else {
+      const frac = totalSec > 0 ? currentSec / totalSec : 0;
+      $('dialProgress').style.strokeDashoffset = String(CIRC * (1 - frac));
+    }
+    $('startPauseBtn').textContent = running ? 'Παύση' : (sessionElapsed > 0 ? 'Συνέχεια' : 'Έναρξη');
+    $('timeState').textContent = running ? mode.label : (sessionElapsed > 0 ? 'Σε παύση' : 'Έτοιμο');
+    document.title = running
+      ? `${fmtTime(currentSec)} · Νυχτερινή Γλαύκα`
+      : 'Νυχτερινή Γλαύκα · Focus & Ambient Studio';
+  }
+
+  function stopTimer(logIfFree = false) {
+    if (tickId) { clearInterval(tickId); tickId = null; }
+    running = false;
+    if (logIfFree && currentMode === 'free' && sessionElapsed >= 60) {
+      logFocusMinutes(Math.round(sessionElapsed / 60));
+      sessionElapsed = 0;
+    }
+    renderTimer();
+  }
+
+  function switchMode(modeKey) {
+    stopTimer(true);
+    currentMode = modeKey;
+    const mode = MODES[modeKey];
+    totalSec = mode.seconds;
+    currentSec = mode.seconds;
+    sessionElapsed = 0;
+    document.querySelectorAll('.mode-tab').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.mode === modeKey));
+    });
+    $('plus5Btn').hidden = mode.countUp;
+    renderTimer();
+  }
+
+  function playChime() {
+    if (!$('chimeToggle').checked) return;
+    const ctx = ensureAudioCtx();
+    const now = ctx.currentTime;
+    [528, 792, 1056].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + i * 0.14);
+      gain.gain.setValueAtTime(0.0001, now + i * 0.14);
+      gain.gain.exponentialRampToValueAtTime(0.14 / (i + 1), now + i * 0.14 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.14 + 2.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now + i * 0.14);
+      osc.stop(now + i * 0.14 + 2.5);
+    });
+  }
+
+  document.querySelectorAll('.mode-tab').forEach((btn) => {
+    btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+  });
+
+  $('startPauseBtn').addEventListener('click', () => {
+    if (running) {
+      stopTimer(false);
+      return;
+    }
+    running = true;
+    const mode = MODES[currentMode];
+    tickId = setInterval(() => {
+      sessionElapsed++;
+      if (mode.countUp) {
+        currentSec++;
+      } else {
+        currentSec--;
+        if (currentSec <= 0) {
+          currentSec = 0;
+          stopTimer(false);
+          playChime();
+          if (mode.loggable) {
+            logFocusMinutes(Math.max(1, Math.round(totalSec / 60)));
+          }
+          sessionElapsed = 0;
+          $('timeState').textContent = 'Ολοκληρώθηκε';
+          return;
+        }
+      }
+      renderTimer();
+    }, 1000);
+    renderTimer();
+  });
+
+  $('resetBtn').addEventListener('click', () => {
+    stopTimer(true);
+    totalSec = MODES[currentMode].seconds;
+    currentSec = totalSec;
+    sessionElapsed = 0;
+    renderTimer();
+  });
+
+  $('plus5Btn').addEventListener('click', () => {
+    if (MODES[currentMode].countUp) return;
+    totalSec += 300;
+    currentSec += 300;
+    renderTimer();
+  });
+
+  // =========================================================================
+  // 2. ΜΙΞΕΡ AMBIENT ΗΧΩΝ (100% WEB AUDIO API — 0 ΕΞΩΤΕΡΙΚΑ ΑΡΧΕΙΑ)
+  // =========================================================================
+  let audioCtx = null;
+  const channels = {};
+
+  function ensureAudioCtx() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+    return audioCtx;
+  }
+
+  function createNoiseBuffer(ctx, kind = 'pink', seconds = 4) {
+    const len = ctx.sampleRate * seconds;
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    if (kind === 'brown') {
+      let last = 0;
+      for (let i = 0; i < len; i++) {
+        const white = Math.random() * 2 - 1;
+        last = (last + 0.02 * white) / 1.02;
+        data[i] = last * 3.2;
+      }
+    } else {
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + w * 0.0555179;
+        b1 = 0.99332 * b1 + w * 0.0750759;
+        b2 = 0.96900 * b2 + w * 0.1538520;
+        b3 = 0.86650 * b3 + w * 0.3104856;
+        b4 = 0.55000 * b4 + w * 0.5329522;
+        b5 = -0.7616 * b5 - w * 0.0168980;
+        data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) * 0.05;
+        b6 = w * 0.115926;
+      }
+    }
+    return buf;
+  }
+
+  function initChannel(name) {
+    if (channels[name]) return channels[name];
+    const ctx = ensureAudioCtx();
+    const masterGain = ctx.createGain();
+    masterGain.gain.value = 0;
+    masterGain.connect(ctx.destination);
+
+    if (name === 'rain') {
+      const src = ctx.createBufferSource();
+      src.buffer = createNoiseBuffer(ctx, 'pink', 5);
+      src.loop = true;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 420;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 2600;
+      src.connect(hp).connect(lp).connect(masterGain);
+      src.start();
+    } else if (name === 'sea') {
+      const src = ctx.createBufferSource();
+      src.buffer = createNoiseBuffer(ctx, 'pink', 6);
+      src.loop = true;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 620;
+      const waveGain = ctx.createGain(); waveGain.gain.value = 0.55;
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.11;
+      const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.38;
+      lfo.connect(lfoGain).connect(waveGain.gain);
+      src.connect(lp).connect(waveGain).connect(masterGain);
+      src.start(); lfo.start();
+    } else if (name === 'fire') {
+      const src = ctx.createBufferSource();
+      src.buffer = createNoiseBuffer(ctx, 'brown', 5);
+      src.loop = true;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 260;
+      src.connect(lp).connect(masterGain);
+      src.start();
+      // Gentle random hearth crackles
+      setInterval(() => {
+        if (!audioCtx || audioCtx.state !== 'running' || masterGain.gain.value < 0.01) return;
+        if (Math.random() > 0.45) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(900 + Math.random() * 1400, now);
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(0.08, now + 0.004);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+        osc.connect(g).connect(masterGain);
+        osc.start(now); osc.stop(now + 0.03);
+      }, 280);
+    } else if (name === 'brown') {
+      const src = ctx.createBufferSource();
+      src.buffer = createNoiseBuffer(ctx, 'brown', 5);
+      src.loop = true;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 340;
+      src.connect(lp).connect(masterGain);
+      src.start();
+    } else if (name === 'clock') {
+      let tick = true;
+      setInterval(() => {
+        if (!audioCtx || audioCtx.state !== 'running' || masterGain.gain.value < 0.01) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(tick ? 920 : 740, now);
+        tick = !tick;
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(0.16, now + 0.003);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.038);
+        osc.connect(g).connect(masterGain);
+        osc.start(now); osc.stop(now + 0.045);
+      }, 1000);
+    }
+
+    channels[name] = { gain: masterGain };
+    return channels[name];
+  }
+
+  const SOUND_NAMES = ['rain', 'sea', 'fire', 'brown', 'clock'];
+  const SOUND_SCALE = { rain: 0.48, sea: 0.52, fire: 0.55, brown: 0.42, clock: 0.35 };
+
+  function setSoundVolume(name, pct) {
+    const val = Math.max(0, Math.min(100, Number(pct) || 0));
+    $(`vol-${name}`).value = String(val);
+    $(`val-${name}`).textContent = `${val}%`;
+    const row = document.querySelector(`.sound-row[data-sound="${name}"]`);
+    if (row) row.classList.toggle('playing', val > 0);
+    if (val > 0 || channels[name]) {
+      const ch = initChannel(name);
+      const ctx = ensureAudioCtx();
+      const target = (val / 100) * SOUND_SCALE[name];
+      ch.gain.gain.setTargetAtTime(target, ctx.currentTime, 0.08);
+    }
+  }
+
+  SOUND_NAMES.forEach((name) => {
+    $(`vol-${name}`).addEventListener('input', (e) => {
+      document.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
+      setSoundVolume(name, e.target.value);
+    });
+  });
+
+  const PRESETS = {
+    rainy:   { rain: 55, sea: 0,  fire: 35, brown: 15, clock: 0  },
+    aegean:  { rain: 0,  sea: 60, fire: 0,  brown: 20, clock: 0  },
+    library: { rain: 22, sea: 0,  fire: 20, brown: 10, clock: 32 },
+    silence: { rain: 0,  sea: 0,  fire: 0,  brown: 0,  clock: 0  }
+  };
+
+  document.querySelectorAll('.preset-chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const p = PRESETS[btn.dataset.preset];
+      if (!p) return;
+      document.querySelectorAll('.preset-chip').forEach((c) => c.classList.toggle('active', c === btn && btn.dataset.preset !== 'silence'));
+      SOUND_NAMES.forEach((n) => setSoundVolume(n, p[n]));
+    });
+  });
+
+  $('muteAllBtn').addEventListener('click', () => {
+    document.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
+    SOUND_NAMES.forEach((n) => setSoundVolume(n, 0));
+    if (!localAudio.paused) {
+      localAudio.pause();
+      $('localPlayBtn').textContent = 'Αναπαραγωγή';
+    }
+  });
+
+  // Local MP3/WAV player (Atlas Choir / personal audio)
+  const localAudio = $('localAudioEl');
+  let localObjUrl = null;
+  localAudio.volume = 0.45;
+
+  $('localAudioInput').addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (localObjUrl) URL.revokeObjectURL(localObjUrl);
+    localObjUrl = URL.createObjectURL(file);
+    localAudio.src = localObjUrl;
+    $('localTrackName').textContent = file.name.replace(/\.[^.]+$/, '');
+    $('localPlayBtn').hidden = false;
+    $('localVolRow').hidden = false;
+    localAudio.play().then(() => {
+      $('localPlayBtn').textContent = 'Παύση μουσικής';
+    }).catch(() => {
+      $('localPlayBtn').textContent = 'Αναπαραγωγή';
+    });
+  });
+
+  $('localPlayBtn').addEventListener('click', () => {
+    if (localAudio.paused) {
+      localAudio.play().catch(() => {});
+      $('localPlayBtn').textContent = 'Παύση μουσικής';
+    } else {
+      localAudio.pause();
+      $('localPlayBtn').textContent = 'Αναπαραγωγή';
+    }
+  });
+
+  $('vol-local').addEventListener('input', (e) => {
+    const v = Number(e.target.value) || 0;
+    localAudio.volume = v / 100;
+    $('val-local').textContent = `${v}%`;
+  });
+
+  // =========================================================================
+  // 3. ΣΤΟΧΟΙ ΣΥΝΕΔΡΙΑΣ (localStorage)
+  // =========================================================================
+  const GOALS_KEY = 'nyxta_goals_v1';
+  let goals = [];
+  try { goals = JSON.parse(localStorage.getItem(GOALS_KEY) || '[]'); } catch { goals = []; }
+
+  function saveGoals() {
+    try { localStorage.setItem(GOALS_KEY, JSON.stringify(goals)); } catch {}
+  }
+
+  function renderGoals() {
+    const ul = $('goalList');
+    ul.innerHTML = '';
+    $('goalEmpty').hidden = goals.length > 0;
+    $('clearDoneBtn').hidden = !goals.some((g) => g.done);
+    goals.forEach((g, idx) => {
+      const li = document.createElement('li');
+      li.className = 'goal-item' + (g.done ? ' done' : '');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!g.done;
+      cb.setAttribute('aria-label', g.text);
+      cb.addEventListener('change', () => {
+        goals[idx].done = cb.checked;
+        saveGoals();
+        renderGoals();
+      });
+      const span = document.createElement('span');
+      span.className = 'goal-text';
+      span.textContent = g.text;
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'goal-del';
+      del.setAttribute('aria-label', 'Διαγραφή στόχου');
+      del.textContent = '×';
+      del.addEventListener('click', () => {
+        goals.splice(idx, 1);
+        saveGoals();
+        renderGoals();
+      });
+      li.append(cb, span, del);
+      ul.appendChild(li);
+    });
+  }
+
+  $('goalForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const txt = $('goalInput').value.trim();
+    if (!txt) return;
+    if (goals.length >= 6) goals.shift();
+    goals.push({ text: txt, done: false });
+    $('goalInput').value = '';
+    saveGoals();
+    renderGoals();
+  });
+
+  $('clearDoneBtn').addEventListener('click', () => {
+    goals = goals.filter((g) => !g.done);
+    saveGoals();
+    renderGoals();
+  });
+
+  // =========================================================================
+  // 4. ΗΜΕΡΟΛΟΓΙΟ ΣΥΓΚΕΝΤΡΩΣΗΣ (localStorage, 7 ημέρες + streak)
+  // =========================================================================
+  const LOG_KEY = 'nyxta_focus_log_v1';
+  const DAY_LABELS = ['Κυ', 'Δε', 'Τρ', 'Τε', 'Πε', 'Πα', 'Σα'];
+
+  function dayKey(d = new Date()) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function loadLog() {
+    try { return JSON.parse(localStorage.getItem(LOG_KEY) || '{"days":{},"sessions":0}'); }
+    catch { return { days: {}, sessions: 0 }; }
+  }
+
+  function logFocusMinutes(mins) {
+    const log = loadLog();
+    const k = dayKey();
+    log.days[k] = (log.days[k] || 0) + mins;
+    log.sessions = (log.sessions || 0) + 1;
+    try { localStorage.setItem(LOG_KEY, JSON.stringify(log)); } catch {}
+    renderLog();
+  }
+
+  function calcStreak(daysObj) {
+    let streak = 0;
+    const d = new Date();
+    if (!daysObj[dayKey(d)]) d.setDate(d.getDate() - 1);
+    while (daysObj[dayKey(d)] > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function renderLog() {
+    const log = loadLog();
+    const todayMins = log.days[dayKey()] || 0;
+    $('kpiToday').textContent = `${todayMins}΄`;
+    $('kpiSessions').textContent = String(log.sessions || 0);
+    $('kpiStreak').textContent = String(calcStreak(log.days));
+
+    const container = $('weekBars');
+    container.innerHTML = '';
+    const last7 = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      last7.push({
+        label: DAY_LABELS[d.getDay()],
+        mins: log.days[dayKey(d)] || 0
+      });
+    }
+    const maxMins = Math.max(25, ...last7.map((x) => x.mins));
+    last7.forEach((item) => {
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+      col.title = `${item.label}: ${item.mins} λεπτά`;
+      const bar = document.createElement('div');
+      bar.className = 'bar-fill' + (item.mins === 0 ? ' zero' : '');
+      bar.style.height = item.mins === 0 ? '5px' : `${Math.max(10, Math.round((item.mins / maxMins) * 52))}px`;
+      const lbl = document.createElement('span');
+      lbl.className = 'bar-day';
+      lbl.textContent = item.label;
+      col.append(bar, lbl);
+      container.appendChild(col);
+    });
+  }
+
+  // =========================================================================
+  // 5. PWA SERVICE WORKER & ΕΓΚΑΤΑΣΤΑΣΗ
+  // =========================================================================
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+    });
+  }
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    $('installBtn').hidden = false;
+  });
+  $('installBtn').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch {}
+    deferredPrompt = null;
+    $('installBtn').hidden = true;
+  });
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    $('installBtn').hidden = true;
+  });
+
+  // Init
+  renderTimer();
+  renderGoals();
+  renderLog();
+})();
+</script>
+</body>
+</html>
