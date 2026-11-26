@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#091A20">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ραντάρ">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Ραντάρ · Υποχρεώσεις &amp; Συνδρομές</title>
+<style>
+  @font-face { font-family: "GFS Didot"; src: url(../xartis/fonts/GFSDidot-Regular.ttf) format("truetype"); font-display: swap; }
+  @font-face { font-family: "Commissioner"; src: url(../xartis/fonts/Commissioner-GrLat.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+
+  :root {
+    --bg: #091A20;
+    --surface: rgba(14, 38, 46, 0.84);
+    --surface-solid: #0E262E;
+    --border: rgba(76, 224, 178, 0.14);
+    --border-strong: rgba(76, 224, 178, 0.30);
+    --ink: #ECF6F4;
+    --ink-2: #A6C3BE;
+    --muted: #6C8E89;
+    --mint: #4CE0B2;
+    --mint-soft: rgba(76, 224, 178, 0.14);
+    --gold: #F2B450;
+    --gold-soft: rgba(242, 180, 80, 0.15);
+    --danger: #F06C6C;
+    --danger-soft: rgba(240, 108, 108, 0.15);
+    --radius: 15px;
+    --font-sans: "Commissioner", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "GFS Didot", Georgia, serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background:
+      radial-gradient(850px 460px at 85% -10%, rgba(76, 224, 178, 0.09), transparent 60%),
+      radial-gradient(700px 480px at 10% 15%, rgba(242, 180, 80, 0.05), transparent 60%),
+      linear-gradient(180deg, #07151A 0%, #0C232A 55%, #091A20 100%);
+    background-attachment: fixed;
+    line-height: 1.48;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+  svg.ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: max(18px, env(safe-area-inset-top)) 18px max(40px, env(safe-area-inset-bottom));
+    display: grid;
+    gap: 18px;
+  }
+
+  /* Header */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img { width: 38px; height: 38px; border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  .brand-title { font-family: var(--font-serif); font-size: 1.32rem; line-height: 1.1; }
+  .brand-sub { font-size: 0.74rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+  .top-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+    color: var(--ink-2); font-size: 0.84rem; font-weight: 500; cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .btn:hover { border-color: var(--border-strong); color: var(--ink); background: rgba(255,255,255,0.06); }
+  .btn.primary { border-color: transparent; background: var(--mint); color: #07151A; font-weight: 700; }
+  .btn.primary:hover { filter: brightness(1.07); }
+  .btn.accent { border-color: rgba(242,180,80,0.5); background: var(--gold-soft); color: var(--gold); }
+  .btn.sm { padding: 5px 10px; font-size: 0.78rem; }
+  .btn[hidden] { display: none; }
+
+  /* KPIs */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 760px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px 16px;
+  }
+  .kpi-lbl { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi-val { font-size: 1.55rem; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .kpi.danger .kpi-val { color: var(--danger); }
+  .kpi.gold .kpi-val { color: var(--gold); }
+  .kpi.mint .kpi-val { color: var(--mint); }
+  .kpi-sub { font-size: 0.76rem; color: var(--ink-2); margin-top: 3px; }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.025);
+    color: var(--ink-2);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.81rem;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .chip[aria-pressed="true"] { border-color: rgba(76,224,178,0.55); background: var(--mint-soft); color: var(--mint); font-weight: 600; }
+  .search-wrap { display: flex; gap: 8px; align-items: center; }
+  .input, .select {
+    background: rgba(5, 16, 20, 0.65);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.87rem;
+    color: var(--ink);
+  }
+  .input::placeholder { color: var(--muted); }
+  .select option { background: #0E262E; color: var(--ink); }
+
+  /* Main layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .card-title { margin: 0; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.02em; }
+
+  /* Item list */
+  .items { display: grid; gap: 10px; }
+  .item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 13px 14px;
+    border-radius: 13px;
+    background: rgba(5, 16, 20, 0.45);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--mint);
+  }
+  .item.urgent { border-left-color: var(--danger); background: rgba(240, 108, 108, 0.06); }
+  .item.soon   { border-left-color: var(--gold);   background: rgba(242, 180, 80, 0.05); }
+  @media (max-width: 600px) {
+    .item { grid-template-columns: 1fr; gap: 10px; }
+  }
+
+  .days-badge {
+    min-width: 72px;
+    text-align: center;
+    padding: 7px 8px;
+    border-radius: 10px;
+    background: var(--mint-soft);
+    color: var(--mint);
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+  }
+  .item.urgent .days-badge { background: var(--danger-soft); color: var(--danger); }
+  .item.soon   .days-badge { background: var(--gold-soft);   color: var(--gold); }
+  .days-badge small { display: block; font-weight: 500; font-size: 0.68rem; opacity: 0.88; margin-top: 2px; }
+
+  .item-main { min-width: 0; }
+  .item-title { font-weight: 600; font-size: 0.96rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .cat-tag {
+    font-size: 0.71rem; font-weight: 500; color: var(--ink-2);
+    padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+  .item-meta { font-size: 0.8rem; color: var(--muted); margin-top: 4px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .item-cost { color: var(--ink); font-weight: 600; }
+  .item-note { font-size: 0.79rem; color: var(--ink-2); margin-top: 4px; opacity: 0.9; }
+
+  .item-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  @media (max-width: 600px) { .item-actions { justify-content: flex-start; } }
+
+  .empty {
+    text-align: center;
+    padding: 34px 16px;
+    color: var(--muted);
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+  }
+
+  /* Cost breakdown */
+  .cat-bars { display: grid; gap: 11px; }
+  .cat-bar-row { display: grid; gap: 5px; }
+  .cat-bar-top { display: flex; justify-content: space-between; font-size: 0.82rem; }
+  .cat-bar-top b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cat-bar-track { height: 7px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .cat-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--mint), #2CA889); }
+
+  /* Quick templates */
+  .tpl-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+
+  /* Modal */
+  dialog {
+    background: var(--surface-solid);
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 22px;
+    width: min(500px, calc(100vw - 28px));
+    box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+  }
+  dialog::backdrop { background: rgba(4, 12, 16, 0.72); backdrop-filter: blur(4px); }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .modal-title { margin: 0; font-size: 1.05rem; font-weight: 600; }
+  .form-grid { display: grid; gap: 12px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+  .field { display: grid; gap: 5px; }
+  .field label { font-size: 0.79rem; color: var(--ink-2); font-weight: 500; }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+
+  /* Lock Screen */
+  .lock-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: radial-gradient(700px 420px at 50% 25%, rgba(76,224,178,0.10), transparent 65%), #07151A;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+  }
+  .lock-screen[hidden] { display: none; }
+  .lock-box {
+    width: min(360px, 100%);
+    background: var(--surface-solid);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 28px 24px;
+    text-align: center;
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+  }
+  .lock-box img { width: 64px; height: 64px; border-radius: 16px; }
+  .lock-err { color: var(--danger); font-size: 0.82rem; min-height: 1.2em; }
+
+  .sec-box { display: grid; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .sec-note { font-size: 0.78rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Optional PIN Lock Screen -->
+<div class="lock-screen" id="lockScreen" hidden>
+  <form class="lock-box" id="unlockForm">
+    <img src="icon-192.png" alt="Ραντάρ" width="64" height="64">
+    <div>
+      <div class="brand-title">Ραντάρ Υποχρεώσεων</div>
+      <div class="brand-sub" style="margin-top:4px">Ιδιωτική πρόσβαση</div>
+    </div>
+    <input class="input" id="unlockPin" type="password" inputmode="numeric" autocomplete="off" placeholder="Εισαγωγή PIN" style="width:100%;text-align:center;letter-spacing:0.25em;font-size:1.1rem">
+    <button type="submit" class="btn primary" style="width:100%;justify-content:center">Ξεκλείδωμα</button>
+    <div class="lock-err" id="unlockErr"></div>
+  </form>
+</div>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <img src="icon-192.png" alt="Ραντάρ Γλαύκας" width="38" height="38">
+      <div>
+        <div class="brand-title">Ραντάρ Υποχρεώσεων</div>
+        <div class="brand-sub">Ιδιωτικό · 100% τοπικά στη συσκευή</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button type="button" class="btn primary" id="addBtn">
+        <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Νέα καταχώριση
+      </button>
+      <button type="button" class="btn" id="icsAllBtn" title="Εξαγωγή όλων σε Ημερολόγιο (.ics)">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        .ics
+      </button>
+      <button type="button" class="btn" id="settingsBtn" title="Backup, Μεταφορά & Κλείδωμα PIN">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Backup / PIN
+      </button>
+      <button type="button" class="btn" id="lockNowBtn" hidden title="Κλείδωμα τώρα">Κλείδωμα</button>
+      <button type="button" class="btn accent" id="installBtn" hidden>Εγκατάσταση app</button>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Σύνοψη">
+    <div class="kpi danger">
+      <div class="kpi-lbl">Επείγοντα (≤ 15 ημ.)</div>
+      <div class="kpi-val" id="kpiUrgent">0</div>
+      <div class="kpi-sub" id="kpiUrgentSub">Καμία επείγουσα</div>
+    </div>
+    <div class="kpi gold">
+      <div class="kpi-lbl">Επόμενες 60 ημέρες</div>
+      <div class="kpi-val" id="kpiSoon">0</div>
+      <div class="kpi-sub" id="kpiSoonCost">0 €</div>
+    </div>
+    <div class="kpi mint">
+      <div class="kpi-lbl">Μηνιαίο ισοδύναμο</div>
+      <div class="kpi-val" id="kpiMonthly">0 €</div>
+      <div class="kpi-sub">Πάγια &amp; συνδρομές</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Ετήσιο σύνολο</div>
+      <div class="kpi-val" id="kpiYearly">0 €</div>
+      <div class="kpi-sub" id="kpiCount">0 ενεργές εγγραφές</div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="chips" id="catChips" role="group" aria-label="Φίλτρο κατηγορίας"></div>
+    <div class="search-wrap">
+      <input class="input" id="searchInput" type="search" placeholder="Αναζήτηση…" aria-label="Αναζήτηση">
+      <select class="select" id="sortSelect" aria-label="Ταξινόμηση">
+        <option value="date">Πιο σύντομα πρώτα</option>
+        <option value="cost">Μεγαλύτερο κόστος</option>
+        <option value="title">Αλφαβητικά</option>
+      </select>
+    </div>
+  </div>
+
+  <main class="layout">
+    <section class="card" aria-label="Λίστα υποχρεώσεων">
+      <div class="card-head">
+        <h2 class="card-title">Επερχόμενες υποχρεώσεις &amp; συνδρομές</h2>
+        <span class="sec-note" id="shownCount"></span>
+      </div>
+      <div class="items" id="itemsList"></div>
+    </section>
+
+    <aside class="card" aria-label="Κατανομή κόστους">
+      <div class="card-head">
+        <h2 class="card-title">Ετήσιο κόστος ανά κατηγορία</h2>
+      </div>
+      <div class="cat-bars" id="catBars"></div>
+      <div class="sec-box">
+        <span class="sec-note">Όλα τα δεδομένα αποθηκεύονται αποκλειστικά στη συσκευή σου (<code>localStorage</code>) και δεν ανεβαίνουν σε κανέναν server. Χρησιμοποίησε «Backup / PIN» για κρυπτογραφημένο αντίγραφο ή μεταφορά μεταξύ υπολογιστή και κινητού.</span>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- Add / Edit Dialog -->
+<dialog id="itemDialog">
+  <div class="modal-head">
+    <h3 class="modal-title" id="dialogTitle">Νέα καταχώριση</h3>
+    <button type="button" class="btn sm" id="closeDialogBtn">×</button>
+  </div>
+  <div class="tpl-grid" id="tplGrid" aria-label="Γρήγορα πρότυπα"></div>
+  <form class="form-grid" id="itemForm">
+    <input type="hidden" id="editId">
+    <div class="field">
+      <label for="fTitle">Τίτλος</label>
+      <input class="input" id="fTitle" required maxlength="80" placeholder="π.χ. Ασφάλεια αυτοκινήτου">
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label for="fCat">Κατηγορία</label>
+        <select class="select" id="fCat">
+          <option value="vehicle">Όχημα</option>
+          <option value="subs">Συνδρομές</option>
+          <option value="docs">Έγγραφα</option>
+          <option value="home">Σπίτι &amp; Λογαριασμοί</option>
+          <option value="other">Εγγυήσεις &amp; Άλλα</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fDate">Ημερομηνία λήξης / πληρωμής</label>
+        <input class="input" id="fDate" type="date" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label for="fCost">Κόστος (€, προαιρετικό)</label>
+        <input class="input" id="fCost" type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+      <div class="field">
+        <label for="fFreq">Επανάληψη</label>
+        <select class="select" id="fFreq">
+          <option value="yearly">Ετήσια</option>
+          <option value="monthly">Μηνιαία</option>
+          <option value="semiannual">Εξαμηνιαία</option>
+          <option value="quarterly">Τριμηνιαία</option>
+          <option value="biennial">Κάθε 2 χρόνια (π.χ. ΚΤΕΟ)</option>
+          <option value="once">Μία φορά</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="fNote">Σημείωση (προαιρετική)</label>
+      <input class="input" id="fNote" maxlength="140" placeholder="π.χ. Αρ. συμβολαίου, εταιρεία, κωδικός πληρωμής">
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="cancelItemBtn">Ακύρωση</button>
+      <button type="submit" class="btn primary">Αποθήκευση</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Settings / Backup / PIN Dialog -->
+<dialog id="settingsDialog">
+  <div class="modal-head">
+    <h3 class="modal-title">Backup, Μεταφορά &amp; Ασφάλεια</h3>
+    <button type="button" class="btn sm" id="closeSettingsBtn">×</button>
+  </div>
+  <div class="form-grid">
+    <div class="field">
+      <label>Κρυπτογραφημένο Backup (AES-256-GCM)</label>
+      <span class="sec-note">Κατέβασε κρυπτογραφημένο αρχείο <code>.radar.enc</code> για το Google Drive ή για μεταφορά στο κινητό.</span>
+      <div class="form-row" style="margin-top:6px">
+        <input class="input" id="encPass" type="password" placeholder="Κωδικός κρυπτογράφησης">
+        <button type="button" class="btn primary" id="exportEncBtn" style="justify-content:center">Εξαγωγή .radar.enc</button>
+      </div>
+    </div>
+
+    <div class="sec-box">
+      <label style="font-size:0.79rem;color:var(--ink-2);font-weight:500">Εισαγωγή από Backup (.radar.enc ή .json)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <label class="btn" style="cursor:pointer">
+          Επιλογή αρχείου backup
+          <input type="file" id="importFile" accept=".enc,.json" style="display:none">
+        </label>
+        <button type="button" class="btn" id="exportJsonBtn">Απλή εξαγωγή .json</button>
+      </div>
+      <span class="sec-note" id="backupMsg"></span>
+    </div>
+
+    <div class="sec-box">
+      <label style="font-size:0.79rem;color:var(--ink-2);font-weight:500">Κλείδωμα εφαρμογής με PIN</label>
+      <div class="form-row">
+        <input class="input" id="newPinInput" type="password" inputmode="numeric" placeholder="Νέο PIN (4+ ψηφία)">
+        <button type="button" class="btn" id="savePinBtn" style="justify-content:center">Ενεργοποίηση PIN</button>
+      </div>
+      <button type="button" class="btn sm" id="removePinBtn" hidden style="justify-self:start">Αφαίρεση κλειδώματος PIN</button>
+      <span class="sec-note" id="pinMsg"></span>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const DATA_KEY = 'radar_items_v1';
+  const PIN_KEY  = 'radar_pin_hash_v1';
+
+  const CATS = {
+    all:     'Όλα',
+    vehicle: 'Όχημα',
+    subs:    'Συνδρομές',
+    docs:    'Έγγραφα',
+    home:    'Σπίτι & Λογαριασμοί',
+    other:   'Εγγυήσεις & Άλλα'
+  };
+  const FREQ_LABEL = {
+    once: 'Μία φορά',
+    monthly: 'Μηνιαία',
+    quarterly: 'Τριμηνιαία',
+    semiannual: 'Εξαμηνιαία',
+    yearly: 'Ετήσια',
+    biennial: 'Κάθε 2 χρόνια'
+  };
+  const ANNUAL_MULT = {
+    once: 0,
+    monthly: 12,
+    quarterly: 4,
+    semiannual: 2,
+    yearly: 1,
+    biennial: 0.5
+  };
+  const TEMPLATES = [
+    { title: 'Ασφάλεια αυτοκινήτου', cat: 'vehicle', freq: 'semiannual' },
+    { title: 'ΚΤΕΟ',                 cat: 'vehicle', freq: 'biennial' },
+    { title: 'Τέλη κυκλοφορίας',     cat: 'vehicle', freq: 'yearly' },
+    { title: 'Συνδρομή Google / AI', cat: 'subs',    freq: 'monthly' },
+    { title: 'Domain / Hosting',     cat: 'subs',    freq: 'yearly' },
+    { title: 'Διαβατήριο / Ταυτότητα', cat: 'docs',  freq: 'once' },
+    { title: 'ΕΝΦΙΑ / Φόρος',        cat: 'home',    freq: 'yearly' }
+  ];
+
+  let items = [];
+  let activeCat = 'all';
+
+  function loadItems() {
+    try { items = JSON.parse(localStorage.getItem(DATA_KEY) || '[]'); }
+    catch { items = []; }
+  }
+  function saveItems() {
+    try { localStorage.setItem(DATA_KEY, JSON.stringify(items)); } catch {}
+  }
+
+  function daysUntil(dateStr) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const target = new Date(y, m - 1, d);
+    return Math.round((target - today) / 86400000);
+  }
+
+  function fmtDateGR(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+  }
+
+  function fmtEur(v) {
+    return new Intl.NumberFormat('el-GR', { maximumFractionDigits: 2 }).format(v) + ' €';
+  }
+
+  function nextDateFor(dateStr, freq) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    if (freq === 'monthly')    dt.setMonth(dt.getMonth() + 1);
+    else if (freq === 'quarterly')  dt.setMonth(dt.getMonth() + 3);
+    else if (freq === 'semiannual') dt.setMonth(dt.getMonth() + 6);
+    else if (freq === 'yearly')     dt.setFullYear(dt.getFullYear() + 1);
+    else if (freq === 'biennial')   dt.setFullYear(dt.getFullYear() + 2);
+    const yy = dt.getFullYear();
+    const mm = String(dt.getMonth() + 1).padStart(2, '0');
+    const dd = String(dt.getDate()).padStart(2, '0');
+    return `${yy}-${mm}-${dd}`;
+  }
+
+  function renderChips() {
+    const wrap = $('catChips');
+    wrap.innerHTML = '';
+    Object.entries(CATS).forEach(([k, lbl]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.setAttribute('aria-pressed', String(activeCat === k));
+      const count = k === 'all' ? items.length : items.filter((x) => x.cat === k).length;
+      b.textContent = count > 0 ? `${lbl} (${count})` : lbl;
+      b.addEventListener('click', () => { activeCat = k; renderAll(); });
+      wrap.appendChild(b);
+    });
+  }
+
+  function renderAll() {
+    renderChips();
+
+    // KPIs
+    let urgent = 0, soonCount = 0, soonCost = 0, yearlyTotal = 0;
+    const catTotals = { vehicle: 0, subs: 0, docs: 0, home: 0, other: 0 };
+
+    items.forEach((it) => {
+      const d = daysUntil(it.date);
+      const c = Number(it.cost) || 0;
+      if (d <= 15) urgent++;
+      if (d >= 0 && d <= 60) { soonCount++; soonCost += c; }
+      const ann = c * (ANNUAL_MULT[it.freq] ?? 0);
+      yearlyTotal += ann;
+      if (catTotals[it.cat] !== undefined) catTotals[it.cat] += ann;
+    });
+
+    $('kpiUrgent').textContent = String(urgent);
+    $('kpiUrgentSub').textContent = urgent === 0 ? 'Όλα υπό έλεγχο' : (urgent === 1 ? '1 χρειάζεται προσοχή' : `${urgent} χρειάζονται προσοχή`);
+    $('kpiSoon').textContent = String(soonCount);
+    $('kpiSoonCost').textContent = soonCost > 0 ? `Εκτίμηση ${fmtEur(soonCost)}` : 'Χωρίς κόστος';
+    $('kpiMonthly').textContent = fmtEur(yearlyTotal / 12);
+    $('kpiYearly').textContent = fmtEur(yearlyTotal);
+    $('kpiCount').textContent = `${items.length} ενεργές εγγραφές`;
+
+    // Filter & sort
+    const q = $('searchInput').value.trim().toLowerCase();
+    const sortBy = $('sortSelect').value;
+    let list = items.filter((it) => {
+      if (activeCat !== 'all' && it.cat !== activeCat) return false;
+      if (q && !(it.title.toLowerCase().includes(q) || (it.note || '').toLowerCase().includes(q))) return false;
+      return true;
+    });
+
+    list.sort((a, b) => {
+      if (sortBy === 'cost') return (Number(b.cost) || 0) - (Number(a.cost) || 0);
+      if (sortBy === 'title') return a.title.localeCompare(b.title, 'el');
+      return a.date.localeCompare(b.date);
+    });
+
+    $('shownCount').textContent = `${list.length} από ${items.length}`;
+    const container = $('itemsList');
+    container.innerHTML = '';
+
+    if (list.length === 0) {
+      const div = document.createElement('div');
+      div.className = 'empty';
+      div.innerHTML = items.length === 0
+        ? '<p style="margin:0">Δεν έχεις προσθέσει ακόμα υποχρεώσεις ή συνδρομές.</p><p style="margin:0;font-size:0.82rem">Πάτησε «Νέα καταχώριση» για να περάσεις ασφάλεια, ΚΤΕΟ, συνδρομές, ταυτότητα ή λογαριασμούς.</p>'
+        : '<p style="margin:0">Δεν βρέθηκαν εγγραφές με αυτά τα φίλτρα.</p>';
+      container.appendChild(div);
+    } else {
+      list.forEach((it) => {
+        const d = daysUntil(it.date);
+        const cls = d <= 15 ? 'urgent' : (d <= 45 ? 'soon' : '');
+        const el = document.createElement('article');
+        el.className = `item ${cls}`;
+
+        let badgeMain = '', badgeSub = '';
+        if (d < 0)       { badgeMain = `${Math.abs(d)} ημ.`; badgeSub = 'Εκπρόθεσμο'; }
+        else if (d === 0){ badgeMain = 'Σήμερα';             badgeSub = fmtDateGR(it.date); }
+        else if (d === 1){ badgeMain = 'Αύριο';              badgeSub = fmtDateGR(it.date); }
+        else             { badgeMain = `${d} ημ.`;           badgeSub = fmtDateGR(it.date); }
+
+        const costStr = Number(it.cost) > 0 ? `<span class="item-cost">${fmtEur(Number(it.cost))}</span>` : '';
+        const noteHtml = it.note ? `<div class="item-note"></div>` : '';
+
+        el.innerHTML = `
+          <div class="days-badge">${badgeMain}<small>${badgeSub}</small></div>
+          <div class="item-main">
+            <div class="item-title"><span class="t-text"></span><span class="cat-tag">${CATS[it.cat] || 'Άλλο'}</span></div>
+            <div class="item-meta">
+              <span>${FREQ_LABEL[it.freq] || ''}</span>
+              ${costStr}
+            </div>
+            ${noteHtml}
+          </div>
+          <div class="item-actions">
+            ${it.freq !== 'once' ? '<button type="button" class="btn sm" data-act="renew" title="Μεταφορά στον επόμενο κύκλο">Ανανεώθηκε ✓</button>' : ''}
+            <button type="button" class="btn sm" data-act="ics" title="Προσθήκη στο Ημερολόγιο">.ics</button>
+            <button type="button" class="btn sm" data-act="edit">Επεξεργασία</button>
+            <button type="button" class="btn sm" data-act="del" aria-label="Διαγραφή">×</button>
+          </div>
+        `;
+        el.querySelector('.t-text').textContent = it.title;
+        if (it.note) el.querySelector('.item-note').textContent = it.note;
+
+        el.querySelectorAll('[data-act]').forEach((btn) => {
+          btn.addEventListener('click', () => handleAction(btn.dataset.act, it.id));
+        });
+        container.appendChild(el);
+      });
+    }
+
+    // Cost breakdown bars
+    const barsEl = $('catBars');
+    barsEl.innerHTML = '';
+    const entries = Object.entries(catTotals).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+    if (entries.length === 0) {
+      barsEl.innerHTML = '<p class="sec-note" style="margin:0">Πρόσθεσε επαναλαμβανόμενες εγγραφές με κόστος για να δεις την ετήσια κατανομή.</p>';
+    } else {
+      const maxVal = entries[0][1];
+      entries.forEach(([k, val]) => {
+        const pct = Math.max(6, Math.round((val / maxVal) * 100));
+        const row = document.createElement('div');
+        row.className = 'cat-bar-row';
+        row.innerHTML = `
+          <div class="cat-bar-top"><span>${CATS[k]}</span><b>${fmtEur(val)} / έτος</b></div>
+          <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${pct}%"></div></div>
+        `;
+        barsEl.appendChild(row);
+      });
+    }
+  }
+
+  function handleAction(act, id) {
+    const idx = items.findIndex((x) => x.id === id);
+    if (idx < 0) return;
+    const it = items[idx];
+    if (act === 'renew') {
+      items[idx].date = nextDateFor(it.date, it.freq);
+      saveItems();
+      renderAll();
+    } else if (act === 'edit') {
+      openItemDialog(it);
+    } else if (act === 'del') {
+      if (confirm(`Διαγραφή «${it.title}»;`)) {
+        items.splice(idx, 1);
+        saveItems();
+        renderAll();
+      }
+    } else if (act === 'ics') {
+      downloadICS([it], `radar-${it.date}.ics`);
+    }
+  }
+
+  // ICS Export (Google / Apple / Outlook Calendar with 7-day alarm)
+  function downloadICS(list, filename) {
+    if (!list.length) return;
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Radar Glafka//EL'
+    ];
+    list.forEach((it) => {
+      const dt = it.date.replace(/-/g, '');
+      const costPart = Number(it.cost) > 0 ? ` (${fmtEur(Number(it.cost))})` : '';
+      const desc = `${CATS[it.cat] || ''}${costPart}${it.note ? ' — ' + it.note : ''}`.replace(/\n/g, ' ');
+      lines.push(
+        'BEGIN:VEVENT',
+        `UID:${it.id}@radar.glafka`,
+        `DTSTART;VALUE=DATE:${dt}`,
+        `SUMMARY:${it.title}${costPart}`,
+        `DESCRIPTION:${desc}`,
+        'BEGIN:VALARM',
+        'TRIGGER:-P7D',
+        'ACTION:DISPLAY',
+        `DESCRIPTION:Υπενθύμιση (σε 7 ημέρες): ${it.title}`,
+        'END:VALARM',
+        'END:VEVENT'
+      );
+    });
+    lines.push('END:VCALENDAR');
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  $('icsAllBtn').addEventListener('click', () => {
+    if (!items.length) { alert('Δεν υπάρχουν εγγραφές για εξαγωγή.'); return; }
+    downloadICS(items, 'radar-ypoxreoseis.ics');
+  });
+
+  // Add / Edit Dialog
+  const itemDialog = $('itemDialog');
+  function buildTemplates() {
+    const g = $('tplGrid');
+    g.innerHTML = '';
+    TEMPLATES.forEach((t) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'btn sm';
+      b.textContent = `+ ${t.title}`;
+      b.addEventListener('click', () => {
+        $('fTitle').value = t.title;
+        $('fCat').value = t.cat;
+        $('fFreq').value = t.freq;
+        $('fDate').focus();
+      });
+      g.appendChild(b);
+    });
+  }
+  buildTemplates();
+
+  function openItemDialog(item = null) {
+    $('dialogTitle').textContent = item ? 'Επεξεργασία καταχώρισης' : 'Νέα καταχώριση';
+    $('tplGrid').style.display = item ? 'none' : 'flex';
+    $('editId').value = item ? item.id : '';
+    $('fTitle').value = item ? item.title : '';
+    $('fCat').value   = item ? item.cat : 'vehicle';
+    $('fDate').value  = item ? item.date : new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+    $('fCost').value  = item && item.cost ? String(item.cost) : '';
+    $('fFreq').value  = item ? item.freq : 'yearly';
+    $('fNote').value  = item ? (item.note || '') : '';
+    itemDialog.showModal();
+  }
+
+  $('addBtn').addEventListener('click', () => openItemDialog(null));
+  $('closeDialogBtn').addEventListener('click', () => itemDialog.close());
+  $('cancelItemBtn').addEventListener('click', () => itemDialog.close());
+
+  $('itemForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = $('editId').value || ('r_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+    const rec = {
+      id,
+      title: $('fTitle').value.trim(),
+      cat: $('fCat').value,
+      date: $('fDate').value,
+      cost: $('fCost').value ? Number($('fCost').value) : 0,
+      freq: $('fFreq').value,
+      note: $('fNote').value.trim()
+    };
+    const idx = items.findIndex((x) => x.id === id);
+    if (idx >= 0) items[idx] = rec;
+    else items.push(rec);
+    saveItems();
+    itemDialog.close();
+    renderAll();
+  });
+
+  $('searchInput').addEventListener('input', renderAll);
+  $('sortSelect').addEventListener('change', renderAll);
+
+  // =========================================================================
+  // CRYPTO HELPERS (AES-256-GCM Backup + SHA-256 PIN Lock)
+  // =========================================================================
+  async function sha256Hex(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('radar_pin_v1:' + str));
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function deriveAesKey(pass, salt) {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: 120000, hash: 'SHA-256' },
+      base,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  }
+
+  function toB64(u8) { return btoa(String.fromCharCode(...u8)); }
+  function fromB64(s) { return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); }
+
+  const settingsDialog = $('settingsDialog');
+  function syncPinButtons() {
+    const hasPin = !!localStorage.getItem(PIN_KEY);
+    $('removePinBtn').hidden = !hasPin;
+    $('lockNowBtn').hidden = !hasPin;
+  }
+
+  $('settingsBtn').addEventListener('click', () => {
+    $('backupMsg').textContent = '';
+    $('pinMsg').textContent = '';
+    syncPinButtons();
+    settingsDialog.showModal();
+  });
+  $('closeSettingsBtn').addEventListener('click', () => settingsDialog.close());
+
+  $('exportEncBtn').addEventListener('click', async () => {
+    const pass = $('encPass').value;
+    if (!pass || pass.length < 4) {
+      $('backupMsg').textContent = 'Βάλε έναν κωδικό τουλάχιστον 4 χαρακτήρων.';
+      return;
+    }
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv   = crypto.getRandomValues(new Uint8Array(12));
+    const key  = await deriveAesKey(pass, salt);
+    const plain = new TextEncoder().encode(JSON.stringify({ v: 1, exportedAt: new Date().toISOString(), items }));
+    const ct   = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plain));
+    const payload = JSON.stringify({ enc: 'AES-256-GCM', salt: toB64(salt), iv: toB64(iv), data: toB64(ct) });
+    const blob = new Blob([payload], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `radar-backup-${new Date().toISOString().slice(0, 10)}.radar.enc`;
+    a.click();
+    $('backupMsg').textContent = 'Το κρυπτογραφημένο backup κατέβηκε.';
+  });
+
+  $('exportJsonBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify({ v: 1, items }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `radar-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    $('backupMsg').textContent = 'Το JSON backup κατέβηκε.';
+  });
+
+  $('importFile').addEventListener('change', async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    try {
+      const raw = JSON.parse(await f.text());
+      let imported = null;
+      if (raw.enc === 'AES-256-GCM') {
+        const pass = $('encPass').value || prompt('Εισαγωγή κωδικού κρυπτογράφησης:');
+        if (!pass) return;
+        const key = await deriveAesKey(pass, fromB64(raw.salt));
+        const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(raw.iv) }, key, fromB64(raw.data));
+        imported = JSON.parse(new TextDecoder().decode(pt)).items;
+      } else if (Array.isArray(raw.items)) {
+        imported = raw.items;
+      }
+      if (!Array.isArray(imported)) throw new Error('bad format');
+      items = imported;
+      saveItems();
+      renderAll();
+      $('backupMsg').textContent = `Εισήχθησαν επιτυχώς ${items.length} εγγραφές.`;
+    } catch {
+      $('backupMsg').textContent = 'Αποτυχία εισαγωγής (λάθος κωδικός ή αρχείο).';
+    }
+    e.target.value = '';
+  });
+
+  // PIN Lock
+  $('savePinBtn').addEventListener('click', async () => {
+    const pin = $('newPinInput').value.trim();
+    if (pin.length < 4) { $('pinMsg').textContent = 'Βάλε τουλάχιστον 4 ψηφία.'; return; }
+    localStorage.setItem(PIN_KEY, await sha256Hex(pin));
+    $('newPinInput').value = '';
+    syncPinButtons();
+    $('pinMsg').textContent = 'Το κλείδωμα PIN ενεργοποιήθηκε.';
+  });
+
+  $('removePinBtn').addEventListener('click', () => {
+    localStorage.removeItem(PIN_KEY);
+    syncPinButtons();
+    $('pinMsg').textContent = 'Το κλείδωμα PIN αφαιρέθηκε.';
+  });
+
+  $('lockNowBtn').addEventListener('click', () => {
+    $('unlockPin').value = '';
+    $('unlockErr').textContent = '';
+    $('lockScreen').hidden = false;
+    $('unlockPin').focus();
+  });
+
+  $('unlockForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const hash = await sha256Hex($('unlockPin').value.trim());
+    if (hash === localStorage.getItem(PIN_KEY)) {
+      $('lockScreen').hidden = true;
+      $('unlockPin').value = '';
+      $('unlockErr').textContent = '';
+    } else {
+      $('unlockErr').textContent = 'Λάθος PIN.';
+    }
+  });
+
+  // PWA Service Worker & Install
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+    });
+  }
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    $('installBtn').hidden = false;
+  });
+  $('installBtn').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch {}
+    deferredPrompt = null;
+    $('installBtn').hidden = true;
+  });
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    $('installBtn').hidden = true;
+  });
+
+  // Init
+  loadItems();
+  syncPinButtons();
+  if (localStorage.getItem(PIN_KEY)) {
+    $('lockScreen').hidden = false;
+  }
+  renderAll();
+})();
+</script>
+</body>
+</html>
