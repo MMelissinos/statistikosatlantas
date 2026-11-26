@@ -11,58 +11,96 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Νυχτερινή Γλαύκα · Focus &amp; Ambient Studio</title>
-<meta name="description" content="Ήσυχο στούντιο συγκέντρωσης με χρονόμετρο Pomodoro, ατμοσφαιρικούς ήχους (βροχή, θάλασσα, τζάκι, βιβλιοθήκη) και ημερολόγιο μελέτης, χωρίς διαφημίσεις.">
+<title>Νυχτερινή Γλαύκα · Χρονόμετρο Συγκέντρωσης &amp; Ήχοι Περιβάλλοντος</title>
+<meta name="description" content="Δωρεάν εφαρμογή συγκέντρωσης και μελέτης με χρονόμετρο Pomodoro, ατμοσφαιρικούς ήχους περιβάλλοντος (βροχή, θάλασσα, τζάκι, καφέ θόρυβος, ρολόι), λίστα στόχων και ημερολόγιο. Λειτουργεί και offline, χωρίς διαφημίσεις ή εγγραφή.">
 <link rel="canonical" href="https://tools.statistikosatlantas.com/nyxta/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Στατιστικός Άτλαντας">
+<meta property="og:locale" content="el_GR">
+<meta property="og:url" content="https://tools.statistikosatlantas.com/nyxta/">
+<meta property="og:title" content="Νυχτερινή Γλαύκα · Χρονόμετρο Συγκέντρωσης &amp; Ήχοι Περιβάλλοντος">
+<meta property="og:description" content="Ήσυχο περιβάλλον εργασίας και μελέτης με χρονόμετρο Pomodoro, 5 συνθετικούς ήχους περιβάλλοντος και τοπικό ημερολόγιο συγκέντρωσης. Χωρίς διαφημίσεις, χωρίς εγγραφή, λειτουργεί και offline.">
+<meta property="og:image" content="https://tools.statistikosatlantas.com/nyxta/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Νυχτερινή Γλαύκα",
+  "alternateName": "Focus & Ambient Studio",
+  "description": "Δωρεάν εφαρμογή συγκέντρωσης με χρονόμετρο Pomodoro, ήχους περιβάλλοντος και τοπικό ημερολόγιο μελέτης, χωρίς διαφημίσεις.",
+  "url": "https://tools.statistikosatlantas.com/nyxta/",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Web, Android, iOS, Windows, macOS",
+  "inLanguage": "el",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Στατιστικός Άτλαντας",
+    "url": "https://statistikosatlantas.com/"
+  }
+}
+</script>
 <style>
+  @font-face { font-family: "GFS Didot"; src: url(../xartis/fonts/GFSDidot-Regular.ttf) format("truetype"); font-display: swap; }
+  @font-face { font-family: "Commissioner"; src: url(../xartis/fonts/Commissioner-GrLat.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+
   :root {
     --bg: #08111F;
-    --bg-2: #0D1B30;
-    --card: rgba(16, 30, 54, 0.78);
-    --card-border: rgba(140, 178, 230, 0.14);
-    --ink: #E8EEF7;
-    --ink-2: #A6B8D0;
-    --muted: #6E829E;
-    --gold: #F2B450;
-    --gold-soft: rgba(242, 180, 80, 0.16);
-    --blue: #5DA3F0;
-    --ok: #5EC997;
-    --radius: 18px;
-    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --serif: Georgia, "Times New Roman", serif;
+    --surface: rgba(14, 27, 48, 0.82);
+    --surface-solid: #0E1B30;
+    --border: rgba(148, 182, 226, 0.14);
+    --border-strong: rgba(148, 182, 226, 0.28);
+    --ink: #EDF2F8;
+    --ink-2: #A8B8CE;
+    --muted: #70849F;
+    --gold: #EBB04E;
+    --gold-soft: rgba(235, 176, 78, 0.14);
+    --accent: #62A6F0;
+    --ok: #5BC492;
+    --radius: 16px;
+    --font-sans: "Commissioner", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "GFS Didot", Georgia, "Times New Roman", serif;
   }
+
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body {
     margin: 0;
-    font-family: var(--font);
+    font-family: var(--font-sans);
     color: var(--ink);
     background:
-      radial-gradient(900px 520px at 80% -10%, rgba(242, 180, 80, 0.08), transparent 60%),
-      radial-gradient(700px 500px at 12% 18%, rgba(93, 163, 240, 0.10), transparent 60%),
-      linear-gradient(180deg, #070F1C 0%, #0B172B 55%, #08111F 100%);
+      radial-gradient(880px 500px at 84% -12%, rgba(235, 176, 78, 0.07), transparent 60%),
+      radial-gradient(720px 520px at 10% 15%, rgba(98, 166, 240, 0.08), transparent 60%),
+      linear-gradient(180deg, #070F1C 0%, #0A1629 55%, #08111F 100%);
     background-attachment: fixed;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
   button, input { font: inherit; color: inherit; }
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  svg.ico { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
   .wrap {
-    max-width: 1040px;
+    max-width: 1060px;
     margin: 0 auto;
-    padding: max(18px, env(safe-area-inset-top)) 18px max(34px, env(safe-area-inset-bottom));
+    padding: max(20px, env(safe-area-inset-top)) 20px max(36px, env(safe-area-inset-bottom));
     display: grid;
-    gap: 20px;
+    gap: 22px;
   }
 
-  /* Top bar */
+  /* Header */
   .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
   }
   .brand {
     display: flex;
@@ -72,66 +110,75 @@
     color: var(--ink);
   }
   .brand img {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   }
   .brand-title {
-    font-family: var(--serif);
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-family: var(--font-serif);
+    font-size: 1.32rem;
+    font-weight: 400;
     letter-spacing: 0.01em;
-    line-height: 1.15;
+    line-height: 1.1;
   }
   .brand-sub {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     color: var(--muted);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    margin-top: 2px;
   }
   .top-actions {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
   }
   .pill-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     padding: 7px 13px;
     border-radius: 999px;
-    border: 1px solid var(--card-border);
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
     color: var(--ink-2);
-    font-size: 0.84rem;
+    font-size: 0.83rem;
     font-weight: 500;
     cursor: pointer;
     transition: border-color .15s, background .15s, color .15s;
   }
-  .pill-btn:hover { border-color: rgba(242, 180, 80, 0.5); color: var(--ink); background: rgba(242, 180, 80, 0.09); }
-  .pill-btn.accent { border-color: rgba(242, 180, 80, 0.55); color: var(--gold); background: var(--gold-soft); }
+  .pill-btn:hover { border-color: var(--border-strong); color: var(--ink); background: rgba(255, 255, 255, 0.06); }
+  .pill-btn.active { border-color: rgba(235, 176, 78, 0.55); color: var(--gold); background: var(--gold-soft); }
+  .pill-btn.accent { border-color: rgba(235, 176, 78, 0.55); color: var(--gold); background: var(--gold-soft); }
   .pill-btn[hidden] { display: none; }
 
-  /* Grid layout */
+  /* Zen mode */
+  body.zen-mode .zen-hide { display: none !important; }
+  body.zen-mode .grid { grid-template-columns: minmax(0, 540px); justify-content: center; }
+  body.zen-mode .timer-card { padding: 38px 28px; }
+
+  /* Layout */
   .grid {
     display: grid;
-    grid-template-columns: 1.08fr 0.92fr;
+    grid-template-columns: 1.06fr 0.94fr;
     gap: 20px;
     align-items: start;
   }
-  @media (max-width: 840px) {
+  @media (max-width: 860px) {
     .grid { grid-template-columns: 1fr; }
   }
+  .stack { display: grid; gap: 20px; }
 
   .card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 22px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
   }
   .card-head {
     display: flex;
@@ -142,42 +189,43 @@
   }
   .card-title {
     margin: 0;
-    font-size: 0.96rem;
+    font-size: 0.92rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     color: var(--ink);
   }
-  .card-hint { font-size: 0.8rem; color: var(--muted); }
+  .card-hint { font-size: 0.78rem; color: var(--muted); }
 
-  /* Timer card */
+  /* Timer */
   .timer-card {
     display: grid;
     justify-items: center;
     gap: 18px;
     text-align: center;
-    padding: 26px 22px;
+    padding: 28px 24px 24px;
   }
   .mode-tabs {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     padding: 4px;
     border-radius: 999px;
-    background: rgba(5, 11, 22, 0.55);
-    border: 1px solid var(--card-border);
+    background: rgba(5, 11, 22, 0.6);
+    border: 1px solid var(--border);
   }
   .mode-tab {
     border: 0;
     background: transparent;
     color: var(--ink-2);
-    padding: 6px 13px;
+    padding: 6px 14px;
     border-radius: 999px;
-    font-size: 0.84rem;
+    font-size: 0.83rem;
     font-weight: 500;
     cursor: pointer;
     transition: background .15s, color .15s;
   }
+  .mode-tab:hover { color: var(--ink); }
   .mode-tab[aria-pressed="true"] {
     background: var(--gold);
     color: #08111F;
@@ -186,7 +234,7 @@
 
   .dial-wrap {
     position: relative;
-    width: min(260px, 72vw);
+    width: min(256px, 70vw);
     aspect-ratio: 1;
     display: grid;
     place-items: center;
@@ -198,133 +246,174 @@
     height: 100%;
     transform: rotate(-90deg);
   }
-  .dial-track { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 7; }
+  .dial-track { fill: none; stroke: rgba(255, 255, 255, 0.07); stroke-width: 6; }
   .dial-progress {
     fill: none;
     stroke: var(--gold);
-    stroke-width: 7;
+    stroke-width: 6;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.35s linear;
-    filter: drop-shadow(0 0 8px rgba(242, 180, 80, 0.35));
+    filter: drop-shadow(0 0 8px rgba(235, 176, 78, 0.3));
   }
-  .dial-center { display: grid; gap: 4px; }
+  .dial-center { display: grid; gap: 5px; }
   .time-readout {
-    font-size: clamp(2.8rem, 7vw, 3.6rem);
-    font-weight: 700;
+    font-size: clamp(2.85rem, 6.5vw, 3.55rem);
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
     line-height: 1;
   }
   .time-state {
-    font-size: 0.84rem;
+    font-size: 0.78rem;
     color: var(--muted);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   .timer-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     justify-content: center;
   }
   .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     border: 0;
     background: var(--gold);
     color: #08111F;
     padding: 11px 28px;
     border-radius: 999px;
-    font-size: 0.96rem;
+    font-size: 0.94rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(242, 180, 80, 0.25);
+    box-shadow: 0 8px 22px rgba(235, 176, 78, 0.22);
     transition: transform .12s ease, filter .15s ease;
   }
-  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-primary:hover { filter: brightness(1.06); }
   .btn-primary:active { transform: scale(0.98); }
   .btn-ghost {
-    border: 1px solid var(--card-border);
-    background: rgba(255, 255, 255, 0.04);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
     color: var(--ink-2);
-    padding: 10px 15px;
+    padding: 10px 14px;
     border-radius: 999px;
-    font-size: 0.86rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: border-color .15s, color .15s;
   }
-  .btn-ghost:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--border-strong); color: var(--ink); }
+  .btn-ghost[hidden] { display: none; }
 
+  .timer-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
   .chime-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.82rem;
-    color: var(--muted);
+    gap: 7px;
     cursor: pointer;
     user-select: none;
   }
   .chime-toggle input { accent-color: var(--gold); }
+  .kbd-hints { font-size: 0.74rem; color: var(--muted); opacity: 0.8; }
+  .kbd-hints kbd {
+    font-family: inherit;
+    font-size: 0.72rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ink-2);
+  }
+  @media (max-width: 720px) { .kbd-hints { display: none; } }
 
-  /* Ambient mixer */
+  /* Ambient Studio */
   .presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
+    gap: 6px;
     margin-bottom: 16px;
   }
   .preset-chip {
-    border: 1px solid var(--card-border);
-    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.025);
     color: var(--ink-2);
-    padding: 5px 11px;
+    padding: 5px 12px;
     border-radius: 999px;
     font-size: 0.8rem;
     cursor: pointer;
     transition: border-color .15s, background .15s, color .15s;
   }
-  .preset-chip:hover, .preset-chip.active {
-    border-color: rgba(242, 180, 80, 0.55);
+  .preset-chip:hover { border-color: var(--border-strong); color: var(--ink); }
+  .preset-chip.active {
+    border-color: rgba(235, 176, 78, 0.55);
     background: var(--gold-soft);
     color: var(--gold);
   }
 
+  .master-row {
+    display: grid;
+    grid-template-columns: auto 1fr 38px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(5, 11, 22, 0.45);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .master-label { font-size: 0.8rem; font-weight: 600; color: var(--ink-2); letter-spacing: 0.02em; }
+
   .sound-list { display: grid; gap: 13px; }
   .sound-row {
     display: grid;
-    grid-template-columns: 34px 1fr 40px;
+    grid-template-columns: 36px 1fr 38px;
     align-items: center;
-    gap: 10px;
+    gap: 11px;
   }
   .sound-icon {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
     display: grid;
     place-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--card-border);
-    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    color: var(--ink-2);
+    transition: background .15s, border-color .15s, color .15s;
   }
   .sound-row.playing .sound-icon {
     background: var(--gold-soft);
-    border-color: rgba(242, 180, 80, 0.45);
+    border-color: rgba(235, 176, 78, 0.45);
+    color: var(--gold);
   }
   .sound-meta { display: grid; gap: 4px; }
-  .sound-name { font-size: 0.88rem; font-weight: 500; color: var(--ink); }
-  .sound-val { font-size: 0.78rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .sound-name { font-size: 0.87rem; font-weight: 500; color: var(--ink); }
+  .sound-val { font-size: 0.77rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
   input[type="range"] {
     width: 100%;
-    height: 5px;
+    height: 4px;
     accent-color: var(--gold);
     cursor: pointer;
   }
 
-  /* Atlas Choir / Local audio strip */
+  /* Music / Local Audio */
   .music-box {
     margin-top: 18px;
     padding-top: 16px;
-    border-top: 1px solid var(--card-border);
+    border-top: 1px solid var(--border);
     display: grid;
     gap: 10px;
   }
@@ -335,18 +424,20 @@
     gap: 8px;
     flex-wrap: wrap;
   }
-  .music-label { font-size: 0.84rem; color: var(--ink-2); font-weight: 600; }
-  .music-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .music-label { font-size: 0.83rem; color: var(--ink-2); font-weight: 600; }
   .music-link {
-    font-size: 0.79rem;
-    color: var(--blue);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--accent);
     text-decoration: none;
     padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(93, 163, 240, 0.28);
-    background: rgba(93, 163, 240, 0.08);
+    border: 1px solid rgba(98, 166, 240, 0.28);
+    background: rgba(98, 166, 240, 0.08);
   }
-  .music-link:hover { border-color: var(--blue); }
+  .music-link:hover { border-color: var(--accent); }
   .local-audio-row {
     display: flex;
     align-items: center;
@@ -356,57 +447,62 @@
   .file-label {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     padding: 6px 12px;
     border-radius: 999px;
-    border: 1px dashed var(--card-border);
+    border: 1px dashed var(--border-strong);
     font-size: 0.8rem;
     color: var(--ink-2);
     cursor: pointer;
+    transition: border-color .15s, color .15s;
   }
   .file-label:hover { border-color: var(--gold); color: var(--ink); }
   .file-label input { display: none; }
-  .local-track-name { font-size: 0.8rem; color: var(--gold); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* Right column stack */
-  .stack { display: grid; gap: 20px; }
+  .local-track-name {
+    font-size: 0.8rem;
+    color: var(--gold);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   /* Goals */
   .goal-form { display: flex; gap: 8px; margin-bottom: 12px; }
   .goal-input {
     flex: 1;
     min-width: 0;
-    background: rgba(5, 11, 22, 0.6);
-    border: 1px solid var(--card-border);
+    background: rgba(5, 11, 22, 0.55);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 9px 12px;
-    font-size: 0.9rem;
+    font-size: 0.89rem;
     color: var(--ink);
   }
   .goal-input::placeholder { color: var(--muted); }
-  .goal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .goal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
   .goal-item {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 9px 11px;
-    border-radius: 11px;
-    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.025);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
   .goal-item input[type="checkbox"] {
-    width: 17px; height: 17px; accent-color: var(--ok); cursor: pointer; flex-shrink: 0;
+    width: 16px; height: 16px; accent-color: var(--ok); cursor: pointer; flex-shrink: 0;
   }
-  .goal-text { flex: 1; font-size: 0.9rem; word-break: break-word; }
+  .goal-text { flex: 1; font-size: 0.89rem; word-break: break-word; }
   .goal-item.done .goal-text { text-decoration: line-through; color: var(--muted); }
   .goal-del {
     border: 0; background: transparent; color: var(--muted);
     cursor: pointer; font-size: 1rem; padding: 2px 6px; border-radius: 6px;
   }
   .goal-del:hover { color: var(--ink); background: rgba(255, 255, 255, 0.08); }
-  .empty-note { font-size: 0.84rem; color: var(--muted); margin: 4px 0 0; }
+  .empty-note { font-size: 0.83rem; color: var(--muted); margin: 4px 0 0; }
 
-  /* Stats log */
+  /* Focus Log */
   .kpi-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -414,13 +510,13 @@
     margin-bottom: 16px;
   }
   .kpi {
-    background: rgba(5, 11, 22, 0.5);
-    border: 1px solid var(--card-border);
+    background: rgba(5, 11, 22, 0.45);
+    border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 11px 10px;
+    padding: 12px 10px;
     text-align: center;
   }
-  .kpi-val { font-size: 1.35rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .kpi-val { font-size: 1.32rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1.15; }
   .kpi-lbl { font-size: 0.74rem; color: var(--muted); margin-top: 3px; }
   .bars {
     display: grid;
@@ -435,8 +531,8 @@
     width: 100%;
     max-width: 26px;
     min-height: 4px;
-    border-radius: 6px 6px 2px 2px;
-    background: linear-gradient(180deg, var(--gold) 0%, rgba(242, 180, 80, 0.35) 100%);
+    border-radius: 5px 5px 2px 2px;
+    background: linear-gradient(180deg, var(--gold) 0%, rgba(235, 176, 78, 0.32) 100%);
     transition: height .25s ease;
   }
   .bar-fill.zero { background: rgba(255, 255, 255, 0.08); }
@@ -449,12 +545,12 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    padding-top: 8px;
-    border-top: 1px solid var(--card-border);
-    font-size: 0.8rem;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 0.79rem;
     color: var(--muted);
   }
-  .foot-links { display: flex; gap: 14px; flex-wrap: wrap; }
+  .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
   .foot a { color: var(--ink-2); text-decoration: none; }
   .foot a:hover { color: var(--gold); }
 </style>
@@ -463,15 +559,25 @@
 <div class="wrap">
   <header class="topbar">
     <a class="brand" href="./">
-      <img src="icon-192.png" alt="Νυχτερινή Γλαύκα" width="40" height="40">
+      <img src="icon-192.png" alt="Νυχτερινή Γλαύκα" width="38" height="38">
       <div>
         <div class="brand-title">Νυχτερινή Γλαύκα</div>
-        <div class="brand-sub">Focus &amp; Ambient Studio</div>
+        <div class="brand-sub">Στούντιο Συγκέντρωσης &amp; Ήχου</div>
       </div>
     </a>
     <div class="top-actions">
-      <button type="button" class="pill-btn" id="muteAllBtn" title="Σίγαση όλων των ήχων">Σίγαση ήχων</button>
-      <button type="button" class="pill-btn accent" id="installBtn" hidden>Εγκατάσταση app</button>
+      <button type="button" class="pill-btn" id="zenBtn" aria-pressed="false" title="Λειτουργία πλήρους συγκέντρωσης (Z)">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        Λειτουργία Zen
+      </button>
+      <button type="button" class="pill-btn" id="muteAllBtn" title="Σίγαση όλων των ήχων (M)">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        Σίγαση
+      </button>
+      <button type="button" class="pill-btn accent" id="installBtn" hidden>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Εγκατάσταση app
+      </button>
     </div>
   </header>
 
@@ -480,10 +586,10 @@
     <div class="stack">
       <section class="card timer-card" aria-label="Χρονόμετρο συγκέντρωσης">
         <div class="mode-tabs" role="group" aria-label="Διάρκεια συνεδρίας">
-          <button type="button" class="mode-tab" data-mode="focus25" aria-pressed="true">25΄ Βαθιά</button>
+          <button type="button" class="mode-tab" data-mode="focus25" aria-pressed="true">25΄ Pomodoro</button>
           <button type="button" class="mode-tab" data-mode="focus50" aria-pressed="false">50΄ Μελέτη</button>
           <button type="button" class="mode-tab" data-mode="break5" aria-pressed="false">5΄ Διάλειμμα</button>
-          <button type="button" class="mode-tab" data-mode="free" aria-pressed="false">∞ Ελεύθερα</button>
+          <button type="button" class="mode-tab" data-mode="free" aria-pressed="false">Ελεύθερο</button>
         </div>
 
         <div class="dial-wrap">
@@ -498,51 +604,67 @@
         </div>
 
         <div class="timer-controls">
+          <button type="button" class="btn-ghost" id="minus5Btn" title="Αφαίρεση 5 λεπτών">−5΄</button>
           <button type="button" class="btn-primary" id="startPauseBtn">Έναρξη</button>
-          <button type="button" class="btn-ghost" id="resetBtn">Επαναφορά</button>
-          <button type="button" class="btn-ghost" id="plus5Btn">+5΄</button>
+          <button type="button" class="btn-ghost" id="plus5Btn" title="Προσθήκη 5 λεπτών">+5΄</button>
+          <button type="button" class="btn-ghost" id="resetBtn" title="Επαναφορά (R)">Επαναφορά</button>
         </div>
 
-        <label class="chime-toggle">
-          <input type="checkbox" id="chimeToggle" checked>
-          Απαλό καμπανάκι στο τέλος της συνεδρίας
-        </label>
+        <div class="timer-meta">
+          <label class="chime-toggle">
+            <input type="checkbox" id="chimeToggle" checked>
+            Ηχητικό σήμα ολοκλήρωσης
+          </label>
+          <span class="kbd-hints"><kbd>Space</kbd> έναρξη · <kbd>R</kbd> επαναφορά · <kbd>Z</kbd> zen</span>
+        </div>
       </section>
 
-      <section class="card" aria-label="Ατμοσφαιρικοί ήχοι">
+      <section class="card zen-hide" aria-label="Ήχοι περιβάλλοντος">
         <div class="card-head">
-          <h2 class="card-title">Ατμοσφαιρικό Στούντιο</h2>
-          <span class="card-hint">Παίζει και offline</span>
+          <h2 class="card-title">Ήχοι περιβάλλοντος</h2>
+          <span class="card-hint">Συνθετικός ήχος · λειτουργεί offline</span>
         </div>
 
         <div class="presets">
-          <button type="button" class="preset-chip" data-preset="rainy">Βροχερό βράδυ</button>
-          <button type="button" class="preset-chip" data-preset="aegean">Αιγαίο τη νύχτα</button>
-          <button type="button" class="preset-chip" data-preset="library">Σιωπηλή βιβλιοθήκη</button>
+          <button type="button" class="preset-chip" data-preset="rainy">Βροχερό απόγευμα</button>
+          <button type="button" class="preset-chip" data-preset="aegean">Νυχτερινή θάλασσα</button>
+          <button type="button" class="preset-chip" data-preset="library">Αναγνωστήριο</button>
           <button type="button" class="preset-chip" data-preset="silence">Σιωπή</button>
+        </div>
+
+        <div class="master-row">
+          <span class="master-label">Γενική ένταση</span>
+          <input type="range" id="vol-master" min="0" max="100" value="80" aria-label="Γενική ένταση">
+          <span class="sound-val" id="val-master">80%</span>
         </div>
 
         <div class="sound-list">
           <div class="sound-row" data-sound="rain">
-            <div class="sound-icon" aria-hidden="true">🌧️</div>
+            <div class="sound-icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M16 13v8M8 13v8M12 15v8"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg>
+            </div>
             <div class="sound-meta">
-              <label class="sound-name" for="vol-rain">Βροχή στο παράθυρο</label>
+              <label class="sound-name" for="vol-rain">Βροχή</label>
               <input type="range" id="vol-rain" min="0" max="100" value="0">
             </div>
             <span class="sound-val" id="val-rain">0%</span>
           </div>
 
           <div class="sound-row" data-sound="sea">
-            <div class="sound-icon" aria-hidden="true">🌊</div>
+            <div class="sound-icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+            </div>
             <div class="sound-meta">
-              <label class="sound-name" for="vol-sea">Νυχτερινή θάλασσα</label>
+              <label class="sound-name" for="vol-sea">Θάλασσα</label>
               <input type="range" id="vol-sea" min="0" max="100" value="0">
             </div>
             <span class="sound-val" id="val-sea">0%</span>
           </div>
 
           <div class="sound-row" data-sound="fire">
-            <div class="sound-icon" aria-hidden="true">🔥</div>
+            <div class="sound-icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            </div>
             <div class="sound-meta">
               <label class="sound-name" for="vol-fire">Τζάκι</label>
               <input type="range" id="vol-fire" min="0" max="100" value="0">
@@ -551,18 +673,22 @@
           </div>
 
           <div class="sound-row" data-sound="brown">
-            <div class="sound-icon" aria-hidden="true">🌬️</div>
+            <div class="sound-icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+            </div>
             <div class="sound-meta">
-              <label class="sound-name" for="vol-brown">Βαθύς νυχτερινός θόρυβος</label>
+              <label class="sound-name" for="vol-brown">Καφέ θόρυβος (απομόνωση)</label>
               <input type="range" id="vol-brown" min="0" max="100" value="0">
             </div>
             <span class="sound-val" id="val-brown">0%</span>
           </div>
 
           <div class="sound-row" data-sound="clock">
-            <div class="sound-icon" aria-hidden="true">🕰️</div>
+            <div class="sound-icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
             <div class="sound-meta">
-              <label class="sound-name" for="vol-clock">Ρολόι βιβλιοθήκης</label>
+              <label class="sound-name" for="vol-clock">Ρολόι αναγνωστηρίου</label>
               <input type="range" id="vol-clock" min="0" max="100" value="0">
             </div>
             <span class="sound-val" id="val-clock">0%</span>
@@ -571,23 +697,24 @@
 
         <div class="music-box">
           <div class="music-head">
-            <span class="music-label">Μουσική υπόκρουση · Atlas Choir</span>
-            <div class="music-links">
-              <a class="music-link" href="https://www.youtube.com/@atlaschoirmusic" target="_blank" rel="noopener">YouTube @atlaschoirmusic ↗</a>
-            </div>
+            <span class="music-label">Μουσική υπόκρουση</span>
+            <a class="music-link" href="https://www.youtube.com/@atlaschoirmusic" target="_blank" rel="noopener">Atlas Choir (YouTube) ↗</a>
           </div>
           <div class="local-audio-row">
             <label class="file-label">
-              <span>+ Φόρτωσε τοπικό MP3 / WAV</span>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              <span>Επιλογή τοπικού αρχείου ήχου</span>
               <input type="file" id="localAudioInput" accept="audio/*">
             </label>
             <button type="button" class="pill-btn" id="localPlayBtn" hidden>Αναπαραγωγή</button>
             <span class="local-track-name" id="localTrackName"></span>
           </div>
           <div class="sound-row" id="localVolRow" hidden>
-            <div class="sound-icon" aria-hidden="true">🎵</div>
+            <div class="sound-icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </div>
             <div class="sound-meta">
-              <label class="sound-name" for="vol-local">Ένταση μουσικής (loop)</label>
+              <label class="sound-name" for="vol-local">Ένταση αρχείου ήχου (επανάληψη)</label>
               <input type="range" id="vol-local" min="0" max="100" value="45">
             </div>
             <span class="sound-val" id="val-local">45%</span>
@@ -597,24 +724,24 @@
     </div>
 
     <!-- Right column: Goals + Focus Log -->
-    <div class="stack">
+    <div class="stack zen-hide">
       <section class="card" aria-label="Στόχοι συνεδρίας">
         <div class="card-head">
-          <h2 class="card-title">Στόχοι της συνεδρίας</h2>
-          <button type="button" class="pill-btn" id="clearDoneBtn" hidden>Καθαρισμός</button>
+          <h2 class="card-title">Στόχοι συνεδρίας</h2>
+          <button type="button" class="pill-btn" id="clearDoneBtn" hidden>Εκκαθάριση ολοκληρωμένων</button>
         </div>
         <form class="goal-form" id="goalForm">
-          <input class="goal-input" id="goalInput" type="text" maxlength="90" placeholder="Τι θέλεις να τελειώσεις απόψε;" autocomplete="off">
+          <input class="goal-input" id="goalInput" type="text" maxlength="100" placeholder="Προσθήκη στόχου συνεδρίας…" autocomplete="off">
           <button type="submit" class="btn-ghost">Προσθήκη</button>
         </form>
         <ul class="goal-list" id="goalList"></ul>
-        <p class="empty-note" id="goalEmpty">Γράψε 1–3 ξεκάθαρους στόχους για να μείνεις συγκεντρωμένος.</p>
+        <p class="empty-note" id="goalEmpty">Καταγράψτε 1–3 βασικούς στόχους για τη συνεδρία σας.</p>
       </section>
 
       <section class="card" aria-label="Ημερολόγιο συγκέντρωσης">
         <div class="card-head">
           <h2 class="card-title">Ημερολόγιο συγκέντρωσης</h2>
-          <span class="card-hint">Αποθηκεύεται μόνο στη συσκευή σου</span>
+          <span class="card-hint">Αποθήκευση τοπικά στη συσκευή</span>
         </div>
         <div class="kpi-row">
           <div class="kpi">
@@ -635,11 +762,11 @@
     </div>
   </main>
 
-  <footer class="foot">
-    <span>Μέρος του σύμπαντος της Γλαύκας · 0 διαφημίσεις, 0 cookies παρακολούθησης</span>
-    <nav class="foot-links" aria-label="Σύνδεσμοι Άτλαντα">
-      <a href="https://statistikosatlantas.com/">Στατιστικός Άτλαντας</a>
-      <a href="https://tools.statistikosatlantas.com/xartis/">Χάρτης</a>
+  <footer class="foot zen-hide">
+    <span>Στατιστικός Άτλαντας · Δωρεάν εφαρμογή χωρίς διαφημίσεις και χωρίς cookies παρακολούθησης</span>
+    <nav class="foot-links" aria-label="Σύνδεσμοι Στατιστικού Άτλαντα">
+      <a href="https://statistikosatlantas.com/">Άρθρα</a>
+      <a href="https://tools.statistikosatlantas.com/xartis/">Στατιστικός Χάρτης</a>
       <a href="https://tools.statistikosatlantas.com/">Εργαλεία</a>
       <a href="https://www.youtube.com/@atlaschoirmusic" target="_blank" rel="noopener">Atlas Choir</a>
     </nav>
@@ -656,10 +783,10 @@
   // 1. ΧΡΟΝΟΜΕΤΡΟ ΣΥΓΚΕΝΤΡΩΣΗΣ
   // =========================================================================
   const MODES = {
-    focus25: { label: 'Βαθιά συγκέντρωση', seconds: 25 * 60, countUp: false, loggable: true },
-    focus50: { label: 'Μακρά μελέτη',      seconds: 50 * 60, countUp: false, loggable: true },
-    break5:  { label: 'Σύντομο διάλειμμα', seconds:  5 * 60, countUp: false, loggable: false },
-    free:    { label: 'Ελεύθερη νύχτα',    seconds:       0, countUp: true,  loggable: true }
+    focus25: { label: 'Συγκέντρωση', seconds: 25 * 60, countUp: false, loggable: true },
+    focus50: { label: 'Μελέτη',      seconds: 50 * 60, countUp: false, loggable: true },
+    break5:  { label: 'Διάλειμμα',   seconds:  5 * 60, countUp: false, loggable: false },
+    free:    { label: 'Ελεύθερο',    seconds:       0, countUp: true,  loggable: true }
   };
   const CIRC = 2 * Math.PI * 98;
   let currentMode = 'focus25';
@@ -693,7 +820,7 @@
     $('timeState').textContent = running ? mode.label : (sessionElapsed > 0 ? 'Σε παύση' : 'Έτοιμο');
     document.title = running
       ? `${fmtTime(currentSec)} · Νυχτερινή Γλαύκα`
-      : 'Νυχτερινή Γλαύκα · Focus & Ambient Studio';
+      : 'Νυχτερινή Γλαύκα · Χρονόμετρο Συγκέντρωσης & Ήχοι Περιβάλλοντος';
   }
 
   function stopTimer(logIfFree = false) {
@@ -717,32 +844,11 @@
       b.setAttribute('aria-pressed', String(b.dataset.mode === modeKey));
     });
     $('plus5Btn').hidden = mode.countUp;
+    $('minus5Btn').hidden = mode.countUp;
     renderTimer();
   }
 
-  function playChime() {
-    if (!$('chimeToggle').checked) return;
-    const ctx = ensureAudioCtx();
-    const now = ctx.currentTime;
-    [528, 792, 1056].forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now + i * 0.14);
-      gain.gain.setValueAtTime(0.0001, now + i * 0.14);
-      gain.gain.exponentialRampToValueAtTime(0.14 / (i + 1), now + i * 0.14 + 0.04);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.14 + 2.4);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(now + i * 0.14);
-      osc.stop(now + i * 0.14 + 2.5);
-    });
-  }
-
-  document.querySelectorAll('.mode-tab').forEach((btn) => {
-    btn.addEventListener('click', () => switchMode(btn.dataset.mode));
-  });
-
-  $('startPauseBtn').addEventListener('click', () => {
+  function toggleStartPause() {
     if (running) {
       stopTimer(false);
       return;
@@ -770,33 +876,75 @@
       renderTimer();
     }, 1000);
     renderTimer();
-  });
+  }
 
-  $('resetBtn').addEventListener('click', () => {
+  function resetTimer() {
     stopTimer(true);
     totalSec = MODES[currentMode].seconds;
     currentSec = totalSec;
     sessionElapsed = 0;
     renderTimer();
-  });
+  }
 
+  function playChime() {
+    if (!$('chimeToggle').checked) return;
+    const ctx = ensureAudioCtx();
+    const now = ctx.currentTime;
+    [528, 792, 1056].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + i * 0.14);
+      gain.gain.setValueAtTime(0.0001, now + i * 0.14);
+      gain.gain.exponentialRampToValueAtTime(0.14 / (i + 1), now + i * 0.14 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.14 + 2.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now + i * 0.14);
+      osc.stop(now + i * 0.14 + 2.5);
+    });
+  }
+
+  document.querySelectorAll('.mode-tab').forEach((btn) => {
+    btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+  });
+  $('startPauseBtn').addEventListener('click', toggleStartPause);
+  $('resetBtn').addEventListener('click', resetTimer);
   $('plus5Btn').addEventListener('click', () => {
     if (MODES[currentMode].countUp) return;
     totalSec += 300;
     currentSec += 300;
     renderTimer();
   });
+  $('minus5Btn').addEventListener('click', () => {
+    if (MODES[currentMode].countUp || currentSec <= 300) return;
+    totalSec = Math.max(300, totalSec - 300);
+    currentSec = Math.max(60, currentSec - 300);
+    renderTimer();
+  });
+
+  // Zen mode
+  function toggleZen() {
+    const active = document.body.classList.toggle('zen-mode');
+    $('zenBtn').classList.toggle('active', active);
+    $('zenBtn').setAttribute('aria-pressed', String(active));
+  }
+  $('zenBtn').addEventListener('click', toggleZen);
 
   // =========================================================================
-  // 2. ΜΙΞΕΡ AMBIENT ΗΧΩΝ (100% WEB AUDIO API — 0 ΕΞΩΤΕΡΙΚΑ ΑΡΧΕΙΑ)
+  // 2. ΜΙΞΕΡ AMBIENT ΗΧΩΝ (WEB AUDIO API + MASTER GAIN)
   // =========================================================================
   let audioCtx = null;
+  let masterBus = null;
+  let masterLevel = 0.80;
   const channels = {};
 
   function ensureAudioCtx() {
     if (!audioCtx) {
       const AC = window.AudioContext || window.webkitAudioContext;
       audioCtx = new AC();
+      masterBus = audioCtx.createGain();
+      masterBus.gain.value = masterLevel;
+      masterBus.connect(audioCtx.destination);
     }
     if (audioCtx.state === 'suspended') {
       audioCtx.resume().catch(() => {});
@@ -835,9 +983,9 @@
   function initChannel(name) {
     if (channels[name]) return channels[name];
     const ctx = ensureAudioCtx();
-    const masterGain = ctx.createGain();
-    masterGain.gain.value = 0;
-    masterGain.connect(ctx.destination);
+    const chGain = ctx.createGain();
+    chGain.gain.value = 0;
+    chGain.connect(masterBus);
 
     if (name === 'rain') {
       const src = ctx.createBufferSource();
@@ -845,7 +993,7 @@
       src.loop = true;
       const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 420;
       const lp = ctx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 2600;
-      src.connect(hp).connect(lp).connect(masterGain);
+      src.connect(hp).connect(lp).connect(chGain);
       src.start();
     } else if (name === 'sea') {
       const src = ctx.createBufferSource();
@@ -856,18 +1004,17 @@
       const lfo = ctx.createOscillator(); lfo.frequency.value = 0.11;
       const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.38;
       lfo.connect(lfoGain).connect(waveGain.gain);
-      src.connect(lp).connect(waveGain).connect(masterGain);
+      src.connect(lp).connect(waveGain).connect(chGain);
       src.start(); lfo.start();
     } else if (name === 'fire') {
       const src = ctx.createBufferSource();
       src.buffer = createNoiseBuffer(ctx, 'brown', 5);
       src.loop = true;
       const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 260;
-      src.connect(lp).connect(masterGain);
+      src.connect(lp).connect(chGain);
       src.start();
-      // Gentle random hearth crackles
       setInterval(() => {
-        if (!audioCtx || audioCtx.state !== 'running' || masterGain.gain.value < 0.01) return;
+        if (!audioCtx || audioCtx.state !== 'running' || chGain.gain.value < 0.01) return;
         if (Math.random() > 0.45) return;
         const now = ctx.currentTime;
         const osc = ctx.createOscillator();
@@ -877,7 +1024,7 @@
         g.gain.setValueAtTime(0.0001, now);
         g.gain.exponentialRampToValueAtTime(0.08, now + 0.004);
         g.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
-        osc.connect(g).connect(masterGain);
+        osc.connect(g).connect(chGain);
         osc.start(now); osc.stop(now + 0.03);
       }, 280);
     } else if (name === 'brown') {
@@ -885,12 +1032,12 @@
       src.buffer = createNoiseBuffer(ctx, 'brown', 5);
       src.loop = true;
       const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 340;
-      src.connect(lp).connect(masterGain);
+      src.connect(lp).connect(chGain);
       src.start();
     } else if (name === 'clock') {
       let tick = true;
       setInterval(() => {
-        if (!audioCtx || audioCtx.state !== 'running' || masterGain.gain.value < 0.01) return;
+        if (!audioCtx || audioCtx.state !== 'running' || chGain.gain.value < 0.01) return;
         const now = ctx.currentTime;
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
@@ -900,12 +1047,12 @@
         g.gain.setValueAtTime(0.0001, now);
         g.gain.exponentialRampToValueAtTime(0.16, now + 0.003);
         g.gain.exponentialRampToValueAtTime(0.0001, now + 0.038);
-        osc.connect(g).connect(masterGain);
+        osc.connect(g).connect(chGain);
         osc.start(now); osc.stop(now + 0.045);
       }, 1000);
     }
 
-    channels[name] = { gain: masterGain };
+    channels[name] = { gain: chGain };
     return channels[name];
   }
 
@@ -921,10 +1068,18 @@
     if (val > 0 || channels[name]) {
       const ch = initChannel(name);
       const ctx = ensureAudioCtx();
-      const target = (val / 100) * SOUND_SCALE[name];
-      ch.gain.gain.setTargetAtTime(target, ctx.currentTime, 0.08);
+      ch.gain.gain.setTargetAtTime((val / 100) * SOUND_SCALE[name], ctx.currentTime, 0.08);
     }
   }
+
+  $('vol-master').addEventListener('input', (e) => {
+    const v = Math.max(0, Math.min(100, Number(e.target.value) || 0));
+    masterLevel = v / 100;
+    $('val-master').textContent = `${v}%`;
+    if (masterBus && audioCtx) {
+      masterBus.gain.setTargetAtTime(masterLevel, audioCtx.currentTime, 0.06);
+    }
+  });
 
   SOUND_NAMES.forEach((name) => {
     $(`vol-${name}`).addEventListener('input', (e) => {
@@ -949,16 +1104,17 @@
     });
   });
 
-  $('muteAllBtn').addEventListener('click', () => {
+  function muteAll() {
     document.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
     SOUND_NAMES.forEach((n) => setSoundVolume(n, 0));
     if (!localAudio.paused) {
       localAudio.pause();
       $('localPlayBtn').textContent = 'Αναπαραγωγή';
     }
-  });
+  }
+  $('muteAllBtn').addEventListener('click', muteAll);
 
-  // Local MP3/WAV player (Atlas Choir / personal audio)
+  // Local audio file
   const localAudio = $('localAudioEl');
   let localObjUrl = null;
   localAudio.volume = 0.45;
@@ -973,7 +1129,7 @@
     $('localPlayBtn').hidden = false;
     $('localVolRow').hidden = false;
     localAudio.play().then(() => {
-      $('localPlayBtn').textContent = 'Παύση μουσικής';
+      $('localPlayBtn').textContent = 'Παύση ήχου';
     }).catch(() => {
       $('localPlayBtn').textContent = 'Αναπαραγωγή';
     });
@@ -982,7 +1138,7 @@
   $('localPlayBtn').addEventListener('click', () => {
     if (localAudio.paused) {
       localAudio.play().catch(() => {});
-      $('localPlayBtn').textContent = 'Παύση μουσικής';
+      $('localPlayBtn').textContent = 'Παύση ήχου';
     } else {
       localAudio.pause();
       $('localPlayBtn').textContent = 'Αναπαραγωγή';
@@ -993,6 +1149,16 @@
     const v = Number(e.target.value) || 0;
     localAudio.volume = v / 100;
     $('val-local').textContent = `${v}%`;
+  });
+
+  // Keyboard shortcuts (ignored while typing in an input)
+  window.addEventListener('keydown', (e) => {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.code === 'Space') { e.preventDefault(); toggleStartPause(); }
+    else if (e.key === 'r' || e.key === 'R' || e.key === 'ρ' || e.key === 'Ρ') { resetTimer(); }
+    else if (e.key === 'm' || e.key === 'M' || e.key === 'μ' || e.key === 'Μ') { muteAll(); }
+    else if (e.key === 'z' || e.key === 'Z' || e.key === 'ζ' || e.key === 'Ζ') { toggleZen(); }
   });
 
   // =========================================================================
@@ -1156,7 +1322,6 @@
     $('installBtn').hidden = true;
   });
 
-  // Init
   renderTimer();
   renderGoals();
   renderLog();

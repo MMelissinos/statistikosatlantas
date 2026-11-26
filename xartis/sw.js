@@ -1,12 +1,12 @@
-const CACHE_NAME = 'xartis-atlanta-v2';
+const CACHE_NAME = 'xartis-atlanta-v3';
 const CORE_ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest',
-  './icon.svg',
-  './icon-192.png',
-  './icon-512.png',
-  './icon-maskable-512.png',
+  './manifest.webmanifest?v=2',
+  './icon.svg?v=2',
+  './icon-192.png?v=2',
+  './icon-512.png?v=2',
+  './icon-maskable-512.png?v=2',
   './vendor/d3.min.js',
   './vendor/topojson-client.min.js',
   './fonts/GFSDidot-Regular.ttf',

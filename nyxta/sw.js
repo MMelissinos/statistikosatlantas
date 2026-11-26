@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nyxta-glafka-v1';
+const CACHE_NAME = 'nyxta-glafka-v2';
 const SHELL_ASSETS = [
   './',
   './index.html',
