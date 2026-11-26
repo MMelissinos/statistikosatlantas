@@ -1,4 +1,4 @@
-const CACHE_NAME = 'radar-glafka-v1';
+const CACHE_NAME = 'radar-glafka-v2';
 const SHELL_ASSETS = [
   './',
   './index.html',

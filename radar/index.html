@@ -484,6 +484,8 @@
   const $ = (id) => document.getElementById(id);
   const DATA_KEY = 'radar_items_v1';
   const PIN_KEY  = 'radar_pin_hash_v1';
+  const UNLOCK_KEY = 'radar_unlocked_v1';
+  const MASTER_PIN_HASH = 'e5b3e229c08b5534e833b1873e561cee3800e29a827862d01312329d6a030d43';
 
   const CATS = {
     all:     'Όλα',
@@ -817,8 +819,11 @@
   // CRYPTO HELPERS (AES-256-GCM Backup + SHA-256 PIN Lock)
   // =========================================================================
   async function sha256Hex(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('radar_pin_v1:' + str));
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('atlas_private_v1:' + str));
     return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+  function activePinHash() {
+    return localStorage.getItem(PIN_KEY) || MASTER_PIN_HASH;
   }
 
   async function deriveAesKey(pass, salt) {
@@ -922,6 +927,7 @@
   });
 
   $('lockNowBtn').addEventListener('click', () => {
+    localStorage.removeItem(UNLOCK_KEY);
     $('unlockPin').value = '';
     $('unlockErr').textContent = '';
     $('lockScreen').hidden = false;
@@ -931,7 +937,8 @@
   $('unlockForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const hash = await sha256Hex($('unlockPin').value.trim());
-    if (hash === localStorage.getItem(PIN_KEY)) {
+    if (hash === activePinHash()) {
+      try { localStorage.setItem(UNLOCK_KEY, hash); } catch {}
       $('lockScreen').hidden = true;
       $('unlockPin').value = '';
       $('unlockErr').textContent = '';
@@ -964,10 +971,11 @@
     $('installBtn').hidden = true;
   });
 
-  // Init
+  // Init — πάντα κλειδωμένο σε νέα/ανώνυμη συσκευή μέχρι να μπει το PIN
   loadItems();
   syncPinButtons();
-  if (localStorage.getItem(PIN_KEY)) {
+  $('lockNowBtn').hidden = false;
+  if (localStorage.getItem(UNLOCK_KEY) !== activePinHash()) {
     $('lockScreen').hidden = false;
   }
   renderAll();

@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /pinakas/
 Disallow: /radar/
+Disallow: /pinakothiki/
 
 Sitemap: https://tools.statistikosatlantas.com/sitemap.xml
