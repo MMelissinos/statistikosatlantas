@@ -1,0 +1,18 @@
+{
+  "id": "/anagnostis/",
+  "name": "Αναγνώστης της Γλαύκας",
+  "short_name": "Αναγνώστης",
+  "description": "Ιδιωτικός αναγνώστης μεγάλων και μηνιαίων άρθρων του Στατιστικού Άτλαντα.",
+  "start_url": "/anagnostis/",
+  "scope": "/anagnostis/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0D1520",
+  "theme_color": "#0D1520",
+  "lang": "el",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

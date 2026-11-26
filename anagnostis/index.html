@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#0D1520">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Αναγνώστης">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Αναγνώστης της Γλαύκας</title>
+<style>
+  @font-face { font-family: "GFS Didot"; src: url(../xartis/fonts/GFSDidot-Regular.ttf) format("truetype"); font-display: swap; }
+  @font-face { font-family: "Commissioner"; src: url(../xartis/fonts/Commissioner-GrLat.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+
+  :root {
+    --bg: #0D1520;
+    --surface: #142030;
+    --border: rgba(214, 184, 128, 0.16);
+    --border-strong: rgba(214, 184, 128, 0.42);
+    --ink: #EDEAE3;
+    --ink-2: #B0B8C4;
+    --muted: #768396;
+    --gold: #E5B96D;
+    --gold-soft: rgba(229, 185, 109, 0.14);
+    --ok: #5CC696;
+    --danger: #F06C6C;
+    --font-sans: "Commissioner", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "GFS Didot", Georgia, "Times New Roman", serif;
+    --reader-size: 1.08rem;
+  }
+  :root[data-theme="sepia"] {
+    --bg: #F4EFE4;
+    --surface: #FAF6EC;
+    --border: rgba(96, 74, 42, 0.16);
+    --border-strong: rgba(96, 74, 42, 0.35);
+    --ink: #2A2218;
+    --ink-2: #574938;
+    --muted: #84745E;
+    --gold: #9E6A1E;
+    --gold-soft: rgba(158, 106, 30, 0.12);
+    --ok: #267A52;
+  }
+  :root[data-theme="light"] {
+    --bg: #F6F8FA;
+    --surface: #FFFFFF;
+    --border: rgba(14, 39, 70, 0.12);
+    --border-strong: rgba(14, 39, 70, 0.28);
+    --ink: #131E29;
+    --ink-2: #465566;
+    --muted: #728294;
+    --gold: #1C5CAB;
+    --gold-soft: rgba(28, 92, 171, 0.10);
+    --ok: #1D7A50;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  /* PIN Lock */
+  .lock {
+    position: fixed; inset: 0; z-index: 99999; width: 100%; height: 100dvh;
+    background: radial-gradient(700px 420px at 50% 25%, rgba(229,185,109,0.09), transparent 65%), #0D1520;
+    display: grid; place-items: center; padding: 18px; color: #EDEAE3;
+  }
+  .lock[hidden] { display: none; }
+  .lock-box {
+    width: min(350px, 100%); background: #142030; border: 1px solid rgba(229,185,109,0.4);
+    border-radius: 20px; padding: 26px 22px; text-align: center;
+    display: grid; gap: 14px; justify-items: center;
+  }
+  .lock-box img { width: 64px; height: 64px; border-radius: 16px; }
+  .pin-inp {
+    width: 100%; background: rgba(0,0,0,0.35); border: 1px solid rgba(229,185,109,0.38);
+    border-radius: 12px; padding: 11px 14px; text-align: center;
+    letter-spacing: 0.25em; font-size: 1.1rem; color: #EDEAE3;
+  }
+  .lock-err { color: var(--danger); font-size: 0.82rem; min-height: 1.2em; }
+
+  /* Shell */
+  .wrap {
+    width: 100%; max-width: 980px; margin: 0 auto;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(54px, env(safe-area-inset-bottom));
+    display: grid; gap: 16px;
+  }
+  .wrap[hidden] { display: none; }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand img { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; }
+  .brand-title { font-family: var(--font-serif); font-size: clamp(1.12rem, 4vw, 1.38rem); line-height: 1.1; }
+  .brand-sub { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
+
+  .controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--border); background: transparent; color: var(--ink-2);
+    font-size: 0.81rem; cursor: pointer; white-space: nowrap; text-decoration: none;
+  }
+  .btn:hover { border-color: var(--border-strong); color: var(--ink); }
+  .btn.gold { border-color: var(--gold); background: var(--gold-soft); color: var(--gold); font-weight: 600; }
+  .btn[hidden] { display: none; }
+
+  .search {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; padding: 9px 15px; font-size: 0.88rem;
+  }
+  .search::placeholder { color: var(--muted); }
+
+  .chips {
+    display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto;
+    padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+    padding: 6px 12px; border-radius: 999px; font-size: 0.8rem; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .chip[aria-pressed="true"] { border-color: var(--gold); background: var(--gold-soft); color: var(--gold); font-weight: 600; }
+
+  /* Article List */
+  .list { display: grid; gap: 12px; }
+  .art-card {
+    display: grid; grid-template-columns: 1fr 104px; gap: 12px; align-items: center;
+    padding: 14px 15px; border-radius: 14px; background: var(--surface);
+    border: 1px solid var(--border); cursor: pointer; transition: border-color .15s;
+  }
+  .art-card:hover { border-color: var(--border-strong); }
+  .art-card.read { opacity: 0.68; }
+  .art-card.no-img { grid-template-columns: 1fr; }
+  @media (max-width: 520px) { .art-card { grid-template-columns: 1fr 82px; padding: 12px; } }
+  .art-thumb { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 9px; background: rgba(0,0,0,0.2); }
+  .art-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; align-items: center; }
+  .badge {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--ink-2);
+  }
+  .badge.monthly { border-color: var(--gold); background: var(--gold-soft); color: var(--gold); }
+  .badge.future  { border-color: rgba(98,166,240,0.45); color: #62A6F0; }
+  .badge.done    { border-color: rgba(92,198,150,0.45); color: var(--ok); }
+  .art-title { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.28; margin: 0 0 5px; }
+  .art-meta { font-size: 0.77rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Reader View */
+  .reader[hidden] { display: none; }
+  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--gold); width: 0%; z-index: 999; transition: width 0.1s linear; }
+  .reader-bar {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: max(10px, env(safe-area-inset-top)) 14px 10px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+  }
+  .reader-body {
+    max-width: 700px; margin: 0 auto;
+    padding: 22px 16px 70px;
+  }
+  .reader-body h1 {
+    font-family: var(--font-serif); font-size: clamp(1.55rem, 5vw, 2.2rem);
+    line-height: 1.22; font-weight: 400; margin: 8px 0 12px;
+  }
+  .reader-hero { width: 100%; border-radius: 12px; margin: 16px 0 22px; display: block; }
+  .prose { font-size: var(--reader-size); line-height: 1.78; color: var(--ink); }
+  .prose p { margin: 0 0 1.15em; }
+  .prose h2 { font-family: var(--font-serif); font-size: 1.4em; font-weight: 400; margin: 1.7em 0 0.6em; line-height: 1.28; }
+  .prose h3 { font-size: 1.12em; font-weight: 600; margin: 1.4em 0 0.5em; }
+  .prose img, .prose figure { max-width: 100%; height: auto; border-radius: 10px; margin: 1.2em 0; }
+  .prose figcaption { font-size: 0.8em; color: var(--muted); margin-top: 6px; }
+  .prose a { color: var(--gold); text-underline-offset: 3px; }
+  .prose blockquote { margin: 1.2em 0; padding: 10px 16px; border-left: 3px solid var(--gold); background: var(--surface); border-radius: 0 10px 10px 0; }
+  .prose table { width: 100%; border-collapse: collapse; font-size: 0.86em; margin: 1.2em 0; display: block; overflow-x: auto; }
+  .prose th, .prose td { border-bottom: 1px solid var(--border); padding: 7px 9px; text-align: left; }
+  .reader-foot {
+    margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="lock" id="lockScreen">
+  <form class="lock-box" id="unlockForm">
+    <img src="icon-192.png" alt="Αναγνώστης" width="64" height="64">
+    <div>
+      <div class="brand-title">Αναγνώστης της Γλαύκας</div>
+      <div class="brand-sub" style="margin-top:4px;color:#8EA0B5">Ιδιωτική βιβλιοθήκη άρθρων</div>
+    </div>
+    <input class="pin-inp" id="pinInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Εισαγωγή PIN">
+    <button type="submit" class="btn gold" style="width:100%;justify-content:center;padding:10px">Ξεκλείδωμα</button>
+    <div class="lock-err" id="pinErr"></div>
+  </form>
+</div>
+
+<div class="wrap" id="listView" hidden>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icon-192.png" alt="Αναγνώστης" width="38" height="38">
+      <div>
+        <div class="brand-title">Αναγνώστης της Γλαύκας</div>
+        <div class="brand-sub" id="subLine">Μεγάλα &amp; μηνιαία άρθρα</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button type="button" class="btn" id="themeBtn" title="Αλλαγή θέματος">Θέμα</button>
+      <button type="button" class="btn" id="lockBtn">Κλείδωμα</button>
+      <button type="button" class="btn gold" id="installBtn" hidden>Εγκατάσταση app</button>
+    </div>
+  </header>
+
+  <input class="search" id="searchInput" type="search" placeholder="Αναζήτηση σε τίτλο ή θέμα…">
+  <nav class="chips" id="chips"></nav>
+  <main class="list" id="articlesList"></main>
+</div>
+
+<div class="reader" id="readerView" hidden>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="reader-bar">
+    <button type="button" class="btn" id="backBtn">← Άρθρα</button>
+    <div class="controls">
+      <button type="button" class="btn" id="fontDownBtn" aria-label="Μικρότερη γραμματοσειρά">A−</button>
+      <button type="button" class="btn" id="fontUpBtn" aria-label="Μεγαλύτερη γραμματοσειρά">A+</button>
+      <button type="button" class="btn" id="readerThemeBtn">Θέμα</button>
+      <button type="button" class="btn" id="favArtBtn">☆</button>
+      <button type="button" class="btn gold" id="markReadBtn">Διαβάστηκε ✓</button>
+    </div>
+  </div>
+  <article class="reader-body">
+    <div class="art-badges" id="rBadges"></div>
+    <h1 id="rTitle"></h1>
+    <div class="art-meta" id="rMeta"></div>
+    <img class="reader-hero" id="rHero" alt="" hidden>
+    <div class="prose" id="rContent"></div>
+    <div class="reader-foot">
+      <button type="button" class="btn gold" id="markReadBottomBtn">Σήμανση ως διαβασμένο ✓</button>
+      <a class="btn" id="openBlogLink" target="_blank" rel="noopener">Άνοιγμα στο Blog ↗</a>
+    </div>
+  </article>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const PIN_STORE = 'anagnostis_pin_v1';
+  const READ_STORE = 'anagnostis_read_v1';
+  const FAV_STORE  = 'anagnostis_fav_v1';
+  const THEME_STORE = 'anagnostis_theme_v1';
+  const SIZE_STORE  = 'anagnostis_size_v1';
+
+  const THEMES = ['dark', 'sepia', 'light'];
+  const THEME_LBL = { dark: 'Νύχτα', sepia: 'Χαρτί', light: 'Ημέρα' };
+  let themeIdx = Math.max(0, THEMES.indexOf(localStorage.getItem(THEME_STORE) || 'dark'));
+  let fontSize = Number(localStorage.getItem(SIZE_STORE) || '1.08');
+
+  function applyTheme() {
+    const t = THEMES[themeIdx];
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem(THEME_STORE, t);
+    $('themeBtn').textContent = THEME_LBL[t];
+    $('readerThemeBtn').textContent = THEME_LBL[t];
+  }
+  function cycleTheme() { themeIdx = (themeIdx + 1) % THEMES.length; applyTheme(); }
+  function applyFont() {
+    fontSize = Math.max(0.88, Math.min(1.45, Math.round(fontSize * 100) / 100));
+    document.documentElement.style.setProperty('--reader-size', fontSize + 'rem');
+    localStorage.setItem(SIZE_STORE, String(fontSize));
+  }
+  $('themeBtn').addEventListener('click', cycleTheme);
+  $('readerThemeBtn').addEventListener('click', cycleTheme);
+  $('fontDownBtn').addEventListener('click', () => { fontSize -= 0.08; applyFont(); });
+  $('fontUpBtn').addEventListener('click', () => { fontSize += 0.08; applyFont(); });
+  applyTheme();
+  applyFont();
+
+  let readSet = new Set();
+  let favSet  = new Set();
+  try { readSet = new Set(JSON.parse(localStorage.getItem(READ_STORE) || '[]')); } catch {}
+  try { favSet  = new Set(JSON.parse(localStorage.getItem(FAV_STORE)  || '[]')); } catch {}
+  const saveSets = () => {
+    try {
+      localStorage.setItem(READ_STORE, JSON.stringify([...readSet]));
+      localStorage.setItem(FAV_STORE,  JSON.stringify([...favSet]));
+    } catch {}
+  };
+
+  let allArticles = [];
+  let activeFilter = 'all';
+  let currentArt = null;
+
+  function fromB64(s) { return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); }
+
+  async function decryptData(pin) {
+    const resp = await fetch('./data.enc.json', { cache: 'no-store' });
+    if (!resp.ok) throw new Error('fetch');
+    const enc = await resp.json();
+    const keyMat = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: fromB64(enc.salt), iterations: enc.iter || 100000, hash: 'SHA-256' },
+      keyMat,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+    const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(enc.iv) }, key, fromB64(enc.data));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+
+  async function tryUnlock(pin) {
+    try {
+      const data = await decryptData(pin);
+      allArticles = data.articles || [];
+      try { localStorage.setItem(PIN_STORE, pin); } catch {}
+      $('lockScreen').hidden = true;
+      $('listView').hidden = false;
+      $('subLine').textContent = `${data.total} άρθρα · ${data.monthly} μηνιαία · ${data.scheduled} προγραμματισμένα`;
+      renderList();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  $('unlockForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pin = $('pinInput').value.trim();
+    if (!pin) return;
+    $('pinErr').textContent = 'Αποκρυπτογράφηση…';
+    const ok = await tryUnlock(pin);
+    if (!ok) {
+      $('pinErr').textContent = 'Λάθος PIN.';
+    } else {
+      $('pinInput').value = '';
+      $('pinErr').textContent = '';
+    }
+  });
+
+  $('lockBtn').addEventListener('click', () => {
+    localStorage.removeItem(PIN_STORE);
+    $('listView').hidden = true;
+    $('readerView').hidden = true;
+    $('lockScreen').hidden = false;
+    $('pinInput').focus();
+  });
+
+  function fmtDate(d) {
+    if (!d) return '';
+    const [y, m, day] = d.split('-');
+    return `${day}/${m}/${y}`;
+  }
+
+  function renderChips() {
+    const filters = [
+      ['all',       `Όλα (${allArticles.length})`],
+      ['monthly',   `Μηνιαία (${allArticles.filter((a) => a.isMonthly).length})`],
+      ['unread',    `Αδιάβαστα (${allArticles.filter((a) => !readSet.has(a.id)).length})`],
+      ['scheduled', `Προγραμματισμένα (${allArticles.filter((a) => a.status === 'future').length})`],
+      ['published', `Δημοσιευμένα (${allArticles.filter((a) => a.status === 'publish').length})`],
+      ['favs',      `★ Αγαπημένα (${favSet.size})`],
+    ];
+    const w = $('chips');
+    w.innerHTML = '';
+    filters.forEach(([id, lbl]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip';
+      b.setAttribute('aria-pressed', String(activeFilter === id));
+      b.textContent = lbl;
+      b.addEventListener('click', () => { activeFilter = id; renderList(); });
+      w.appendChild(b);
+    });
+  }
+
+  function renderList() {
+    renderChips();
+    const q = $('searchInput').value.trim().toLowerCase();
+    const items = allArticles.filter((a) => {
+      if (activeFilter === 'monthly'   && !a.isMonthly) return false;
+      if (activeFilter === 'unread'    && readSet.has(a.id)) return false;
+      if (activeFilter === 'scheduled' && a.status !== 'future') return false;
+      if (activeFilter === 'published' && a.status !== 'publish') return false;
+      if (activeFilter === 'favs'      && !favSet.has(a.id)) return false;
+      if (q && !(a.title.toLowerCase().includes(q) || (a.cats || []).join(' ').toLowerCase().includes(q))) return false;
+      return true;
+    });
+
+    const list = $('articlesList');
+    list.innerHTML = '';
+    if (!items.length) {
+      list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:30px">Δεν βρέθηκαν άρθρα.</p>';
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    items.forEach((a) => {
+      const isRead = readSet.has(a.id);
+      const card = document.createElement('article');
+      card.className = `art-card ${isRead ? 'read' : ''} ${a.img ? '' : 'no-img'}`;
+      const badges = [];
+      if (a.isMonthly) badges.push('<span class="badge monthly">Μηνιαίο</span>');
+      if (a.status === 'future') badges.push('<span class="badge future">Προγραμματισμένο</span>');
+      if (isRead) badges.push('<span class="badge done">Διαβάστηκε ✓</span>');
+      if (favSet.has(a.id)) badges.push('<span class="badge monthly">★</span>');
+
+      card.innerHTML = `
+        <div style="min-width:0">
+          <div class="art-badges">${badges.join('')}</div>
+          <h2 class="art-title"></h2>
+          <div class="art-meta">
+            <span>${fmtDate(a.date)}</span>
+            <span>${a.mins} λεπτά ανάγνωσης</span>
+            ${a.cats && a.cats.length ? `<span>${a.cats.slice(0,2).join(' · ')}</span>` : ''}
+          </div>
+        </div>
+        ${a.img ? `<img class="art-thumb" src="${a.img}" alt="" loading="lazy">` : ''}
+      `;
+      card.querySelector('.art-title').textContent = a.title;
+      card.addEventListener('click', () => openArticle(a));
+      frag.appendChild(card);
+    });
+    list.appendChild(frag);
+  }
+
+  function syncReaderButtons() {
+    if (!currentArt) return;
+    const isRead = readSet.has(currentArt.id);
+    const isFav  = favSet.has(currentArt.id);
+    $('markReadBtn').textContent = isRead ? 'Διαβάστηκε ✓' : 'Σήμανση ✓';
+    $('markReadBtn').classList.toggle('gold', isRead);
+    $('markReadBottomBtn').textContent = isRead ? 'Διαβάστηκε ✓ (Αναίρεση)' : 'Σήμανση ως διαβασμένο ✓';
+    $('favArtBtn').textContent = isFav ? '★' : '☆';
+    $('favArtBtn').classList.toggle('gold', isFav);
+  }
+
+  function openArticle(a) {
+    currentArt = a;
+    $('listView').hidden = true;
+    $('readerView').hidden = false;
+    const badges = [];
+    if (a.isMonthly) badges.push('<span class="badge monthly">Μηνιαίο Άρθρο</span>');
+    if (a.status === 'future') badges.push('<span class="badge future">Προγραμματισμένο</span>');
+    (a.cats || []).forEach((c) => badges.push(`<span class="badge">${c}</span>`));
+    $('rBadges').innerHTML = badges.join('');
+    $('rTitle').textContent = a.title;
+    $('rMeta').textContent = `${fmtDate(a.date)} · ${a.mins} λεπτά ανάγνωσης · ${a.words} λέξεις`;
+    if (a.img) { $('rHero').src = a.img; $('rHero').hidden = false; }
+    else { $('rHero').hidden = true; }
+    $('rContent').innerHTML = a.html;
+    $('openBlogLink').href = a.link || 'https://statistikosatlantas.com/';
+    $('openBlogLink').hidden = a.status === 'future';
+    syncReaderButtons();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function toggleRead() {
+    if (!currentArt) return;
+    if (readSet.has(currentArt.id)) readSet.delete(currentArt.id);
+    else readSet.add(currentArt.id);
+    saveSets();
+    syncReaderButtons();
+  }
+  function toggleFav() {
+    if (!currentArt) return;
+    if (favSet.has(currentArt.id)) favSet.delete(currentArt.id);
+    else favSet.add(currentArt.id);
+    saveSets();
+    syncReaderButtons();
+  }
+
+  $('markReadBtn').addEventListener('click', toggleRead);
+  $('markReadBottomBtn').addEventListener('click', toggleRead);
+  $('favArtBtn').addEventListener('click', toggleFav);
+  $('backBtn').addEventListener('click', () => {
+    $('readerView').hidden = true;
+    $('listView').hidden = false;
+    renderList();
+  });
+  $('searchInput').addEventListener('input', renderList);
+
+  window.addEventListener('scroll', () => {
+    if ($('readerView').hidden) return;
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    const pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+    $('progressBar').style.width = pct + '%';
+  }, { passive: true });
+
+  // PWA
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {}); });
+  }
+  let dp = null;
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); dp = e; $('installBtn').hidden = false; });
+  $('installBtn').addEventListener('click', async () => { if (!dp) return; dp.prompt(); try { await dp.userChoice; } catch {} dp = null; $('installBtn').hidden = true; });
+
+  // Auto-unlock if saved PIN exists
+  const savedPin = localStorage.getItem(PIN_STORE);
+  if (savedPin) {
+    tryUnlock(savedPin);
+  }
+})();
+</script>
+</body>
+</html>
