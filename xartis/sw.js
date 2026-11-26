@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xartis-atlanta-v1';
+const CACHE_NAME = 'xartis-atlanta-v2';
 const CORE_ASSETS = [
   './',
   './index.html',
