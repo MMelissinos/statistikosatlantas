@@ -14,13 +14,18 @@
 <meta name="apple-mobile-web-app-title" content="Άτλαντας">
 <style>
 :root {
-  --bg: #f6f8fb;
+  --bg: #f3f6fb;
   --surface: #ffffff;
-  --surface-2: #f0f4fa;
-  --fg: #111827;
+  --surface-2: #edf2f9;
+  --fg: #0f172a;
   --fg-muted: #5b667a;
-  --border: #e2e8f0;
+  --border: #dfe7f2;
   --accent: #1f5fbf;
+  --accent-soft: rgba(31, 95, 191, 0.10);
+  --gsc: #0d9488;
+  --gsc-soft: rgba(13, 148, 136, 0.11);
+  --yt: #dc2626;
+  --yt-soft: rgba(220, 38, 38, 0.10);
   --navy: #0e2746;
   --ok: #15803d;
   --ok-bg: #dcfce7;
@@ -28,31 +33,42 @@
   --bad-bg: #fee2e2;
   --warn: #b45309;
   --warn-bg: #fef3c7;
+  --warn-border: #fcd34d;
   --bar: #1f5fbf;
+  --bar-top: #3b82f6;
   --bar-best: #f29a2e;
   --grid: #e5ecf5;
-  --shadow: 0 1px 3px rgba(14, 39, 70, 0.06);
-  --radius: 12px;
+  --shadow: 0 1px 3px rgba(14, 39, 70, 0.05), 0 4px 14px rgba(14, 39, 70, 0.04);
+  --shadow-lg: 0 12px 32px rgba(14, 39, 70, 0.14);
+  --radius: 14px;
 }
 [data-theme="dark"] {
-  --bg: #0b1220;
-  --surface: #121c2e;
-  --surface-2: #18253c;
+  --bg: #09101d;
+  --surface: #111b2e;
+  --surface-2: #18253d;
   --fg: #f1f5f9;
   --fg-muted: #94a3b8;
-  --border: #24324a;
+  --border: #22314a;
   --accent: #60a5fa;
+  --accent-soft: rgba(96, 165, 250, 0.14);
+  --gsc: #2dd4bf;
+  --gsc-soft: rgba(45, 212, 191, 0.14);
+  --yt: #f87171;
+  --yt-soft: rgba(248, 113, 113, 0.14);
   --navy: #0e2746;
   --ok: #4ade80;
   --ok-bg: rgba(34, 197, 94, 0.16);
   --bad: #f87171;
   --bad-bg: rgba(239, 68, 68, 0.16);
   --warn: #fbbf24;
-  --warn-bg: rgba(245, 158, 11, 0.16);
+  --warn-bg: rgba(245, 158, 11, 0.14);
+  --warn-border: rgba(251, 191, 36, 0.35);
   --bar: #3b82f6;
+  --bar-top: #60a5fa;
   --bar-best: #f59e0b;
   --grid: #1e2d45;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
 }
 * { box-sizing: border-box; }
 html, body {
@@ -67,8 +83,9 @@ html, body {
 .wrap {
   max-width: 1040px;
   margin: 0 auto;
-  padding: max(16px, env(safe-area-inset-top)) 16px max(36px, env(safe-area-inset-bottom));
+  padding: max(16px, env(safe-area-inset-top)) 16px max(40px, env(safe-area-inset-bottom));
 }
+
 /* Lock screen */
 .lock-screen {
   min-height: 100dvh;
@@ -76,61 +93,60 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  background: radial-gradient(circle at top, var(--accent-soft), transparent 55%), var(--bg);
 }
 .lock-card {
   width: 100%;
-  max-width: 360px;
+  max-width: 370px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px 24px;
-  box-shadow: var(--shadow);
+  border-radius: 20px;
+  padding: 32px 26px;
+  box-shadow: var(--shadow-lg);
   text-align: center;
 }
-.lock-card img { width: 64px; height: 64px; border-radius: 14px; margin-bottom: 12px; }
-.lock-card h1 { font-size: 22px; margin: 0 0 6px; }
-.lock-card p { font-size: 14px; color: var(--fg-muted); margin: 0 0 18px; }
+.lock-card img { width: 64px; height: 64px; border-radius: 16px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(14,39,70,0.2); }
+.lock-card h1 { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.02em; }
+.lock-card p { font-size: 14px; color: var(--fg-muted); margin: 0 0 20px; }
 .lock-form { display: flex; flex-direction: column; gap: 10px; }
 .lock-form input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 14px;
   font-size: 16px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--surface-2);
   color: var(--fg);
   text-align: center;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 .lock-form input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.lock-err { color: var(--bad); font-size: 13px; min-height: 18px; margin-top: 8px; }
+
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 14px;
+  padding: 8px 12px;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 9px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--fg);
   cursor: pointer;
-  transition: opacity 0.15s, background 0.15s;
+  transition: transform 0.12s, background 0.15s, border-color 0.15s, opacity 0.15s;
 }
 .btn:hover { background: var(--surface-2); }
-.btn-primary {
-  background: var(--navy);
-  color: #fff;
-  border-color: var(--navy);
-}
+.btn:active { transform: scale(0.98); }
+.btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+.btn-icon { padding: 8px 10px; }
+.btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
 .btn-primary:hover { opacity: 0.92; background: var(--navy); }
-.btn-accent {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-.lock-err { color: var(--bad); font-size: 13px; min-height: 18px; margin-top: 6px; }
+.btn-accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-accent:hover { opacity: 0.92; background: var(--accent); }
 
 /* Header */
 .topbar {
@@ -139,31 +155,177 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 .brand { display: flex; align-items: center; gap: 12px; }
-.brand img { width: 42px; height: 42px; border-radius: 10px; }
-.brand h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
-.brand-sub { font-size: 12px; color: var(--fg-muted); }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.brand img { width: 42px; height: 42px; border-radius: 12px; box-shadow: 0 2px 8px rgba(14,39,70,0.18); }
+.brand h1 { font-size: 20px; margin: 0; letter-spacing: -0.02em; line-height: 1.2; }
+.brand-sub { font-size: 12px; color: var(--fg-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* Navigation tabs (desktop segmented bar) */
+.nav-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 5px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.nav-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--fg-muted);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  position: relative;
+}
+.nav-tab svg { width: 17px; height: 17px; flex-shrink: 0; }
+.nav-tab:hover { color: var(--fg); background: var(--surface-2); }
+.nav-tab.active[data-tab="atlas"] {
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(14, 39, 70, 0.25);
+}
+[data-theme="dark"] .nav-tab.active[data-tab="atlas"] {
+  background: var(--accent);
+  color: #081326;
+}
+.nav-tab.active[data-tab="gsc"] {
+  background: var(--gsc);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.28);
+}
+[data-theme="dark"] .nav-tab.active[data-tab="gsc"] { color: #052e2b; }
+.nav-tab.active[data-tab="youtube"] {
+  background: var(--yt);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.28);
+}
+[data-theme="dark"] .nav-tab.active[data-tab="youtube"] { color: #2b0808; }
+.tab-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.nav-tab.active .tab-badge {
+  background: rgba(255,255,255,0.22);
+  color: inherit;
+}
+
+/* Live dot */
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.55);
+  animation: pulse 2.2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.55); }
+  70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+/* Views */
+.view { display: none; animation: fadeIn 0.2s ease-out; }
+.view.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Screen Header */
+.screen-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 14px;
+}
+.screen-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.screen-title h2 { font-size: 19px; margin: 0; letter-spacing: -0.015em; }
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.chip-live { background: var(--ok-bg); color: var(--ok); }
+.chip-delay { background: var(--warn-bg); color: var(--warn); }
+.chip-gsc { background: var(--gsc-soft); color: var(--gsc); }
+.when { font-size: 12.5px; color: var(--fg-muted); }
+
+/* Hero summary */
 .lede {
   background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
   border-radius: var(--radius);
-  padding: 12px 16px;
-  margin: 0 0 22px;
+  padding: 13px 16px;
+  margin: 0 0 18px;
   font-size: 14.5px;
   color: var(--fg-muted);
   box-shadow: var(--shadow);
 }
 .lede b { color: var(--fg); font-variant-numeric: tabular-nums; }
+.lede.lede-gsc { border-left-color: var(--gsc); }
+.lede.lede-yt { border-left-color: var(--yt); }
+
+/* Callout / Notice */
+.callout {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  border-radius: var(--radius);
+  padding: 12px 15px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--fg);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.callout-ico { font-size: 16px; line-height: 1.3; flex-shrink: 0; }
+.callout b { font-weight: 700; }
+.callout-info {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+}
+.callout-info b { color: var(--fg); }
+
 .ios-tip {
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 10px 14px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   font-size: 13px;
   color: var(--fg-muted);
   display: flex;
@@ -172,138 +334,269 @@ html, body {
   gap: 10px;
 }
 
-/* Sections */
-.sec {
-  margin-top: 26px;
+/* Sub-section divider inside a view */
+.subhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 26px 0 12px;
   padding-top: 20px;
   border-top: 1px solid var(--border);
 }
-.sec:first-of-type { margin-top: 8px; padding-top: 0; border-top: none; }
-.sec-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 6px 12px;
-  margin-bottom: 14px;
-}
-.sec h2 { font-size: 17px; margin: 0; }
-.when { font-size: 12px; color: var(--fg-muted); }
+.subhead h3 { font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px; }
 
-/* Tiles */
+/* KPI Tiles */
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 11px;
   margin-bottom: 16px;
 }
 .tile {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px 15px;
+  padding: 15px 16px;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
+  position: relative;
+  overflow: hidden;
 }
-.k { font-size: 12px; color: var(--fg-muted); font-weight: 500; }
-.v { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; letter-spacing: -0.02em; }
-.d { font-size: 12px; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
-.good { color: var(--ok); font-weight: 600; }
-.bad { color: var(--bad); font-weight: 600; }
+.tile::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: transparent;
+}
+.tile.t-atlas::before { background: var(--accent); }
+.tile.t-gsc::before { background: var(--gsc); }
+.tile.t-yt::before { background: var(--yt); }
+.tile.t-warn::before { background: var(--warn); }
+.k { font-size: 12px; color: var(--fg-muted); font-weight: 600; }
+.v { font-size: 27px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.12; letter-spacing: -0.025em; }
+.d { font-size: 12px; color: var(--fg-muted); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.good { color: var(--ok); font-weight: 700; }
+.bad { color: var(--bad); font-weight: 700; }
 
-/* Chart */
+/* Cards */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 16px 18px;
   box-shadow: var(--shadow);
   margin-bottom: 14px;
 }
-.card h3 { font-size: 14px; margin: 0 0 10px; color: var(--fg); }
-.chart-wrap { position: relative; width: 100%; min-height: 190px; }
+.card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.card h3 { font-size: 14.5px; margin: 0; color: var(--fg); letter-spacing: -0.01em; }
+.card-sub { font-size: 12px; color: var(--fg-muted); }
+
+.chart-wrap { position: relative; width: 100%; min-height: 195px; }
 .chart-tip {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   pointer-events: none;
   background: var(--navy);
   color: #fff;
-  border-radius: 7px;
-  padding: 5px 9px;
+  border-radius: 8px;
+  padding: 6px 10px;
   font-size: 12px;
+  font-weight: 500;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.28);
   z-index: 5;
 }
-.note { font-size: 12px; color: var(--fg-muted); margin: 8px 0 0; }
+.note { font-size: 12px; color: var(--fg-muted); margin: 10px 0 0; }
 
 /* Tables */
 .two {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
   gap: 14px;
 }
 .scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 th {
   text-align: left;
-  font-size: 11.5px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   color: var(--fg-muted);
   border-bottom: 1px solid var(--border);
-  padding: 6px 8px 7px 0;
+  padding: 6px 8px 8px 0;
 }
 td {
-  padding: 8px 8px 8px 0;
+  padding: 9px 8px 9px 0;
   border-bottom: 1px solid var(--border);
-  vertical-align: top;
+  vertical-align: middle;
 }
 tr:last-child td { border-bottom: none; }
 th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-td a { color: var(--accent); text-decoration: none; }
+td a { color: var(--accent); text-decoration: none; font-weight: 500; }
 td a:hover { text-decoration: underline; }
+
+/* Inline micro bar */
+.bar-cell { min-width: 70px; }
+.micro-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  margin-top: 4px;
+  overflow: hidden;
+}
+.micro-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.micro-bar.mb-gsc > span { background: var(--gsc); }
+.micro-bar.mb-yt > span { background: var(--yt); }
+
 .pill {
   display: inline-block;
   font-size: 11px;
-  font-weight: 600;
-  padding: 2px 7px;
+  font-weight: 700;
+  padding: 2px 8px;
   border-radius: 999px;
   white-space: nowrap;
 }
 .pill-ok { background: var(--ok-bg); color: var(--ok); }
 .pill-bad { background: var(--bad-bg); color: var(--bad); }
 .pill-warn { background: var(--warn-bg); color: var(--warn); }
-.pill-tag { background: var(--surface-2); color: var(--fg-muted); }
+.pill-tag { background: var(--surface-2); color: var(--fg-muted); font-weight: 600; }
 
 /* System health row */
 .health-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 10px;
 }
 .health-item {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   padding: 12px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  box-shadow: var(--shadow);
 }
 .health-label { font-size: 13px; font-weight: 600; }
-.health-sub { font-size: 11.5px; color: var(--fg-muted); }
+.health-sub { font-size: 11.5px; color: var(--fg-muted); margin-top: 2px; }
+
+/* Modal: Refresh schedule guide */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 16, 29, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 60;
+}
+.modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 88dvh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px 22px 18px;
+  box-shadow: var(--shadow-lg);
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.modal-head h2 { font-size: 17px; margin: 0; }
+.sched-list { display: flex; flex-direction: column; gap: 10px; }
+.sched-row {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 13px;
+}
+.sched-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.sched-title { font-size: 13.5px; font-weight: 700; }
+.sched-desc { font-size: 12.5px; color: var(--fg-muted); margin: 0; line-height: 1.45; }
+
+/* Mobile bottom navigation */
+.bottom-nav {
+  display: none;
+}
+
 .hidden { display: none !important; }
 footer {
-  margin-top: 28px;
+  margin-top: 26px;
   text-align: center;
   font-size: 12px;
   color: var(--fg-muted);
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+  .brand h1 { font-size: 18px; }
+  .btn-label { display: none; }
+  .nav-tabs { display: none; }
+  .tiles { grid-template-columns: repeat(2, 1fr); gap: 9px; }
+  .tile { padding: 13px 13px; }
+  .v { font-size: 23px; }
+  .card { padding: 14px; }
+  .bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 6px 8px calc(8px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 18px rgba(14, 39, 70, 0.08);
+    z-index: 40;
+  }
+  .bnav-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--fg-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 4px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    position: relative;
+  }
+  .bnav-btn svg { width: 21px; height: 21px; }
+  .bnav-btn.active[data-tab="atlas"] { color: var(--accent); background: var(--accent-soft); }
+  .bnav-btn.active[data-tab="gsc"] { color: var(--gsc); background: var(--gsc-soft); }
+  .bnav-btn.active[data-tab="youtube"] { color: var(--yt); background: var(--yt-soft); }
 }
 </style>
 </head>
@@ -316,7 +609,7 @@ footer {
     <p>Εισήγαγε τον κωδικό πρόσβασης μία φορά — θα αποθηκευτεί στη συσκευή σου.</p>
     <form id="lockForm" class="lock-form">
       <input id="pinInput" type="password" autocomplete="current-password" placeholder="Κωδικός πρόσβασης" required>
-      <button type="submit" class="btn btn-primary" style="padding:11px;font-size:15px">Ξεκλείδωμα</button>
+      <button type="submit" class="btn btn-primary" style="padding:12px;font-size:15px">Ξεκλείδωμα</button>
     </form>
     <div id="lockErr" class="lock-err"></div>
   </div>
@@ -328,46 +621,80 @@ footer {
       <img src="icon-192.png" alt="Άτλαντας">
       <div>
         <h1>Πίνακας Άτλαντα</h1>
-        <div class="brand-sub" id="syncTime">Φόρτωση…</div>
+        <div class="brand-sub">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span id="syncTime">Φόρτωση…</span>
+        </div>
       </div>
     </div>
     <div class="actions">
       <button id="installBtn" class="btn btn-accent hidden" type="button">Εγκατάσταση</button>
-      <button id="refreshBtn" class="btn" type="button">Ανανέωση</button>
-      <button id="themeBtn" class="btn" type="button" title="Εναλλαγή θέματος">Θέμα</button>
-      <button id="lockBtn" class="btn" type="button" title="Κλείδωμα συσκευής">Κλείδωμα</button>
+      <button id="scheduleBtn" class="btn" type="button" title="Κάθε πότε ανανεώνεται τι;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="btn-label">Ρυθμός</span>
+      </button>
+      <button id="refreshBtn" class="btn" type="button" title="Ανανέωση δεδομένων">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+        <span class="btn-label" id="refreshLabel">Ανανέωση</span>
+      </button>
+      <button id="themeBtn" class="btn btn-icon" type="button" title="Εναλλαγή θέματος" aria-label="Εναλλαγή θέματος"></button>
+      <button id="lockBtn" class="btn btn-icon" type="button" title="Κλείδωμα συσκευής" aria-label="Κλείδωμα συσκευής">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </button>
     </div>
   </header>
 
   <div id="iosTip" class="ios-tip hidden">
     <span>Για εγκατάσταση σε iPhone/iPad: πάτα <b>Κοινοποίηση</b> → <b>Προσθήκη στην οθόνη Αφετηρίας</b>.</span>
-    <button id="iosClose" class="btn" type="button" style="padding:4px 8px">OK</button>
+    <button id="iosClose" class="btn" type="button" style="padding:4px 9px">OK</button>
   </div>
 
-  <p class="lede" id="lede">Φόρτωση δεδομένων…</p>
+  <!-- Desktop / Tablet Tab Switcher -->
+  <nav class="nav-tabs" role="tablist" aria-label="Ενότητες στατιστικών">
+    <button class="nav-tab active" role="tab" aria-selected="true" data-tab="atlas" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+      <span>Άτλαντας</span>
+      <span class="tab-badge">Live</span>
+    </button>
+    <button class="nav-tab" role="tab" aria-selected="false" data-tab="gsc" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Search Console</span>
+    </button>
+    <button class="nav-tab" role="tab" aria-selected="false" data-tab="youtube" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span>YouTube</span>
+    </button>
+  </nav>
 
-  <section class="sec" id="sec-blog">
-    <div class="sec-head">
-      <h2>Blog · WordPress &amp; Jetpack</h2>
-      <span class="when" id="blogWhen">Αυτόματος συγχρονισμός</span>
+  <!-- ==================== VIEW 1: ΑΤΛΑΝΤΑΣ (ΑΡΧΙΚΗ / LIVE) ==================== -->
+  <main id="view-atlas" class="view active" role="tabpanel">
+    <div class="screen-head">
+      <div class="screen-title">
+        <h2>Στατιστικός Άτλαντας · Blog</h2>
+        <span class="status-chip chip-live"><span class="live-dot"></span>Live · ανά 4 ώρες</span>
+      </div>
+      <span class="when" id="blogWhen">WordPress &amp; Jetpack</span>
     </div>
+
+    <p class="lede" id="ledeAtlas">Φόρτωση δεδομένων…</p>
+
     <div class="tiles">
-      <div class="tile">
+      <div class="tile t-atlas">
         <span class="k">Προβολές · 7 ημέρες</span>
         <span class="v" id="bViews7">—</span>
         <span class="d"><span id="bWeekChg">—</span> έναντι προηγ. 7 ημ.</span>
       </div>
-      <div class="tile">
+      <div class="tile t-atlas">
         <span class="k">Προβολές · 30 ημέρες</span>
         <span class="v" id="bViews30">—</span>
-        <span class="d" id="bAllTime">Σύνολο: —</span>
+        <span class="d" id="bAllTime">Ιστορικό σύνολο: —</span>
       </div>
-      <div class="tile">
+      <div class="tile t-atlas">
         <span class="k">Σήμερα / Χθες</span>
         <span class="v" id="bTodayYest">—</span>
-        <span class="d" id="bBestDay">Καλύτερη μέρα: —</span>
+        <span class="d" id="bBestDay">Καλύτερη: —</span>
       </div>
-      <div class="tile">
+      <div class="tile t-atlas">
         <span class="k">Posts (Δημ. / Προγρ.)</span>
         <span class="v" id="bPosts">—</span>
         <span class="d" id="bFollowers">Followers: —</span>
@@ -375,14 +702,20 @@ footer {
     </div>
 
     <div class="card">
-      <h3>Προβολές ανά ημέρα · τελευταίες 30 ημέρες</h3>
+      <div class="card-head">
+        <h3>Προβολές ανά ημέρα · τελευταίες 30 ημέρες</h3>
+        <span class="card-sub">Jetpack Stats</span>
+      </div>
       <div class="chart-wrap" id="dailyChart"></div>
-      <p class="note">Άγγιξε ή πέρασε το ποντίκι πάνω σε κάθε μπάρα για προβολές και επισκέπτες. Με πορτοκαλί η καλύτερη ημέρα της περιόδου.</p>
+      <p class="note">Άγγιξε ή πέρασε το ποντίκι πάνω σε κάθε μπάρα για προβολές και επισκέπτες. Με πορτοκαλί η καλύτερη ημέρα.</p>
     </div>
 
     <div class="two">
       <div class="card">
-        <h3>Επόμενα προγραμματισμένα (Άρθρα &amp; Podcasts)</h3>
+        <div class="card-head">
+          <h3>Επόμενα προγραμματισμένα</h3>
+          <span class="card-sub">Άρθρα &amp; Podcasts</span>
+        </div>
         <div class="scroll">
           <table>
             <thead><tr><th>Ημερομηνία</th><th>Τίτλος</th></tr></thead>
@@ -391,7 +724,10 @@ footer {
         </div>
       </div>
       <div class="card">
-        <h3>Πρόσφατα δημοσιευμένα</h3>
+        <div class="card-head">
+          <h3>Πρόσφατα δημοσιευμένα</h3>
+          <span class="card-sub">Τελευταία 8 posts</span>
+        </div>
         <div class="scroll">
           <table>
             <thead><tr><th>Ημερομηνία</th><th>Τίτλος</th></tr></thead>
@@ -400,22 +736,56 @@ footer {
         </div>
       </div>
     </div>
-  </section>
 
-  <section class="sec" id="sec-gsc">
-    <div class="sec-head">
-      <h2>Google Search Console</h2>
-      <span class="when" id="gscWhen">28 ημέρες · Google API</span>
+    <div class="subhead">
+      <h3>Υγεία Συστήματος &amp; Αυτοματισμού</h3>
+      <span class="when">Backup 02:00 · Sync κάθε 4 ώρες</span>
     </div>
+    <div class="health-grid" id="healthGrid"></div>
+  </main>
+
+  <!-- ==================== VIEW 2: GOOGLE SEARCH CONSOLE ==================== -->
+  <section id="view-gsc" class="view" role="tabpanel">
+    <div class="screen-head">
+      <div class="screen-title">
+        <h2>Google Search Console</h2>
+        <span class="status-chip chip-gsc">28 ημέρες</span>
+        <span class="status-chip chip-delay">⏱ Καθυστέρηση 1–2 ημ.</span>
+      </div>
+      <span class="when" id="gscWhen">Google API</span>
+    </div>
+
+    <p class="lede lede-gsc" id="ledeGsc">Φόρτωση δεδομένων Search Console…</p>
+
     <div class="tiles">
-      <div class="tile"><span class="k">Κλικ</span><span class="v" id="gClicks">—</span></div>
-      <div class="tile"><span class="k">Εμφανίσεις</span><span class="v" id="gImpr">—</span></div>
-      <div class="tile"><span class="k">CTR %</span><span class="v" id="gCtr">—</span></div>
-      <div class="tile"><span class="k">Μέση θέση</span><span class="v" id="gPos">—</span></div>
+      <div class="tile t-gsc">
+        <span class="k">Κλικ από Google</span>
+        <span class="v" id="gClicks">—</span>
+        <span class="d">Τελευταίες 28 ημέρες</span>
+      </div>
+      <div class="tile t-gsc">
+        <span class="k">Εμφανίσεις</span>
+        <span class="v" id="gImpr">—</span>
+        <span class="d">Αποτελέσματα αναζήτησης</span>
+      </div>
+      <div class="tile t-gsc">
+        <span class="k">CTR %</span>
+        <span class="v" id="gCtr">—</span>
+        <span class="d">Ποσοστό κλικ</span>
+      </div>
+      <div class="tile t-gsc">
+        <span class="k">Μέση θέση</span>
+        <span class="v" id="gPos">—</span>
+        <span class="d">Χαμηλότερο = καλύτερο</span>
+      </div>
     </div>
+
     <div class="two">
       <div class="card">
-        <h3>Κορυφαίες αναζητήσεις</h3>
+        <div class="card-head">
+          <h3>Κορυφαίες αναζητήσεις</h3>
+          <span class="card-sub">Top 25 queries</span>
+        </div>
         <div class="scroll">
           <table>
             <thead><tr><th>Αναζήτηση</th><th class="n">Εμφ.</th><th class="n">Κλικ</th><th class="n">Θέση</th></tr></thead>
@@ -424,7 +794,10 @@ footer {
         </div>
       </div>
       <div class="card">
-        <h3>Σελίδες στο Google</h3>
+        <div class="card-head">
+          <h3>Σελίδες στο Google</h3>
+          <span class="card-sub">Top 10 pages</span>
+        </div>
         <div class="scroll">
           <table>
             <thead><tr><th>Σελίδα</th><th class="n">Εμφ.</th><th class="n">Κλικ</th><th class="n">Θέση</th></tr></thead>
@@ -433,24 +806,53 @@ footer {
         </div>
       </div>
     </div>
+
+    <div class="callout callout-info">
+      <span class="callout-ico">ℹ️</span>
+      <div><b>Ρυθμός ανανέωσης Search Console:</b> Ο συγχρονισμός τραβάει νέα στοιχεία κάθε 4 ώρες, αλλά η ίδια η Google δημοσιεύει τα δεδομένα του Search Console με <b>καθυστέρηση 1–2 ημερών</b> (δεν περιλαμβάνει τη σημερινή ημέρα).</div>
+    </div>
   </section>
 
-  <section class="sec" id="sec-yt">
-    <div class="sec-head">
-      <h2>YouTube · Atlas Choir</h2>
-      <span class="when" id="ytWhen">28 ημέρες · YouTube API</span>
+  <!-- ==================== VIEW 3: YOUTUBE (ATLAS CHOIR) ==================== -->
+  <section id="view-youtube" class="view" role="tabpanel">
+    <div class="screen-head">
+      <div class="screen-title">
+        <h2>YouTube · Atlas Choir</h2>
+        <span class="status-chip chip-live"><span class="live-dot"></span>Live προβολές · ανά 4 ώρες</span>
+      </div>
+      <span class="when" id="ytWhen">YouTube Data API</span>
     </div>
+
+    <p class="lede lede-yt" id="ledeYt">Φόρτωση δεδομένων YouTube…</p>
+
     <div class="tiles">
-      <div class="tile"><span class="k">Προβολές · 24 ώρες</span><span class="v" id="y24">—</span></div>
-      <div class="tile"><span class="k">Προβολές · 7 ημέρες</span><span class="v" id="y7">—</span></div>
-      <div class="tile"><span class="k">Προβολές · συνολικά</span><span class="v" id="yTotal">—</span></div>
-      <div class="tile"><span class="k" id="y28k">Προβολές · 28 ημ.</span><span class="v" id="y28">—</span></div>
-      <div class="tile"><span class="k" id="yHoursK">Ώρες θέασης · 28 ημ.</span><span class="v" id="yHours">—</span></div>
-      <div class="tile"><span class="k">Συνδρομητές</span><span class="v" id="ySubs">—</span></div>
-      <div class="tile"><span class="k">Βίντεο</span><span class="v" id="yVids">—</span></div>
+      <div class="tile t-yt">
+        <span class="k">Προβολές · 24 ώρες</span>
+        <span class="v" id="y24">—</span>
+        <span class="d" id="y24Sub">Ζωντανή διαφορά</span>
+      </div>
+      <div class="tile t-yt">
+        <span class="k">Προβολές · 7 ημέρες</span>
+        <span class="v" id="y7">—</span>
+        <span class="d" id="y7Sub">Ζωντανή διαφορά</span>
+      </div>
+      <div class="tile t-yt">
+        <span class="k">Προβολές · συνολικά</span>
+        <span class="v" id="yTotal">—</span>
+        <span class="d">Άθροισμα όλων των βίντεο</span>
+      </div>
+      <div class="tile t-yt">
+        <span class="k">Συνδρομητές</span>
+        <span class="v" id="ySubs">—</span>
+        <span class="d" id="yVidsSub">Βίντεο: —</span>
+      </div>
     </div>
+
     <div class="card">
-      <h3>Βίντεο τώρα · ζωντανοί μετρητές</h3>
+      <div class="card-head">
+        <h3>Βίντεο τώρα · ζωντανοί μετρητές</h3>
+        <span class="card-sub">YouTube Data API · Top 10</span>
+      </div>
       <div class="scroll">
         <table>
           <thead><tr><th>Βίντεο</th><th class="n">24 ώρες</th><th class="n">Συνολικά</th></tr></thead>
@@ -459,39 +861,131 @@ footer {
       </div>
       <p class="note" id="ytLiveNote">Ζωντανοί μετρητές από το YouTube Data API, σε κάθε συγχρονισμό (κάθε 4 ώρες).</p>
     </div>
+
+    <!-- Ξεχωριστή ενότητα για YouTube Analytics (2–3 ημέρες καθυστέρηση) -->
+    <div class="subhead">
+      <h3>YouTube Analytics · Ώρες θέασης &amp; 28 ημέρες</h3>
+      <span class="status-chip chip-delay" id="ytAnBadge">⏱ Καθυστέρηση 2–3 ημ. από Google</span>
+    </div>
+
+    <div class="callout" id="ytWatchExplain">
+      <span class="callout-ico">⏳</span>
+      <div id="ytWatchExplainText">Το YouTube Analytics (η μόνη πηγή για τις ώρες θέασης) ενημερώνεται από τη Google με καθυστέρηση 2–3 ημερών.</div>
+    </div>
+
+    <div class="tiles">
+      <div class="tile t-warn">
+        <span class="k" id="yHoursK">Ώρες θέασης · 28 ημ.</span>
+        <span class="v" id="yHours">—</span>
+        <span class="d" id="yHoursSub">Μόνο έως την ημερομηνία Analytics</span>
+      </div>
+      <div class="tile t-warn">
+        <span class="k" id="y28k">Προβολές Analytics · 28 ημ.</span>
+        <span class="v" id="y28">—</span>
+        <span class="d">Δεν περιλαμβάνει τις τελευταίες 2–3 ημ.</span>
+      </div>
+      <div class="tile t-warn">
+        <span class="k">Νέοι συνδρομητές · 28 ημ.</span>
+        <span class="v" id="ySubsGained">—</span>
+        <span class="d">Καθαρή μεταβολή (Analytics)</span>
+      </div>
+    </div>
+
     <div class="card">
-      <h3 id="ytTopH">Κορυφαία βίντεο · 28 ημέρες</h3>
+      <div class="card-head">
+        <h3 id="ytTopH">Κορυφαία βίντεο · 28 ημέρες (Analytics)</h3>
+        <span class="card-sub">Καθυστερημένα 2–3 ημέρες</span>
+      </div>
       <div class="scroll">
         <table>
-          <thead><tr><th>Βίντεο</th><th class="n">Προβολές</th></tr></thead>
+          <thead><tr><th>Βίντεο</th><th class="n">Προβολές περιόδου</th></tr></thead>
           <tbody id="tblYt"></tbody>
         </table>
       </div>
-      <p class="note">Το YouTube Analytics έχει καθυστέρηση 2–3 ημερών· τα νέα βίντεο φαίνονται πρώτα στις συνολικές προβολές.</p>
     </div>
   </section>
 
-  <section class="sec" id="sec-sys">
-    <div class="sec-head">
-      <h2>Υγεία Συστήματος &amp; Αυτοματισμού</h2>
-      <span class="when">Καθημερινό Backup 02:00 &amp; API Sync</span>
-    </div>
-    <div class="health-grid" id="healthGrid"></div>
-  </section>
+  <footer>Πίνακας Άτλαντα · Αυτόνομο PWA (AES-256-GCM) · Αυτόματος συγχρονισμός κάθε 4 ώρες</footer>
+</div>
 
-  <footer>Πίνακας Άτλαντα · Αυτόνομο PWA (AES-256-GCM) · Μηδενική εξάρτηση από Claude</footer>
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav hidden" id="bottomNav" aria-label="Πλοήγηση εφαρμογής">
+  <button class="bnav-btn active" data-tab="atlas" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+    <span>Άτλαντας</span>
+  </button>
+  <button class="bnav-btn" data-tab="gsc" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search Console</span>
+  </button>
+  <button class="bnav-btn" data-tab="youtube" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    <span>YouTube</span>
+  </button>
+</nav>
+
+<!-- Schedule / Freshness Modal -->
+<div id="scheduleModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="schedTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="schedTitle">Κάθε πότε ανανεώνεται τι;</h2>
+      <button id="schedClose" class="btn" type="button" style="padding:5px 10px">Κλείσιμο</button>
+    </div>
+    <div class="sched-list">
+      <div class="sched-row">
+        <div class="sched-top">
+          <span class="sched-title">Αυτόματος συγχρονισμός (PC → PWA)</span>
+          <span class="pill pill-ok">Κάθε 4 ώρες + 02:00</span>
+        </div>
+        <p class="sched-desc">Το PC τρέχει αυτόματα στις <b>00:00, 04:00, 08:00, 12:00, 16:00, 20:00</b> (και στις <b>02:00</b> με το backup), κρυπτογραφεί τα νέα νούμερα και τα ανεβάζει εδώ. Η εφαρμογή φέρνει αυτόματα τη νεότερη έκδοση όταν την ανοίγεις.</p>
+      </div>
+      <div class="sched-row">
+        <div class="sched-top">
+          <span class="sched-title">Στατιστικός Άτλαντας (WordPress &amp; Jetpack)</span>
+          <span class="pill pill-ok">Live</span>
+        </div>
+        <p class="sched-desc">Προβολές σήμερα/χθες, 30 ημερών, δημοσιευμένα &amp; προγραμματισμένα άρθρα ανανεώνονται <b>ζωντανά</b> σε κάθε 4ωρο συγχρονισμό.</p>
+      </div>
+      <div class="sched-row">
+        <div class="sched-top">
+          <span class="sched-title">YouTube · Προβολές, Βίντεο, Συνδρομητές</span>
+          <span class="pill pill-ok">Live (Data API)</span>
+        </div>
+        <p class="sched-desc">Αθροίζει τους <b>ζωντανούς μετρητές κάθε βίντεο</b> σε κάθε 4ωρο συγχρονισμό. Έτσι οι συνολικές προβολές και τα «24 ώρες / 7 ημέρες» είναι πάντα φρέσκα.</p>
+      </div>
+      <div class="sched-row">
+        <div class="sched-top">
+          <span class="sched-title">Google Search Console</span>
+          <span class="pill pill-warn">Καθυστέρηση 1–2 ημ.</span>
+        </div>
+        <p class="sched-desc">Ελέγχεται κάθε 4 ώρες, αλλά η ίδια η Google ολοκληρώνει τα κλικ/εμφανίσεις με 24–48 ώρες καθυστέρηση (δεν υπάρχουν σημερινά στοιχεία).</p>
+      </div>
+      <div class="sched-row">
+        <div class="sched-top">
+          <span class="sched-title">YouTube · Ώρες θέασης (Watch Time)</span>
+          <span class="pill pill-warn">Καθυστέρηση 2–3 ημ.</span>
+        </div>
+        <p class="sched-desc">Το YouTube Data API <b>δεν δίνει καθόλου ώρες θέασης</b>. Οι ώρες θέασης έρχονται μόνο από το YouTube Analytics API, που η Google καθυστερεί 2–3 ημέρες — γι' αυτό αντιστοιχούν μόνο στις προβολές έως εκείνη την ημερομηνία.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 (function () {
   const PIN_KEY = 'atlas_pinakas_pin_v1';
   const THEME_KEY = 'atlas_pinakas_theme_v1';
+  const VALID_TABS = ['atlas', 'gsc', 'youtube'];
   const $ = (id) => document.getElementById(id);
 
   // Theme handling
+  const SUN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+  const MOON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
-    $('themeBtn').textContent = t === 'dark' ? 'Φωτεινό' : 'Σκοτεινό';
+    $('themeBtn').innerHTML = t === 'dark' ? SUN_SVG : MOON_SVG;
+    $('themeBtn').title = t === 'dark' ? 'Φωτεινό θέμα' : 'Σκοτεινό θέμα';
   }
   const savedTheme = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   applyTheme(savedTheme);
@@ -501,12 +995,49 @@ footer {
     applyTheme(next);
   });
 
+  // Tab navigation (default: atlas)
+  let currentTab = 'atlas';
+  function setTab(tab, updateHash = true) {
+    if (!VALID_TABS.includes(tab)) tab = 'atlas';
+    currentTab = tab;
+    VALID_TABS.forEach((t) => {
+      const view = $('view-' + t);
+      if (view) view.classList.toggle('active', t === tab);
+    });
+    document.querySelectorAll('[data-tab]').forEach((btn) => {
+      const isAct = btn.getAttribute('data-tab') === tab;
+      btn.classList.toggle('active', isAct);
+      if (btn.getAttribute('role') === 'tab') btn.setAttribute('aria-selected', String(isAct));
+    });
+    if (updateHash) {
+      const targetHash = tab === 'atlas' ? '#atlas' : '#' + tab;
+      if (location.hash !== targetHash) history.replaceState(null, '', targetHash);
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  document.querySelectorAll('[data-tab]').forEach((btn) => {
+    btn.addEventListener('click', () => setTab(btn.getAttribute('data-tab')));
+  });
+  window.addEventListener('hashchange', () => {
+    const h = (location.hash || '').replace('#', '');
+    if (VALID_TABS.includes(h)) setTab(h, false);
+  });
+  const initialHash = (location.hash || '').replace('#', '');
+  setTab(VALID_TABS.includes(initialHash) ? initialHash : 'atlas', false);
+
+  // Schedule modal
+  const modal = $('scheduleModal');
+  $('scheduleBtn').addEventListener('click', () => modal.classList.remove('hidden'));
+  $('schedClose').addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.add('hidden'); });
+
   // PWA Service Worker & Install prompt
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
       .then((reg) => reg.update()).catch(() => {});
-    // Όταν ενεργοποιηθεί νέα έκδοση, ξαναφόρτωσε μία φορά ώστε να φανεί αμέσως.
-    let swReloaded = !navigator.serviceWorker.controller; // 1η επίσκεψη: δεν χρειάζεται reload
+    let swReloaded = !navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (swReloaded) return;
       swReloaded = true;
@@ -550,6 +1081,18 @@ footer {
     if (Number.isNaN(d.getTime())) return iso.replace('T', ' ').slice(0, 16);
     return d.toLocaleString('el-GR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
+  function fmtRel(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    const mins = Math.round((Date.now() - d.getTime()) / 60000);
+    if (mins < 2) return 'μόλις τώρα';
+    if (mins < 60) return `πριν ${mins} λεπτά`;
+    const hrs = Math.round(mins / 60);
+    if (hrs < 24) return `πριν ${hrs} ${hrs === 1 ? 'ώρα' : 'ώρες'}`;
+    const days = Math.round(hrs / 24);
+    return `πριν ${days} ${days === 1 ? 'ημέρα' : 'ημέρες'}`;
+  }
   function fmtShortDate(iso) {
     if (!iso) return '—';
     const m = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}:\d{2}))?/.exec(iso);
@@ -561,6 +1104,9 @@ footer {
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
     return arr;
+  }
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
   async function decryptPayload(enc, pin) {
@@ -598,12 +1144,12 @@ footer {
       el.innerHTML = '<p class="note">Δεν υπάρχουν διαθέσιμα ημερήσια δεδομένα.</p>';
       return;
     }
-    const W = 720, H = 195, m = { t: 14, r: 8, b: 26, l: 38 };
+    const W = 720, H = 200, m = { t: 16, r: 8, b: 26, l: 38 };
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
     const maxV = Math.max(1, ...daily.map((d) => d.views || 0));
     const niceMax = maxV <= 5 ? 5 : Math.ceil(maxV / 10) * 10;
     const stepX = iw / daily.length;
-    const barW = Math.max(4, stepX * 0.72);
+    const barW = Math.max(5, stepX * 0.7);
 
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
@@ -612,7 +1158,14 @@ footer {
     svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label', 'Ημερήσιες προβολές blog 30 ημερών');
 
-    // Horizontal gridlines
+    const defs = document.createElementNS(ns, 'defs');
+    defs.innerHTML =
+      '<linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="var(--bar-top)"/>' +
+      '<stop offset="100%" stop-color="var(--bar)"/>' +
+      '</linearGradient>';
+    svg.appendChild(defs);
+
     for (let i = 0; i <= 4; i++) {
       const val = Math.round((niceMax / 4) * i);
       const y = m.t + ih - (val / niceMax) * ih;
@@ -623,10 +1176,11 @@ footer {
       line.setAttribute('y2', y);
       line.setAttribute('stroke', 'var(--grid)');
       line.setAttribute('stroke-width', '1');
+      if (i > 0) line.setAttribute('stroke-dasharray', '3 3');
       svg.appendChild(line);
 
       const lbl = document.createElementNS(ns, 'text');
-      lbl.setAttribute('x', m.l - 6);
+      lbl.setAttribute('x', m.l - 7);
       lbl.setAttribute('y', y + 4);
       lbl.setAttribute('text-anchor', 'end');
       lbl.setAttribute('fill', 'var(--fg-muted)');
@@ -649,8 +1203,8 @@ footer {
       rect.setAttribute('y', y.toFixed(1));
       rect.setAttribute('width', barW.toFixed(1));
       rect.setAttribute('height', h.toFixed(1));
-      rect.setAttribute('rx', '2');
-      rect.setAttribute('fill', d.views === maxV && maxV > 0 ? 'var(--bar-best)' : 'var(--bar)');
+      rect.setAttribute('rx', '3');
+      rect.setAttribute('fill', d.views === maxV && maxV > 0 ? 'var(--bar-best)' : 'url(#barGrad)');
       rect.style.cursor = 'pointer';
 
       const showTip = () => {
@@ -695,10 +1249,16 @@ footer {
       cols.forEach((c) => {
         const td = tr.insertCell();
         const val = typeof c.get === 'function' ? c.get(r) : r[c.f];
-        if (c.num) {
+        if (c.barMax !== undefined) {
+          td.className = 'n bar-cell';
+          const num = Number(val) || 0;
+          const pct = c.barMax > 0 ? Math.max(4, Math.min(100, (num / c.barMax) * 100)) : 0;
+          td.innerHTML = `<div>${fmt(val, c.dec || 0)}</div><div class="micro-bar ${c.barCls || ''}"><span style="width:${pct.toFixed(1)}%"></span></div>`;
+        } else if (c.num) {
           td.className = 'n';
           td.textContent = fmt(val, c.dec || 0);
         } else if (c.html) {
+          if (c.cls) td.className = c.cls;
           td.innerHTML = val;
         } else if (c.link && r[c.link] && /^https?:\/\//.test(r[c.link])) {
           const a = document.createElement('a');
@@ -715,7 +1275,8 @@ footer {
   }
 
   function render(data) {
-    $('syncTime').textContent = `Τελευταία ενημέρωση: ${fmtDateTime(data.generated_at)}`;
+    const rel = fmtRel(data.generated_at);
+    $('syncTime').textContent = `Ενημέρωση: ${fmtDateTime(data.generated_at)}${rel ? ` (${rel})` : ''}`;
 
     const blog = data.blog || {};
     const jp = blog.jetpack || {};
@@ -723,18 +1284,16 @@ footer {
     const yt = data.youtube || {};
     const sys = data.system || {};
 
+    // ---------- 1. ΑΤΛΑΝΤΑΣ (LIVE) ----------
     const chg = jp.week_change_pct;
     const chgText = chg === null || chg === undefined ? '—' : `${chg > 0 ? '+' : ''}${fmt(chg, 1)}%`;
-    const gImpr = findMetric(gsc.summary, 'impressions');
-    const ytLive = yt.live || {};
-    const yTot = ytLive.views_total ?? findMetric(yt.summary, 'views_total');
 
-    $('lede').innerHTML =
-      `Το blog είχε <b>${fmt(jp.views_7d)}</b> προβολές τις τελευταίες 7 ημέρες ` +
+    $('ledeAtlas').innerHTML =
+      `Σήμερα <b>${fmt(jp.views_today)}</b> προβολές (${fmt(jp.visitors_today)} επισκέπτες) · ` +
+      `τις τελευταίες 7 ημέρες <b>${fmt(jp.views_7d)}</b> προβολές ` +
       `(<b class="${chg > 0 ? 'good' : chg < 0 ? 'bad' : ''}">${chgText}</b> έναντι των 7 προηγούμενων). ` +
-      `Στο Google είχε <b>${fmt(gImpr)}</b> εμφανίσεις σε 28 ημέρες και το Atlas Choir έχει <b>${fmt(yTot)}</b> συνολικές προβολές στο YouTube.`;
+      `Έτοιμα <b>${fmt(blog.scheduled_count)}</b> προγραμματισμένα posts.`;
 
-    // Blog KPIs
     $('bViews7').textContent = fmt(jp.views_7d);
     const wc = $('bWeekChg');
     wc.textContent = chgText;
@@ -745,73 +1304,19 @@ footer {
     $('bBestDay').textContent = jp.best_day ? `Καλύτερη: ${fmtShortDate(jp.best_day)} (${fmt(jp.best_day_views)})` : '—';
     $('bPosts').textContent = `${fmt(blog.published_count)} / ${fmt(blog.scheduled_count)}`;
     $('bFollowers').textContent = `Followers: ${fmt(jp.followers)}`;
-    if (blog.fetched_at) $('blogWhen').textContent = `WordPress & Jetpack · ${fmtShortDate(blog.fetched_at)}`;
+    if (blog.fetched_at) $('blogWhen').textContent = `Τελευταία λήψη: ${fmtDateTime(blog.fetched_at)}`;
 
     renderChart(jp.daily || []);
 
     fillTable('tblUpcoming', blog.upcoming_major || [], [
       { get: (r) => `${fmtShortDate(r.date)}` },
-      { html: true, get: (r) => `<span class="pill pill-tag">${r.kind || 'Άρθρο'}</span> ${escapeHtml(r.title)}` }
+      { html: true, get: (r) => `<span class="pill pill-tag">${escapeHtml(r.kind || 'Άρθρο')}</span> ${escapeHtml(r.title)}` }
     ], 'Δεν υπάρχουν προγραμματισμένα άρθρα/podcasts.');
 
     fillTable('tblRecent', blog.recent_posts || [], [
       { get: (r) => fmtShortDate(r.date) },
       { f: 'title', link: 'url' }
     ], 'Δεν βρέθηκαν πρόσφατα posts.');
-
-    // GSC
-    if (Array.isArray(gsc.window) && gsc.window.length === 2) {
-      $('gscWhen').textContent = `${fmtShortDate(gsc.window[0])} – ${fmtShortDate(gsc.window[1])} · Google API`;
-    }
-    $('gClicks').textContent = fmt(findMetric(gsc.summary, 'clicks'));
-    $('gImpr').textContent = fmt(gImpr);
-    $('gCtr').textContent = fmt(findMetric(gsc.summary, 'ctr'), 1);
-    $('gPos').textContent = fmt(findMetric(gsc.summary, 'position'), 1);
-    fillTable('tblGscQ', gsc.queries || [], [
-      { f: 'query' },
-      { f: 'impressions', num: true },
-      { f: 'clicks', num: true },
-      { f: 'position', num: true, dec: 1 }
-    ]);
-    fillTable('tblGscP', gsc.pages || [], [
-      { f: 'page', link: 'url' },
-      { f: 'impressions', num: true },
-      { f: 'clicks', num: true },
-      { f: 'position', num: true, dec: 1 }
-    ]);
-
-    // YouTube
-    // Επικεφαλίδα = ώρα ζωντανών μετρητών. Το παράθυρο του Analytics (καθυστέρηση 2–3 ημ.) πάει μόνο στα «28 ημ.».
-    $('ytWhen').textContent = ytLive.as_of ? `ζωντανά · ${fmtDateTime(ytLive.as_of)}` : 'YouTube API';
-    if (Array.isArray(yt.window) && yt.window.length === 2) {
-      const upTo = ` (έως ${fmtShortDate(yt.window[1])})`;
-      $('y28k').textContent = 'Προβολές · 28 ημ.' + upTo;
-      $('yHoursK').textContent = 'Ώρες θέασης · 28 ημ.' + upTo;
-      $('ytTopH').textContent = `Κορυφαία βίντεο · ${fmtShortDate(yt.window[0])} – ${fmtShortDate(yt.window[1])}`;
-    }
-    $('yTotal').textContent = fmt(yTot);
-    $('y24').textContent = fmt(ytLive.views_24h);
-    $('y7').textContent = fmt(ytLive.views_7d);
-    fillTable('tblYtLive', ytLive.top || [], [
-      { f: 'video' },
-      { f: 'views_24h', num: true },
-      { f: 'views_total', num: true }
-    ], 'Δεν υπάρχουν ακόμη ζωντανοί μετρητές.');
-    if (ytLive.as_of) {
-      let since = ytLive.since_24h ? ` · «24 ώρες» = από ${fmtDateTime(ytLive.since_24h)}` : ' · οι στήλες «24 ώρες» γεμίζουν από τον επόμενο συγχρονισμό';
-      if (ytLive.since_7d && (new Date(ytLive.as_of) - new Date(ytLive.since_7d)) < 6.5 * 864e5) {
-        since += ` · «7 ημέρες» = από ${fmtDateTime(ytLive.since_7d)} (λιγότερο ιστορικό ακόμη)`;
-      }
-      $('ytLiveNote').textContent = `Ζωντανοί μετρητές YouTube Data API, ${fmtDateTime(ytLive.as_of)}${since}`;
-    }
-    $('y28').textContent = fmt(findMetric(yt.summary, 'views_28d'));
-    $('yHours').textContent = fmt(findMetric(yt.summary, 'watch_hours_28d'), 1);
-    $('ySubs').textContent = fmt(findMetric(yt.summary, 'subs_total'));
-    $('yVids').textContent = fmt(findMetric(yt.summary, 'videos_total'));
-    fillTable('tblYt', yt.top || [], [
-      { f: 'video' },
-      { f: 'views', num: true }
-    ], 'Το YouTube Analytics δεν έχει επιστρέψει ακόμη δεδομένα 28 ημερών (καθυστέρηση 2–3 ημερών).');
 
     // System Health
     const items = [
@@ -847,10 +1352,110 @@ footer {
       div.innerHTML = `<div><div class="health-label">${escapeHtml(it.label)}</div><div class="health-sub">${escapeHtml(it.sub)}</div></div><span class="pill ${cls}">${escapeHtml(txt)}</span>`;
       hg.appendChild(div);
     });
-  }
 
-  function escapeHtml(s) {
-    return String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // ---------- 2. SEARCH CONSOLE ----------
+    const gClicks = findMetric(gsc.summary, 'clicks');
+    const gImpr = findMetric(gsc.summary, 'impressions');
+    const gCtr = findMetric(gsc.summary, 'ctr');
+    const gPos = findMetric(gsc.summary, 'position');
+    const gWinText = Array.isArray(gsc.window) && gsc.window.length === 2
+      ? `${fmtShortDate(gsc.window[0])} – ${fmtShortDate(gsc.window[1])}` : '28 ημέρες';
+
+    $('gscWhen').textContent = `Περίοδος: ${gWinText}`;
+    $('ledeGsc').innerHTML =
+      `Στο Google (${gWinText}) το site είχε <b>${fmt(gImpr)}</b> εμφανίσεις και <b>${fmt(gClicks)}</b> κλικ ` +
+      `(CTR <b>${fmt(gCtr, 1)}%</b>, μέση θέση <b>${fmt(gPos, 1)}</b>).`;
+
+    $('gClicks').textContent = fmt(gClicks);
+    $('gImpr').textContent = fmt(gImpr);
+    $('gCtr').textContent = fmt(gCtr, 1) + '%';
+    $('gPos').textContent = fmt(gPos, 1);
+
+    const maxQImpr = Math.max(1, ...(gsc.queries || []).map((x) => x.impressions || 0));
+    fillTable('tblGscQ', gsc.queries || [], [
+      { f: 'query' },
+      { f: 'impressions', barMax: maxQImpr, barCls: 'mb-gsc' },
+      { f: 'clicks', num: true },
+      { f: 'position', num: true, dec: 1 }
+    ]);
+    const maxPImpr = Math.max(1, ...(gsc.pages || []).map((x) => x.impressions || 0));
+    fillTable('tblGscP', gsc.pages || [], [
+      { f: 'page', link: 'url' },
+      { f: 'impressions', barMax: maxPImpr, barCls: 'mb-gsc' },
+      { f: 'clicks', num: true },
+      { f: 'position', num: true, dec: 1 }
+    ]);
+
+    // ---------- 3. YOUTUBE (ATLAS CHOIR) ----------
+    const ytLive = yt.live || {};
+    const yTot = ytLive.views_total ?? findMetric(yt.summary, 'views_total');
+    const y28 = findMetric(yt.summary, 'views_28d');
+    const yHours = findMetric(yt.summary, 'watch_hours_28d');
+    const ySubs = findMetric(yt.summary, 'subs_total');
+    const yVids = findMetric(yt.summary, 'videos_total');
+    const ySubsGained = findMetric(yt.summary, 'subs_gained_28d');
+
+    $('ytWhen').textContent = ytLive.as_of ? `Λήψη: ${fmtDateTime(ytLive.as_of)}` : 'YouTube Data API';
+    $('ledeYt').innerHTML =
+      `Το Atlas Choir έχει <b>${fmt(yTot)}</b> συνολικές προβολές σε <b>${fmt(yVids)}</b> βίντεο ` +
+      `(<b>+${fmt(ytLive.views_24h)}</b> τις τελευταίες 24 ώρες, <b>${fmt(ySubs)}</b> συνδρομητές).`;
+
+    $('y24').textContent = fmt(ytLive.views_24h);
+    $('y24Sub').textContent = ytLive.since_24h ? `Από ${fmtShortDate(ytLive.since_24h)}` : 'Ζωντανή διαφορά';
+    $('y7').textContent = fmt(ytLive.views_7d);
+    $('y7Sub').textContent = ytLive.since_7d ? `Από ${fmtShortDate(ytLive.since_7d)}` : 'Ζωντανή διαφορά';
+    $('yTotal').textContent = fmt(yTot);
+    $('ySubs').textContent = fmt(ySubs);
+    $('yVidsSub').textContent = `Βίντεο καναλιού: ${fmt(yVids)}`;
+
+    const maxYtLive = Math.max(1, ...(ytLive.top || []).map((x) => x.views_total || 0));
+    fillTable('tblYtLive', ytLive.top || [], [
+      { f: 'video' },
+      {
+        html: true,
+        cls: 'n',
+        get: (r) => {
+          const d = r.views_24h;
+          if (d === null || d === undefined) return '<span class="when">—</span>';
+          return d > 0 ? `<span class="pill pill-ok">+${fmt(d)}</span>` : '<span class="when">0</span>';
+        }
+      },
+      { f: 'views_total', barMax: maxYtLive, barCls: 'mb-yt' }
+    ], 'Δεν υπάρχουν ακόμη ζωντανοί μετρητές.');
+
+    if (ytLive.as_of) {
+      let since = ytLive.since_24h ? ` · «24 ώρες» από ${fmtDateTime(ytLive.since_24h)}` : '';
+      if (ytLive.since_7d && (new Date(ytLive.as_of) - new Date(ytLive.since_7d)) < 6.5 * 864e5) {
+        since += ` · «7 ημέρες» από ${fmtDateTime(ytLive.since_7d)} (ακόμα γεμίζει το ιστορικό 7 ημ.)`;
+      }
+      $('ytLiveNote').textContent = `Ζωντανοί μετρητές YouTube Data API (${fmtDateTime(ytLive.as_of)})${since}.`;
+    }
+
+    // YouTube Analytics (delayed 2-3 days)
+    const ytEnd = Array.isArray(yt.window) && yt.window.length === 2 ? fmtShortDate(yt.window[1]) : null;
+    const ytStart = Array.isArray(yt.window) && yt.window.length === 2 ? fmtShortDate(yt.window[0]) : null;
+    if (ytEnd) {
+      $('ytAnBadge').textContent = `⏱ Καθυστέρηση 2–3 ημ. · έως ${ytEnd}`;
+      $('yHoursK').textContent = `Ώρες θέασης (έως ${ytEnd})`;
+      $('yHoursSub').textContent = `Αφορά μόνο τις ${fmt(y28)} προβολές έως ${ytEnd}`;
+      $('y28k').textContent = `Προβολές Analytics (έως ${ytEnd})`;
+      $('ytTopH').textContent = `Κορυφαία βίντεο · ${ytStart} – ${ytEnd}`;
+      const missingViews = Math.max(0, (Number(yTot) || 0) - (Number(y28) || 0));
+      $('ytWatchExplainText').innerHTML =
+        `<b>Γιατί οι ώρες θέασης φαίνονται χαμηλές;</b> Το YouTube Data API δίνει ζωντανά μόνο τις προβολές — όχι χρόνο θέασης. ` +
+        `Οι <b>${fmt(yHours, 1)} ώρες</b> έρχονται από το YouTube Analytics API, που η Google καθυστερεί 2–3 ημέρες (έως <b>${ytEnd}</b>), ` +
+        `οπότε αντιστοιχούν μόνο στις <b>${fmt(y28)} προβολές</b> μέχρι τότε` +
+        (missingViews > 0 ? ` — <b>δεν περιλαμβάνουν ακόμη τις νεότερες ${fmt(missingViews)} προβολές</b>.` : '.');
+    }
+    $('yHours').textContent = fmt(yHours, 1);
+    $('y28').textContent = fmt(y28);
+    $('ySubsGained').textContent = (Number(ySubsGained) > 0 ? '+' : '') + fmt(ySubsGained);
+
+    const maxYtAn = Math.max(1, ...(yt.top || []).map((x) => x.views || 0));
+    fillTable('tblYt', yt.top || [], [
+      { f: 'video' },
+      { f: 'views', barMax: maxYtAn, barCls: 'mb-yt' }
+    ], 'Το YouTube Analytics δεν έχει επιστρέψει ακόμη δεδομένα (καθυστέρηση 2–3 ημερών).');
   }
 
   let cachedEnc = null;
@@ -868,6 +1473,7 @@ footer {
     localStorage.setItem(PIN_KEY, pin);
     $('lockScreen').classList.add('hidden');
     $('app').classList.remove('hidden');
+    $('bottomNav').classList.remove('hidden');
     render(data);
   }
 
@@ -888,26 +1494,27 @@ footer {
     const pin = localStorage.getItem(PIN_KEY);
     if (!pin) return;
     const btn = $('refreshBtn');
-    btn.textContent = 'Ανανέωση…';
+    const lbl = $('refreshLabel');
+    lbl.textContent = 'Ανανέωση…';
     btn.disabled = true;
     try {
       await tryUnlock(pin, true);
     } catch (e) {
       alert('Δεν ήταν δυνατή η ανανέωση (έλεγξε τη σύνδεση).');
     } finally {
-      btn.textContent = 'Ανανέωση';
+      lbl.textContent = 'Ανανέωση';
       btn.disabled = false;
     }
   });
 
-  // Όταν η εφαρμογή ξαναγίνεται ορατή (π.χ. επιστροφή στο εγκατεστημένο PWA) ή κάθε 15', φέρνει το νεότερο αρχείο.
+  // Auto-refresh on return to PWA or every 15'
   let lastAuto = Date.now();
   async function autoRefresh() {
     const pin = localStorage.getItem(PIN_KEY);
     if (!pin || document.hidden || $('app').classList.contains('hidden')) return;
     if (Date.now() - lastAuto < 60e3) return;
     lastAuto = Date.now();
-    try { await tryUnlock(pin, true); } catch (e) { /* offline: κρατάμε ό,τι φαίνεται */ }
+    try { await tryUnlock(pin, true); } catch (e) {}
   }
   document.addEventListener('visibilitychange', autoRefresh);
   window.addEventListener('focus', autoRefresh);
@@ -918,6 +1525,7 @@ footer {
     $('pinInput').value = '';
     $('lockErr').textContent = '';
     $('app').classList.add('hidden');
+    $('bottomNav').classList.add('hidden');
     $('lockScreen').classList.remove('hidden');
   });
 
@@ -929,7 +1537,6 @@ footer {
         await tryUnlock(savedPin, true);
         return;
       } catch (e) {
-        // Fallback to cached or ask PIN again
         try {
           await tryUnlock(savedPin, false);
           return;
