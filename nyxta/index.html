@@ -1061,6 +1061,7 @@
 
   function setSoundVolume(name, pct) {
     const val = Math.max(0, Math.min(100, Number(pct) || 0));
+    if (val > 0 && isMuted) setMuted(false);
     $(`vol-${name}`).value = String(val);
     $(`val-${name}`).textContent = `${val}%`;
     const row = document.querySelector(`.sound-row[data-sound="${name}"]`);
@@ -1068,7 +1069,9 @@
     if (val > 0 || channels[name]) {
       const ch = initChannel(name);
       const ctx = ensureAudioCtx();
-      ch.gain.gain.setTargetAtTime((val / 100) * SOUND_SCALE[name], ctx.currentTime, 0.08);
+      const now = ctx.currentTime;
+      ch.gain.gain.cancelScheduledValues(now);
+      ch.gain.gain.setTargetAtTime((val / 100) * SOUND_SCALE[name], now, 0.05);
     }
   }
 
@@ -1104,13 +1107,30 @@
     });
   });
 
-  function muteAll() {
-    document.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
-    SOUND_NAMES.forEach((n) => setSoundVolume(n, 0));
-    if (!localAudio.paused) {
-      localAudio.pause();
-      $('localPlayBtn').textContent = 'Αναπαραγωγή';
+  let isMuted = false;
+  function setMuted(state) {
+    isMuted = !!state;
+    const btn = $('muteAllBtn');
+    btn.classList.toggle('active', isMuted);
+    btn.setAttribute('aria-pressed', String(isMuted));
+    const lbl = btn.lastChild;
+    if (lbl && lbl.nodeType === 3) lbl.textContent = isMuted ? ' Άρση σίγασης' : ' Σίγαση';
+    if (masterBus && audioCtx) {
+      const now = audioCtx.currentTime;
+      masterBus.gain.cancelScheduledValues(now);
+      masterBus.gain.setValueAtTime(isMuted ? 0 : masterLevel, now);
+      if (isMuted) {
+        audioCtx.suspend().catch(() => {});
+      } else {
+        audioCtx.resume().catch(() => {});
+      }
     }
+    if (localAudio) {
+      localAudio.muted = isMuted;
+    }
+  }
+  function muteAll() {
+    setMuted(!isMuted);
   }
   $('muteAllBtn').addEventListener('click', muteAll);
 
