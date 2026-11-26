@@ -66,33 +66,65 @@
 
 * { box-sizing: border-box; }
 body {
+  margin: 0;
   background: var(--bg); color: var(--ink);
   font-family: var(--font-body); font-size: var(--step-0); line-height: 1.5;
-  padding-inline: 16px; padding-block: 20px 40px;
+  padding-inline: 0; padding-block: 0 40px;
 }
-.page { max-width: 1180px; margin: 0 auto; display: grid; gap: 20px; }
+.page { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-top: 20px; display: grid; gap: 20px; }
 h1, h2 { font-weight: 400; margin: 0; text-wrap: balance; }
 p { margin: 0; }
 button, select, input { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
-/* Πλοήγηση επιστροφής στον Στατιστικό Άτλαντα */
-.site-bar {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;
-  padding-bottom: 12px; border-bottom: 1px solid var(--rule);
+/* Ενοποιημένο header (ίδιο πλαίσιο με blog & εργαλεία, με υποστήριξη dark mode) */
+.atlas-site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 100;
 }
-.site-bar a {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 36px;
-  text-decoration: none; color: var(--ink); font-size: var(--step--1); font-weight: 600;
+.atlas-header-inner {
+  max-width: 1200px; margin: 0 auto; padding: 11px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.site-bar a:hover { color: var(--bubble-edge); }
-.site-bar .site-brand { font-size: 1rem; font-weight: 700; }
-.site-bar .site-brand span { color: var(--bubble-edge); }
-.site-bar .site-tools { color: var(--ink-2); font-weight: 500; }
-@media (max-width: 639px) {
-  body { padding-block: 12px 40px; }
-  .site-bar { padding-bottom: 8px; }
-  .site-bar a { min-height: 40px; }
+.atlas-brand {
+  display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
+  text-decoration: none; color: var(--ink); font-weight: 800; font-size: 1.08rem; letter-spacing: -0.01em;
+}
+.atlas-brand img { width: 34px; height: 34px; object-fit: contain; display: block; }
+.atlas-brand span { color: var(--bubble-edge); }
+.atlas-nav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.atlas-nav a {
+  color: var(--ink-2); text-decoration: none; font-size: 0.93rem; font-weight: 500;
+  padding: 6px 2px; border-bottom: 2px solid transparent; transition: color .15s ease, border-color .15s ease;
+}
+.atlas-nav a:hover { color: var(--bubble-edge); }
+.atlas-nav a[aria-current="page"] { color: var(--bubble-edge); font-weight: 700; border-bottom-color: var(--bubble-edge); }
+.atlas-mobile-nav { display: none; position: relative; }
+.atlas-mobile-nav summary {
+  list-style: none; cursor: pointer; width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--rule); border-radius: 8px; font-size: 1.2rem;
+  color: var(--ink); background: var(--surface);
+}
+.atlas-mobile-nav summary::-webkit-details-marker { display: none; }
+.atlas-mobile-panel {
+  position: absolute; right: 0; top: 48px; width: min(260px, calc(100vw - 32px));
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18); padding: 10px; display: grid; gap: 4px; z-index: 200;
+}
+.atlas-mobile-panel a {
+  display: block; padding: 10px 12px; border-radius: 8px; text-decoration: none;
+  color: var(--ink); font-size: 0.95rem; font-weight: 500;
+}
+.atlas-mobile-panel a:hover, .atlas-mobile-panel a[aria-current="page"] {
+  background: var(--bg); color: var(--bubble-edge); font-weight: 700;
+}
+@media (max-width: 860px) {
+  .atlas-header-inner { padding: 10px 16px; }
+  .atlas-nav { display: none; }
+  .atlas-mobile-nav { display: block; }
+  .page { padding-top: 14px; }
 }
 
 /* Χάρτες-ιστορίες */
@@ -330,11 +362,38 @@ select {
 }
 </style>
 
+<header class="atlas-site-header">
+  <div class="atlas-header-inner">
+    <a class="atlas-brand" href="https://statistikosatlantas.com/">
+      <img src="https://statistikosatlantas.wordpress.com/wp-content/uploads/2026/11/glafka-owl.png" alt="" width="34" height="34">
+      Στατιστικός <span>Άτλαντας</span>
+    </a>
+    <nav class="atlas-nav" aria-label="Κύριο μενού">
+      <a href="https://tools.statistikosatlantas.com/xartis/" aria-current="page">Χάρτης</a>
+      <a href="https://tools.statistikosatlantas.com/">Εργαλεία</a>
+      <a href="https://statistikosatlantas.com/category/arthra/">Άρθρα</a>
+      <a href="https://statistikosatlantas.com/category/evrimata/">Ευρήματα</a>
+      <a href="https://statistikosatlantas.com/category/odigoi/">Οδηγοί</a>
+      <a href="https://statistikosatlantas.com/category/akouste/">Ακούστε</a>
+      <a href="https://statistikosatlantas.com/about/">Σχετικά</a>
+    </nav>
+    <details class="atlas-mobile-nav">
+      <summary aria-label="Άνοιγμα μενού">☰</summary>
+      <nav class="atlas-mobile-panel" aria-label="Κύριο μενού κινητού">
+        <a href="https://statistikosatlantas.com/">Αρχική</a>
+        <a href="https://tools.statistikosatlantas.com/xartis/" aria-current="page">Χάρτης</a>
+        <a href="https://tools.statistikosatlantas.com/">Εργαλεία</a>
+        <a href="https://statistikosatlantas.com/category/arthra/">Άρθρα</a>
+        <a href="https://statistikosatlantas.com/category/evrimata/">Ευρήματα</a>
+        <a href="https://statistikosatlantas.com/category/odigoi/">Οδηγοί</a>
+        <a href="https://statistikosatlantas.com/category/akouste/">Ακούστε</a>
+        <a href="https://statistikosatlantas.com/about/">Σχετικά</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
 <div class="page">
-  <nav class="site-bar" aria-label="Πλοήγηση Στατιστικού Άτλαντα">
-    <a class="site-brand" href="https://statistikosatlantas.com/">← Στατιστικός <span>Άτλαντας</span></a>
-    <a class="site-tools" href="https://tools.statistikosatlantas.com/">Όλα τα εργαλεία</a>
-  </nav>
   <nav class="stories loading" id="storyNav" aria-label="Χάρτες"></nav>
   <header class="masthead">
     <p class="eyebrow">Στατιστικός Άτλας Ελλάδας<span class="eyebrow-topic"> · <span id="eyebrowTopic">Δημογραφία</span></span></p>
