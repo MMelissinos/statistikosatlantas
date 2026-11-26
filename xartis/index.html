@@ -76,6 +76,25 @@ p { margin: 0; }
 button, select, input { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
+/* Πλοήγηση επιστροφής στον Στατιστικό Άτλαντα */
+.site-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--rule);
+}
+.site-bar a {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px;
+  text-decoration: none; color: var(--ink); font-size: var(--step--1); font-weight: 600;
+}
+.site-bar a:hover { color: var(--bubble-edge); }
+.site-bar .site-brand { font-size: 1rem; font-weight: 700; }
+.site-bar .site-brand span { color: var(--bubble-edge); }
+.site-bar .site-tools { color: var(--ink-2); font-weight: 500; }
+@media (max-width: 639px) {
+  body { padding-block: 12px 40px; }
+  .site-bar { padding-bottom: 8px; }
+  .site-bar a { min-height: 40px; }
+}
+
 /* Χάρτες-ιστορίες */
 /* Κινητό: οι καρτέλες είναι πλέγμα 2×2 με ίσες στήλες· κάθε κελί έχει ύψος τουλάχιστον 48px και τη δική του
    γραμμή, ώστε η ενεργή να φαίνεται σε όλη τη στήλη της και καμία να μην κρύβεται πίσω από οριζόντια κύλιση. */
@@ -312,6 +331,10 @@ select {
 </style>
 
 <div class="page">
+  <nav class="site-bar" aria-label="Πλοήγηση Στατιστικού Άτλαντα">
+    <a class="site-brand" href="https://statistikosatlantas.com/">← Στατιστικός <span>Άτλαντας</span></a>
+    <a class="site-tools" href="https://tools.statistikosatlantas.com/">Όλα τα εργαλεία</a>
+  </nav>
   <nav class="stories loading" id="storyNav" aria-label="Χάρτες"></nav>
   <header class="masthead">
     <p class="eyebrow">Στατιστικός Άτλας Ελλάδας<span class="eyebrow-topic"> · <span id="eyebrowTopic">Δημογραφία</span></span></p>
