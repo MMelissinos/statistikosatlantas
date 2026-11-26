@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pinakas-atlanta-v6';
+const CACHE_NAME = 'pinakas-atlanta-v7';
 const SHELL_ASSETS = [
   './',
   './index.html',
