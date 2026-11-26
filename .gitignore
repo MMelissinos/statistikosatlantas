@@ -23,6 +23,7 @@ workflow/region_findings_images/
 workflow/findings_cards_samples/
 workflow/image_bank/
 workflow/staging_iron_baroque/
+workflow/pinakothiki/
 workflow/*.cmd
 workflow/*.md
 workflow/MEMORY.md
