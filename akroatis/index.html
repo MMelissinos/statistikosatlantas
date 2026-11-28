@@ -652,7 +652,7 @@
   <form class="rss-bar" id="rssForm">
     <div class="rss-input-wrap">
       <svg class="ico" viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5"/></svg>
-      <input type="url" class="input" id="rssUrl" placeholder="Επικόλλησε RSS URL podcast (π.χ. https://feeds.megaphone.fm/darknetdiaries)..." required>
+      <input type="text" inputmode="url" class="input" id="rssUrl" placeholder="Επικόλλησε οποιοδήποτε RSS URL podcast (χωρίς όριο)..." required>
     </div>
     <button type="submit" class="btn primary" id="loadBtn">
       <svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
@@ -882,20 +882,58 @@
     $('statusText').textContent = msg;
   }
 
-  // Multi-fallback CORS RSS fetcher
+  function looksLikeRss(text) {
+    if (!text) return false;
+    const head = text.slice(0, 2000).toLowerCase();
+    return head.includes('<rss') || head.includes('<channel') || head.includes('<feed') || (head.includes('<?xml') && text.includes('<item'));
+  }
+
+  async function fetchWithTimeout(url, ms = 12000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      return await fetch(url, { signal: ctrl.signal });
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
+  // Multi-fallback CORS RSS fetcher (έλεγχος ότι η απάντηση είναι όντως XML/RSS, όχι HTML error page)
   async function fetchFeedText(url) {
     const attempts = [
-      () => fetch(url),
-      () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`),
-      () => fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`)
+      async () => {
+        const res = await fetchWithTimeout(url, 8000);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.text();
+      },
+      async () => {
+        const res = await fetchWithTimeout(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, 12000);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.text();
+      },
+      async () => {
+        const res = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`, 12000);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        return data?.contents || '';
+      },
+      async () => {
+        const res = await fetchWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`, 12000);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.text();
+      },
+      async () => {
+        const res = await fetchWithTimeout(`https://corsproxy.io/?url=${encodeURIComponent(url)}`, 12000);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.text();
+      }
     ];
     let lastErr = null;
     for (const run of attempts) {
       try {
-        const res = await run();
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        if (text && text.includes('<')) return text;
+        const text = await run();
+        if (looksLikeRss(text)) return text;
+        lastErr = new Error('Η απάντηση δεν ήταν έγκυρο RSS/XML.');
       } catch (err) {
         lastErr = err;
       }
@@ -1021,6 +1059,7 @@
   async function loadPodcast(url, saveIfNew = true) {
     url = (url || '').trim();
     if (!url) return;
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
     activeFeedUrl = url;
     renderSubs();
     setStatus('Φόρτωση RSS feed...');
