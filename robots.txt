@@ -4,5 +4,6 @@ Disallow: /pinakas/
 Disallow: /radar/
 Disallow: /pinakothiki/
 Disallow: /anagnostis/
+Disallow: /akroatis/
 
 Sitemap: https://tools.statistikosatlantas.com/sitemap.xml
