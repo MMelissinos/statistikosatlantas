@@ -1,4 +1,4 @@
-const CACHE_NAME = 'akroatis-glafka-v4';
+const CACHE_NAME = 'akroatis-glafka-v5';
 const SHELL_ASSETS = [
   './',
   './index.html',
